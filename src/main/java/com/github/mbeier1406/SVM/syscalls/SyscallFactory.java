@@ -3,6 +3,7 @@ package com.github.mbeier1406.SVM.syscalls;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import org.reflections.Reflections;
@@ -18,17 +19,18 @@ public class SyscallFactory {
 	 * im {@linkplain MEM}, die von {@linkplain Instruction Instructions} in der {@linkplain ALU}
 	 * ausgeführt werden können.
 	 */
-	public static final Map<Short, SyscallInterface<Short>> SYSCALLS;
+	public static final Map<Byte, SyscallInterface<Short>> SYSCALLS;
 
 	/** Lädt die definierten {@linkplain SyscallInterface Syscalls} */
 	static {
 		SYSCALLS = getSyscalls();
 	}
 
-	public static Map<Short, SyscallInterface<Short>> getSyscalls() {
+	/** Lädt alle Systemaufrufe für {@linkplain com.github.mbeier1406.SVM.instructions.Syscall} */
+	public static Map<Byte, SyscallInterface<Short>> getSyscalls() {
 		try {
 			Set<Class<?>> syscallClasses = new Reflections("com.github.mbeier1406.SVM.syscalls").getTypesAnnotatedWith(Syscall.class);
-			final Map<Short, SyscallInterface<Short>> syscalls = new HashMap<>();
+			final Map<Byte, SyscallInterface<Short>> syscalls = new HashMap<>();
 			syscallClasses.forEach(syscallClass -> {
 				try {
 					@SuppressWarnings("unchecked")
@@ -44,6 +46,11 @@ public class SyscallFactory {
 		catch ( Exception e ) {
 			throw new RuntimeException("Syscalls können nicht mehr Refelction ermittelt werden!", e);
 		}
+	}
+
+	/** Ermöglicht den Zugriff auf den Hauptspeicher für die Systemaufrufe */
+	public static void setMem(final MEM.Instruction<Short> mem) {
+		SYSCALLS.entrySet().forEach(s -> s.getValue().setMemory(Objects.requireNonNull(mem, "mem")));
 	}
 
 }

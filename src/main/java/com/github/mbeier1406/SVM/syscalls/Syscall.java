@@ -21,6 +21,6 @@ public @interface Syscall {
 	 * angegeben. Dieser wird hier mit {@linkplain Short} angegeben, was voraussetzt, dass die {@linkplain ALU} und
 	 * das {@linkplain MEM} ebenfalls mit diesem Datentyp typisiert wird!
 	 */
-	public short code() default 0x0;
+	public byte code() default 0x0;
 
 }

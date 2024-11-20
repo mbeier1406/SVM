@@ -3,6 +3,10 @@ package com.github.mbeier1406.SVM.syscalls;
 import static com.github.mbeier1406.SVM.syscalls.SyscallFactory.SYSCALLS;
 import static com.github.mbeier1406.SVM.syscalls.SyscallInterface.Codes.EXIT;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.github.mbeier1406.SVM.SVMException;
@@ -10,13 +14,23 @@ import com.github.mbeier1406.SVM.SVMException;
 /**
  * Test für die Klasse {@linkplain Exit}.
  */
-public class ExitTest {
+public class ExitTest extends TestBase {
 
-	/** Beendet die JVM mit Exitcode 0 */
+	/** Initialisiert den Speicher mit zwei Strings, setzt das Tempfile */
+	@BeforeEach
+	public void init() throws SVMException {
+		/* Das zu testende Objekt */
+		syscall = SYSCALLS.get(EXIT.getCode());
+		/* Diese Instruktion verwendet einen Parameter */
+		super.testeParam1Null();
+	}
+
+	/** Testet, ob der Exitcode gestzt wird */
 	@Test
 	public void testeSyscall() throws SVMException {
-		SYSCALLS.get(EXIT.getCode()).execute((short) 0, null, null);
-		throw new SVMException("Syscall funktioniert nicht: " + EXIT.name());
+		assertThat(returnCode, equalTo((short) 0));
+		syscall.execute((short) 1, null, null);
+		assertThat(returnCode, equalTo((short) 1));
 	}
 
 }

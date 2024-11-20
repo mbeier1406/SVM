@@ -28,7 +28,7 @@ public class IO extends SyscallBase implements SyscallInterface<Short> {
 	/** In diese Datei kann während der Programmausführung der {@linkplain SVM} geschrieben werden */
 	private static PrintStream tempFile = null;
 
-	/** Setzt die temporäre Datei durch die {@linkplain com.github.mbeier1406.SVM.Runtime} */
+	/** Setzt die temporäre Datei durch die {@linkplain com.github.mbeier1406.SVM.Runtime} (NULL für löschen) */
 	public void setTempFile(final PrintStream tempFile) {
 		IO.tempFile = tempFile;
 		IO_MAP.put((short) TEMP_FILE.ordinal(), tempFile);
@@ -50,8 +50,8 @@ public class IO extends SyscallBase implements SyscallInterface<Short> {
 	@Override
 	public int execute(Short param1, Short param2, Short param3) throws SVMException {
 		PrintStream out = requireNonNull(IO_MAP.get(requireNonNull(param1, "param1")), "Output '"+param1+"'!");
-		for ( short i=0; i < param3; i++ )
-			out.print((char) requireNonNull(super.mem, "mem").read(param2+i).shortValue());
+		for ( short i=0; i < requireNonNull(param3, "param3"); i++ )
+			out.print((char) requireNonNull(super.mem, "mem").read(requireNonNull(param2, "param2")+i).shortValue());
 		return 0;
 	}
 

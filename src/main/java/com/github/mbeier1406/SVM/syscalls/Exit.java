@@ -13,8 +13,8 @@ public class Exit extends SyscallBase implements SyscallInterface<Short> {
 	/** {@inheritDoc} */
 	@Override
 	public int execute(Short param1, Short param2, Short param3) throws SVMException {
-		System.exit((short) Objects.requireNonNull(param1, "param1"));
-		throw new SVMException("Exit: "+param1);
+		super.alu.setStopFlag(Objects.requireNonNull(param1, "param1"));
+		return 0;
 	}
 
 }

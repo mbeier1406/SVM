@@ -47,7 +47,15 @@ public interface SyscallInterface<T> {
 	public int execute(T param1, T param2, T param3) throws SVMException;
 
 	/**
-	 * Da die Systemaufrufe zugriff auf den Hauptspeicher benötigen, erhalten sie alle
+	 * Da die Systemaufrufe Zugriff auf bestimmte Funktionen der ALU benötigen, erhalten sie alle
+	 * die notwendigen Funktionen zum Zugriff.
+	 * @param mem Das Interface mit den Zugriffsmethoden für die {@linkplain ALU}
+	 * @see SyscallBase
+	 */
+	public void setAlu(final ALU.Instruction<T> alu);
+
+	/**
+	 * Da die Systemaufrufe Zugriff auf bestimmte Funktionen des Hauptspeichers benötigen, erhalten sie alle
 	 * die notwendigen Funktionen zum Zugriff.
 	 * @param mem Das Interface mit den Speicherzugriffsmethoden
 	 * @see SyscallBase

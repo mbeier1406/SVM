@@ -15,6 +15,9 @@ public interface MEM<T> {
 	 * Die Funktionen in diesem Teil des Interfaces sind für den Zugriff
 	 * der Machinenbefehle in {@linkplain Instruction} vorgesehen.
 	 * Diese Befehle sollen nur eingeschränkten Zugriff auf den Hauptspecher haben.
+	 * Dies gilt zum Beispiel für die Instruction {@linkplain com.github.mbeier1406.SVM.instructions.Syscall},
+	 * die beispielsweise den Syscall {@linkplain com.github.mbeier1406.SVM.syscalls.IO} aufruft, der
+	 * aus dem Hauptspeicher liest.
 	 * @param <T> Legt die Wortgröße des Speichers fest
 	 */
 	public interface Instruction<T> {

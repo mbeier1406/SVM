@@ -8,6 +8,22 @@ package com.github.mbeier1406.SVM;
 public interface ALU<T> {
 
 	/**
+	 * Die Funktionen in diesem Teil des Interfaces sind für den Zugriff
+	 * der Machinenbefehle in {@linkplain Instruction} vorgesehen.
+	 * Diese Befehle sollen nur eingeschränkten Zugriff auf die Funktionen der ALU haben.
+	 * @param <T> Legt die Wortgröße der Register in der ALU fest
+	 */
+	public interface Instruction<T> {
+		/**
+		 * Dieser Aufruf wird von der Instruktion {@linkplain com.github.mbeier1406.SVM.instructions.Syscall}
+		 * in Zusammenhang mit dem Syscall {@linkplain com.github.mbeier1406.SVM.syscalls.Exit} verwendet,
+		 * um das Stop-Flag zum Beenden der SVM zu bewirken.
+		 * @param returnCode mit welchem Return-Code die SVM beendet werdne soll
+		 */
+		public void setStopFlag(T returnCode);
+	}
+
+	/**
 	 * Initialisiert die ALU:
 	 * <ul>
 	 * <li>Der IP (instruction pointer) wird auf die oberste Adresse des {@linkplain MEM} gesetzt</li>

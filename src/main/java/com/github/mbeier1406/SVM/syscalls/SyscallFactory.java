@@ -1,9 +1,10 @@
 package com.github.mbeier1406.SVM.syscalls;
 
+import static java.util.Objects.requireNonNull;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 import org.reflections.Reflections;
@@ -49,8 +50,11 @@ public class SyscallFactory {
 	}
 
 	/** Ermöglicht den Zugriff auf den Hauptspeicher für die Systemaufrufe */
-	public static void setMem(final MEM.Instruction<Short> mem) {
-		SYSCALLS.entrySet().forEach(s -> s.getValue().setMemory(Objects.requireNonNull(mem, "mem")));
+	public static void init(final ALU.Instruction<Short> alu, final MEM.Instruction<Short> mem) {
+		SYSCALLS.entrySet().forEach(s -> {
+			s.getValue().setAlu(requireNonNull(alu, "alu"));
+			s.getValue().setMemory(requireNonNull(mem, "mem"));
+		});
 	}
 
 }

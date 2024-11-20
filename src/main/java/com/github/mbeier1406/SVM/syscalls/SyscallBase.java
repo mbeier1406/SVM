@@ -1,5 +1,6 @@
 package com.github.mbeier1406.SVM.syscalls;
 
+import com.github.mbeier1406.SVM.ALU;
 import com.github.mbeier1406.SVM.MEM;
 
 /**
@@ -7,8 +8,17 @@ import com.github.mbeier1406.SVM.MEM;
  */
 public abstract class SyscallBase implements SyscallInterface<Short> {
 
+	/** Erlaubt den Systemaufrufen den Zugriff auf die ALU */
+	protected ALU.Instruction<Short> alu;
+
 	/** Erlaubt den Systemaufrufen den Zugriff auf den Hauptspeicher */
 	protected MEM.Instruction<Short> mem;
+
+	/** {@inheritDoc} */
+	@Override
+	public void setAlu(final ALU.Instruction<Short> alu) {
+		this.alu = alu;
+	}
 
 	/** {@inheritDoc} */
 	@Override

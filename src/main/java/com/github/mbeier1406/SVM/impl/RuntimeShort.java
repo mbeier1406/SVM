@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 
+import com.github.mbeier1406.SVM.ALU;
 import com.github.mbeier1406.SVM.MEM;
 import com.github.mbeier1406.SVM.MEM.Instruction;
 import com.github.mbeier1406.SVM.Runtime;
@@ -17,19 +18,23 @@ import com.github.mbeier1406.SVM.syscalls.SyscallInterface;
 
 public class RuntimeShort implements Runtime<Short> {
 
-	/** {@linkplain SyscallInterface Syscalls} haben Zugriff auf den Hauptspeicher */
+	/** {@linkplain SyscallInterface Syscalls} haben Zugriff auf bestimmte Funktionen der ALU */
+	private final ALU.Instruction<Short> alu;
+
+	/** {@linkplain SyscallInterface Syscalls} haben Zugriff auf bestimmte Funktionen des Hauptspeichers */
 	private final MEM.Instruction<Short> mem;
 
 	/** In diese Datei kann der Syscall {@linkplain IO} schreiben */
 	private File tempFile;
 
 
-	public RuntimeShort(Instruction<Short> mem) throws IOException {
+	public RuntimeShort(final ALU.Instruction<Short> alu, final Instruction<Short> mem) throws IOException {
 		super();
 
-		/* Zugriff auf den Hauptspeicher für Syscalls */
+		/* Zugriff auf die ALU und den Hauptspeicher für Syscalls */
+		this.alu = alu;
 		this.mem = mem;
-		SyscallFactory.setMem(this.mem);
+		SyscallFactory.init(this.alu, this.mem);
 
 		/* Temporäre Datei für den IO-Syscall */
 		tempFile = File.createTempFile("svm", "tmp");

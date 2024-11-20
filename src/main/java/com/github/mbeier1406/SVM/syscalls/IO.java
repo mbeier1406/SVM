@@ -31,8 +31,10 @@ public class IO extends SyscallBase implements SyscallInterface<Short> {
 	/** Setzt die temporäre Datei durch die {@linkplain com.github.mbeier1406.SVM.Runtime} */
 	public void setTempFile(final PrintStream tempFile) {
 		IO.tempFile = tempFile;
+		IO_MAP.put((short) TEMP_FILE.ordinal(), tempFile);
 	}
 
+	/** Diese Map ordnet den Ausgabekanälen {@linkplain OutStream} die Dateidescriptoren zu */
 	@SuppressWarnings("serial")
 	private Map<Short, PrintStream> IO_MAP  = new HashMap<Short, PrintStream>() {{
 		put((short) NULL_FILE.ordinal(), new PrintStream(new OutputStream() {

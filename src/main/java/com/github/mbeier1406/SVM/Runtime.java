@@ -1,10 +1,21 @@
 package com.github.mbeier1406.SVM;
 
+import com.github.mbeier1406.SVM.syscalls.IO;
 import com.github.mbeier1406.SVM.syscalls.SyscallInterface;
 
 /**
  * Diese Schnittstelle definiert die Funktionen der Laufzeitumgebung (Betriebssystem)
- * auf die ien in der {@linkplain SVM} ausgeführtes Programm Zugriff hat.
+ * auf die ien in der {@linkplain SVM} ausgeführtes Programm Zugriff hat.<p/>
+ * Folgende Funktionen werden bereitgestellt:
+ * <ul>
+ * 	<li>
+ * 		Bereitstellung einer temporären Datei (wird mit Beenden der SVM gelöscht), in die der
+ * 		Syscall {@linkplain IO} schreiben kann
+ * 	</li>
+ * 	<li>
+ * 		Zugriff auf Systemfunktionen über {@linkplain #syscall(Object, Object, Object, Object)};
+ * 	</li>
+ * </ul>
  * @param <T> Die Wortgröße von Prozessor (ALU) und Speicher (MEM).
  * @see ALU
  * @see MEM

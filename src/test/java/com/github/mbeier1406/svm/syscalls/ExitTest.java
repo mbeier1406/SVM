@@ -1,7 +1,7 @@
-package com.github.mbeier1406.SVM.syscalls;
+package com.github.mbeier1406.svm.syscalls;
 
-import static com.github.mbeier1406.SVM.syscalls.SyscallFactory.SYSCALLS;
-import static com.github.mbeier1406.SVM.syscalls.SyscallInterface.Codes.EXIT;
+import static com.github.mbeier1406.svm.syscalls.SyscallFactory.SYSCALLS;
+import static com.github.mbeier1406.svm.syscalls.SyscallInterface.Codes.EXIT;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -9,7 +9,7 @@ import static org.hamcrest.Matchers.equalTo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.github.mbeier1406.SVM.SVMException;
+import com.github.mbeier1406.svm.SVMException;
 
 /**
  * Test für die Klasse {@linkplain Exit}.

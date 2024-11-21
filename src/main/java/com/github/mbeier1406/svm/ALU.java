@@ -1,4 +1,4 @@
-package com.github.mbeier1406.SVM;
+package com.github.mbeier1406.svm;
 
 /**
  * Definiert die Schnittstelle zu Arithmetisch-, logischen Einheit (ALU),

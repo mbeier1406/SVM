@@ -1,8 +1,8 @@
-package com.github.mbeier1406.SVM.syscalls;
+package com.github.mbeier1406.svm.syscalls;
 
 import java.util.Objects;
 
-import com.github.mbeier1406.SVM.SVMException;
+import com.github.mbeier1406.svm.SVMException;
 
 /**
  * Beendet das gerade ausgeführte Programm mit dem ExitCode aus Parameter 1<p/>

@@ -1,4 +1,4 @@
-package com.github.mbeier1406.SVM.syscalls;
+package com.github.mbeier1406.svm.syscalls;
 
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;

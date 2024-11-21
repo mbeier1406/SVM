@@ -3,4 +3,4 @@
  * bzw. von deren {@linkplain com.github.mbeier1406.SVM.ALU} ausgeführt werden müssen, da diese von der
  * entsprechenden {@linkplain com.github.mbeier1406.SVM.instructions.Syscall}-Anweisung angefordert wurde.
  */
-package com.github.mbeier1406.SVM.syscalls;
+package com.github.mbeier1406.svm.syscalls;

@@ -1,12 +1,12 @@
-package com.github.mbeier1406.SVM.syscalls;
+package com.github.mbeier1406.svm.syscalls;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.github.mbeier1406.SVM.ALU;
-import com.github.mbeier1406.SVM.MEM;
-import com.github.mbeier1406.SVM.impl.MEMShort;
+import com.github.mbeier1406.svm.ALU;
+import com.github.mbeier1406.svm.MEM;
+import com.github.mbeier1406.svm.impl.MEMShort;
 
 /**
  * Basisfunktionen für alle Tests für {@linkplain SyscallInterface Syscalls}.

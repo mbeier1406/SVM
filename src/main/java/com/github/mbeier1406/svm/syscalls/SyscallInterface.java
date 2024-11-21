@@ -1,9 +1,9 @@
-package com.github.mbeier1406.SVM.syscalls;
+package com.github.mbeier1406.svm.syscalls;
 
-import com.github.mbeier1406.SVM.ALU;
-import com.github.mbeier1406.SVM.MEM;
-import com.github.mbeier1406.SVM.SVM;
-import com.github.mbeier1406.SVM.SVMException;
+import com.github.mbeier1406.svm.ALU;
+import com.github.mbeier1406.svm.MEM;
+import com.github.mbeier1406.svm.SVM;
+import com.github.mbeier1406.svm.SVMException;
 
 /**
  * Definiert das Interface zu einem Aufruf in die Laufzeitumgebung.

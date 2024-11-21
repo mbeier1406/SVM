@@ -1,9 +1,9 @@
-package com.github.mbeier1406.SVM.syscalls;
+package com.github.mbeier1406.svm.syscalls;
 
-import static com.github.mbeier1406.SVM.syscalls.IO.OutStream.STDOUT;
-import static com.github.mbeier1406.SVM.syscalls.IO.OutStream.TEMP_FILE;
-import static com.github.mbeier1406.SVM.syscalls.SyscallFactory.SYSCALLS;
-import static com.github.mbeier1406.SVM.syscalls.SyscallInterface.Codes.IO;
+import static com.github.mbeier1406.svm.syscalls.IO.OutStream.STDOUT;
+import static com.github.mbeier1406.svm.syscalls.IO.OutStream.TEMP_FILE;
+import static com.github.mbeier1406.svm.syscalls.SyscallFactory.SYSCALLS;
+import static com.github.mbeier1406.svm.syscalls.SyscallInterface.Codes.IO;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.nullValue;
@@ -18,7 +18,7 @@ import java.io.PrintStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.github.mbeier1406.SVM.SVMException;
+import com.github.mbeier1406.svm.SVMException;
 
 /**
  * Test für die Klasse {@linkplain IO}.

@@ -1,4 +1,4 @@
-package com.github.mbeier1406.SVM;
+package com.github.mbeier1406.svm;
 
 /**
  * Diese {@linkplain Exception} weist auf einen Fehler bei der Ausführung eines

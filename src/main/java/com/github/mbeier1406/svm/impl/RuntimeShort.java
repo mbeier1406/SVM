@@ -1,20 +1,20 @@
-package com.github.mbeier1406.SVM.impl;
+package com.github.mbeier1406.svm.impl;
 
-import static com.github.mbeier1406.SVM.syscalls.SyscallFactory.SYSCALLS;
-import static com.github.mbeier1406.SVM.syscalls.SyscallInterface.Codes.IO;
+import static com.github.mbeier1406.svm.syscalls.SyscallFactory.SYSCALLS;
+import static com.github.mbeier1406.svm.syscalls.SyscallInterface.Codes.IO;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 
-import com.github.mbeier1406.SVM.ALU;
-import com.github.mbeier1406.SVM.MEM;
-import com.github.mbeier1406.SVM.MEM.Instruction;
-import com.github.mbeier1406.SVM.Runtime;
-import com.github.mbeier1406.SVM.SVMException;
-import com.github.mbeier1406.SVM.syscalls.IO;
-import com.github.mbeier1406.SVM.syscalls.SyscallFactory;
-import com.github.mbeier1406.SVM.syscalls.SyscallInterface;
+import com.github.mbeier1406.svm.ALU;
+import com.github.mbeier1406.svm.MEM;
+import com.github.mbeier1406.svm.MEM.Instruction;
+import com.github.mbeier1406.svm.Runtime;
+import com.github.mbeier1406.svm.SVMException;
+import com.github.mbeier1406.svm.syscalls.IO;
+import com.github.mbeier1406.svm.syscalls.SyscallFactory;
+import com.github.mbeier1406.svm.syscalls.SyscallInterface;
 
 public class RuntimeShort implements Runtime<Short> {
 

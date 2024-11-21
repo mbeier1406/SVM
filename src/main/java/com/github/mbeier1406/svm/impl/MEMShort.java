@@ -1,7 +1,7 @@
-package com.github.mbeier1406.SVM.impl;
+package com.github.mbeier1406.svm.impl;
 
-import com.github.mbeier1406.SVM.MEM;
-import com.github.mbeier1406.SVM.SVMException;
+import com.github.mbeier1406.svm.MEM;
+import com.github.mbeier1406.svm.SVMException;
 
 /**
  * Eine einfache Implementierung eines Hauptspeichers,

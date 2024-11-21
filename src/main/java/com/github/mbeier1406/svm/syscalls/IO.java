@@ -1,9 +1,9 @@
-package com.github.mbeier1406.SVM.syscalls;
+package com.github.mbeier1406.svm.syscalls;
 
-import static com.github.mbeier1406.SVM.syscalls.IO.OutStream.NULL_FILE;
-import static com.github.mbeier1406.SVM.syscalls.IO.OutStream.STDERR;
-import static com.github.mbeier1406.SVM.syscalls.IO.OutStream.STDOUT;
-import static com.github.mbeier1406.SVM.syscalls.IO.OutStream.TEMP_FILE;
+import static com.github.mbeier1406.svm.syscalls.IO.OutStream.NULL_FILE;
+import static com.github.mbeier1406.svm.syscalls.IO.OutStream.STDERR;
+import static com.github.mbeier1406.svm.syscalls.IO.OutStream.STDOUT;
+import static com.github.mbeier1406.svm.syscalls.IO.OutStream.TEMP_FILE;
 import static java.util.Objects.requireNonNull;
 
 import java.io.IOException;
@@ -12,8 +12,8 @@ import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.github.mbeier1406.SVM.SVM;
-import com.github.mbeier1406.SVM.SVMException;
+import com.github.mbeier1406.svm.SVM;
+import com.github.mbeier1406.svm.SVMException;
 
 /**
  * Gibt die Zeichenkette an der Adresse Parameter 2 der Länge Parameter 3

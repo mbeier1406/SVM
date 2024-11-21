@@ -1,4 +1,4 @@
-package com.github.mbeier1406.SVM;
+package com.github.mbeier1406.svm;
 
 /**
  * Definiert die Schnittstelle zum (Haupt-)Speicher der {@linkplain SVM}. Die Größe des Hauptspeichers

@@ -1,4 +1,4 @@
-package com.github.mbeier1406.SVM.syscalls;
+package com.github.mbeier1406.svm.syscalls;
 
 import static java.util.Objects.requireNonNull;
 
@@ -9,15 +9,15 @@ import java.util.Set;
 
 import org.reflections.Reflections;
 
-import com.github.mbeier1406.SVM.ALU;
-import com.github.mbeier1406.SVM.MEM;
-import com.github.mbeier1406.SVM.instructions.Instruction;
+import com.github.mbeier1406.svm.ALU;
+import com.github.mbeier1406.svm.MEM;
+import com.github.mbeier1406.svm.instructions.InstructionInterface;
 
 public class SyscallFactory {
 
 	/**
 	 * Diese Map enthält alle {@linkplain SyscallInterface Syscalls} mit derem Code als Wort
-	 * im {@linkplain MEM}, die von {@linkplain Instruction Instructions} in der {@linkplain ALU}
+	 * im {@linkplain MEM}, die von {@linkplain InstructionInterface Instructions} in der {@linkplain ALU}
 	 * ausgeführt werden können.
 	 */
 	public static final Map<Byte, SyscallInterface<Short>> SYSCALLS;
@@ -30,7 +30,7 @@ public class SyscallFactory {
 	/** Lädt alle Systemaufrufe für {@linkplain com.github.mbeier1406.SVM.instructions.Syscall} */
 	public static Map<Byte, SyscallInterface<Short>> getSyscalls() {
 		try {
-			Set<Class<?>> syscallClasses = new Reflections("com.github.mbeier1406.SVM.syscalls").getTypesAnnotatedWith(Syscall.class);
+			Set<Class<?>> syscallClasses = new Reflections("com.github.mbeier1406.svm.syscalls").getTypesAnnotatedWith(Syscall.class);
 			final Map<Byte, SyscallInterface<Short>> syscalls = new HashMap<>();
 			syscallClasses.forEach(syscallClass -> {
 				try {

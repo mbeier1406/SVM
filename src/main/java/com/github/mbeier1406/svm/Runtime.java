@@ -1,7 +1,7 @@
-package com.github.mbeier1406.SVM;
+package com.github.mbeier1406.svm;
 
-import com.github.mbeier1406.SVM.syscalls.IO;
-import com.github.mbeier1406.SVM.syscalls.SyscallInterface;
+import com.github.mbeier1406.svm.syscalls.IO;
+import com.github.mbeier1406.svm.syscalls.SyscallInterface;
 
 /**
  * Diese Schnittstelle definiert die Funktionen der Laufzeitumgebung (Betriebssystem)

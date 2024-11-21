@@ -1,4 +1,4 @@
-package com.github.mbeier1406.SVM;
+package com.github.mbeier1406.svm;
 
 import java.net.URL;
 

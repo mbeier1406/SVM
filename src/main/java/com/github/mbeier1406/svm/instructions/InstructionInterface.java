@@ -2,6 +2,7 @@ package com.github.mbeier1406.svm.instructions;
 
 import com.github.mbeier1406.svm.ALU;
 import com.github.mbeier1406.svm.MEM;
+import com.github.mbeier1406.svm.SVMException;
 
 /**
  * Definiert das Interface zu einem von der {@linkplain ALU} ausführbaren Maschinebefehl.
@@ -27,6 +28,18 @@ public interface InstructionInterface<T> {
 	 * @return Länge der Instruktion in Anzahl Speicherworten
 	 */
 	public T getLength();
+
+	/**
+	 * Führt den Maschinenbefehl/die Instruktion aus. Als Parameter werden die im
+	 * Hauptspeicher direkt dem Byte mit dem Maschinenbefehl ({@linkplain Instruction#code()}
+	 * folgendes Bytes übergeben. Die Länge dieses Feldes ist maschinebefehlsspezifisch und
+	 * ergibt sich aus der Ausgabe von <code>{@linkplain #getLength()}-1</code> (minus eins
+	 * da dieses Byte den Maschinebefehl identifiziert.
+	 * @param params
+	 * @return ein befehlsspezifichen Return-Code
+	 * @throws bei technischen (internen) Fehlern
+	 */
+	public int execute(final byte[] params) throws SVMException;
 
 	/**
 	 * Da die Maschinenbefehle Zugriff auf bestimmte Funktionen der ALU benötigen, erhalten sie alle

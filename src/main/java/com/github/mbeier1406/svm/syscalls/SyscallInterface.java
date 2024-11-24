@@ -4,6 +4,7 @@ import com.github.mbeier1406.svm.ALU;
 import com.github.mbeier1406.svm.MEM;
 import com.github.mbeier1406.svm.SVM;
 import com.github.mbeier1406.svm.SVMException;
+import com.github.mbeier1406.svm.instructions.IntInterface;
 
 /**
  * Definiert das Interface zu einem Aufruf in die Laufzeitumgebung.
@@ -12,14 +13,14 @@ import com.github.mbeier1406.svm.SVMException;
  * @param <T> Die Wortgröße der {@linkplain ALU} und des Speicher {@linkplain MEM}
  * @see Syscall
  */
-public interface SyscallInterface<T> {
+public interface SyscallInterface<T> extends IntInterface<T> {
 
 	/**
 	 * Definiert alle bekannten Systemaufrufe, d. h. die Funktionen
 	 * aus der Laufzeitumgebung der {@linkplain SVM}, auf die ein
 	 * ausgeführtes Programm Zugriff hat (z. B. I/O usw.).
 	 * Alle bekannten Systemaufrufe werden mit ihrem Code (Parameter für
-	 * {@linkplain com.github.mbeier1406.SVM.instructions.Syscall}.
+	 * {@linkplain com.github.mbeier1406.Int.instructions.Syscall}.
 	 * aufgelistet.
 	 */
 	public static enum Codes {

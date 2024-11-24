@@ -15,12 +15,20 @@ public interface ALU<T> {
 	 */
 	public interface Instruction<T> {
 		/**
-		 * Dieser Aufruf wird von der Instruktion {@linkplain com.github.mbeier1406.SVM.instructions.Syscall}
+		 * Dieser Aufruf wird von der Instruktion {@linkplain com.github.mbeier1406.Int.instructions.Syscall}
 		 * in Zusammenhang mit dem Syscall {@linkplain com.github.mbeier1406.SVM.syscalls.Exit} verwendet,
 		 * um das Stop-Flag zum Beenden der SVM zu bewirken.
 		 * @param returnCode mit welchem Return-Code die SVM beendet werdne soll
 		 */
 		public void setStopFlag(T returnCode);
+
+		/**
+		 * Liefert den Wert, den das angegebene Register enthält (1..).
+		 * @param register Nummer des registers
+		 * @return Den Wert des Registers
+		 * @throws SVMException wenn ein ungültiges Register angegeben wird
+		 */
+		public T getRegisterValue(int register) throws SVMException;
 	}
 
 	/**

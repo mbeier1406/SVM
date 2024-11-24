@@ -12,6 +12,8 @@ import org.reflections.Reflections;
 import com.github.mbeier1406.svm.ALU;
 import com.github.mbeier1406.svm.MEM;
 import com.github.mbeier1406.svm.instructions.InstructionInterface;
+import com.github.mbeier1406.svm.instructions.Int;
+import com.github.mbeier1406.svm.instructions.IntInterface;
 
 public class SyscallFactory {
 
@@ -27,7 +29,7 @@ public class SyscallFactory {
 		SYSCALLS = getSyscalls();
 	}
 
-	/** Lädt alle Systemaufrufe für {@linkplain com.github.mbeier1406.SVM.instructions.Syscall} */
+	/** Lädt alle Systemaufrufe für {@linkplain com.github.mbeier1406.Int.instructions.Syscall} */
 	public static Map<Byte, SyscallInterface<Short>> getSyscalls() {
 		try {
 			Set<Class<?>> syscallClasses = new Reflections("com.github.mbeier1406.svm.syscalls").getTypesAnnotatedWith(Syscall.class);
@@ -55,6 +57,13 @@ public class SyscallFactory {
 			s.getValue().setAlu(requireNonNull(alu, "alu"));
 			s.getValue().setMemory(requireNonNull(mem, "mem"));
 		});
+	}
+
+	/** Liefert die Syscalls im Typ für die {@linkplain Int}-Instruktion */
+	public static Map<Byte, IntInterface<Short>> toIntMap() {
+		Map<Byte, IntInterface<Short>> intMap = new HashMap<>();
+		SyscallFactory.SYSCALLS.entrySet().stream().forEach(e -> intMap.put(e.getKey(), e.getValue()));
+		return intMap;
 	}
 
 }

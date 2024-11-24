@@ -1,6 +1,10 @@
 package com.github.mbeier1406.svm.instructions;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.github.mbeier1406.svm.ALU;
+import com.github.mbeier1406.svm.SVMException;
 
 /**
  * <b>NOP</b> No Operation - die Instruktions macht nichts,
@@ -8,6 +12,8 @@ import com.github.mbeier1406.svm.ALU;
  */
 @Instruction(code = 0x1)
 public class Nop extends InstructionBase implements InstructionInterface<Short> {
+
+	public static final Logger LOGGER = LogManager.getLogger(Nop.class);
 
 	/**
 	 * <i>NOP</i> benutzt keinen Parameter und kommt daher mit einem Speicherwort
@@ -22,6 +28,14 @@ public class Nop extends InstructionBase implements InstructionInterface<Short> 
 	@Override
 	public Short getLength() {
 		return 1;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public int execute(byte[] params) throws SVMException {
+		if ( params != null ) throw new SVMException("NOP erwartet keinen Parameter!");
+		LOGGER.trace("NOP");
+		return 0; // NOP tut nichts
 	}
 
 }

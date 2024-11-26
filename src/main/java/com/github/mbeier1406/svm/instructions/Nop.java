@@ -33,8 +33,7 @@ public class Nop extends InstructionBase implements InstructionInterface<Short> 
 	/** {@inheritDoc} */
 	@Override
 	public int execute(byte[] params) throws SVMException {
-		if ( params != null ) throw new SVMException("NOP erwartet keinen Parameter!");
-		LOGGER.trace("NOP");
+		checkParameter(params, 0);
 		return 0; // NOP tut nichts
 	}
 

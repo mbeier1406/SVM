@@ -1,0 +1,31 @@
+package com.github.mbeier1406.svm.instructions;
+
+import static com.github.mbeier1406.svm.instructions.InstructionFactory.INSTRUCTIONS;
+import static com.github.mbeier1406.svm.instructions.InstructionInterface.Codes.NOP;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import com.github.mbeier1406.svm.SVMException;
+
+/**
+ * Tests für die Klasse {@linkplain Nop}.
+ */
+public class NopTest extends TestBase {
+
+	/** Instruktion setzen */
+	@BeforeEach
+	public void init() {
+		this.instruction = INSTRUCTIONS.get(NOP.getCode());
+	}
+
+	/** Korrekter Aufruf erwartet 0 als Return-Code */
+	@Test
+	public void testeKorrektenParameter() throws SVMException {
+		int code = this.instruction.execute(new byte[0]);
+		assertThat(code, equalTo(0));
+	}
+
+}

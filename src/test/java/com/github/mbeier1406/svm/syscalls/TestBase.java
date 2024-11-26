@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.github.mbeier1406.svm.ALU;
 import com.github.mbeier1406.svm.MEM;
+import com.github.mbeier1406.svm.SVMException;
 import com.github.mbeier1406.svm.impl.MEMShort;
 
 /**
@@ -25,7 +26,10 @@ public abstract class TestBase {
 		public void setStopFlag(Short code) {
 			returnCode = code;
 		}
-		
+		@Override
+		public Short getRegisterValue(int register) throws SVMException {
+			return null;
+		}		
 	};
 
 	/** Der Speicher, mit dem der Syscall ausgeführt wird */

@@ -21,6 +21,26 @@ import com.github.mbeier1406.svm.SVMException;
 public interface InstructionInterface<T> {
 
 	/**
+	 * Diese Aufzählung bietet eine Zuordnung des Codes (das byte im {@linkplain MEM Speicher},
+	 * das die nächste, auszuführende {@linkplain InstructionInterface Instruktion} enthält)
+	 * zu alle bekannten Maschinenbefehlen/Instruktionen.
+	 * Die {@linkplain InstructionFactory} kann prinzipiell auch weitere Instruktionen liefern,
+	 * von diesen müsste dann aber der entsprechende Code über die Annotation {@linkplain Instruction#code()}
+	 * ausgelesen werden.
+	 */
+	public static enum Codes {
+		NOP((byte) Nop.class.getAnnotation(Instruction.class).code()),
+		INT((byte) Int.class.getAnnotation(Instruction.class).code());
+		private byte code;
+		private Codes(byte code) {
+			this.code = code;
+		}
+		public byte getCode() {
+			return this.code;
+		}
+	}
+
+	/**
 	 * Liefert die Länge des Maschinenbefehls (mit seinen Parametern) in Anzahl
 	 * Speicherworten (Typ <b>T</b>). Der Instructionpointer der {@linkplain ALU}
 	 * wird nach Ausführung des Befehls um die angegebene Anzahl der Speicherworte

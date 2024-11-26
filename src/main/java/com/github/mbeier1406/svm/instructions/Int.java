@@ -55,8 +55,7 @@ public class Int extends InstructionBase implements InstructionInterface<Short>,
 	 * */
 	@Override
 	public int execute(byte[] params) throws SVMException {
-		if ( params == null ) throw new SVMException("params ist NULL!");
-		if ( params.length != 1 ) throw new SVMException("params: 1 Byte erwartet!");
+		checkParameter(params, 3);
 		byte code = params[0];
 		LOGGER.trace("INT: Modulcode='{}'", code);
 		var module = MODULES.get(code); // Das Byte nach der Instruktion setzt das Servicemodul

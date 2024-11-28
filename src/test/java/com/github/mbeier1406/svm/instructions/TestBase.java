@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import com.github.mbeier1406.svm.ALU;
 import com.github.mbeier1406.svm.MEM;
 import com.github.mbeier1406.svm.SVMException;
+import com.github.mbeier1406.svm.syscalls.SyscallFactory;
 
 /**
  * Basisfunktionen für alle Tests für {@linkplain InstructionInterface Instructions}.
@@ -68,6 +69,7 @@ public abstract class TestBase {
 
 	/** Lädt alle Instructions und initialisiert sie mit ALU und Speicher und fügt ein paar Strings ein */
 	protected TestBase() {
+		SyscallFactory.init(alu, mem);
 		InstructionFactory.init(alu, mem);
 		TestBase.stopFlag = 0; // Definierte Testumgebung schaffen
 		TestBase.returnCode = 0;

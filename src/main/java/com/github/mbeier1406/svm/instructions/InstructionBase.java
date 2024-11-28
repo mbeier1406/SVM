@@ -2,6 +2,8 @@ package com.github.mbeier1406.svm.instructions;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.Arrays;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -42,8 +44,9 @@ public abstract class InstructionBase implements InstructionInterface<Short> {
 
 	/** Protokolliert den Aufruf der Instruktion und prüft die Parameterliste */
 	protected void checkParameter(byte[] params, int len) throws SVMException {
-		LOGGER.trace("{}: '{}'", this.getClass().getSimpleName(), params);
-		if ( requireNonNull(params, "param1").length != len ) throw new SVMException(this.getClass().getSimpleName()+" erwartet "+len+" Parameter!");
+		LOGGER.trace("{}: erwartete Parameterlänge {}, erhalten '{}'", this.getClass().getSimpleName(), len, params);
+		if ( requireNonNull(params, "param1").length != len )
+			throw new SVMException("'"+this.getClass().getSimpleName()+"' erwartet "+len+" Parameter; erhalten '"+Arrays.toString(params)+"'!");
 	}
 
 }

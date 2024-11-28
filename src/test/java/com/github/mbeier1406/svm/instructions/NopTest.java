@@ -4,6 +4,7 @@ import static com.github.mbeier1406.svm.instructions.InstructionFactory.INSTRUCT
 import static com.github.mbeier1406.svm.instructions.InstructionInterface.Codes.NOP;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,6 +27,13 @@ public class NopTest extends TestBase {
 	public void testeKorrektenParameter() throws SVMException {
 		int code = this.instruction.execute(new byte[0]);
 		assertThat(code, equalTo(0));
+	}
+
+	/** Aufruf mit zu vielen Parametern löst einen Fehler aus. */
+	@Test
+	public void testeFehlerhaftenParameter() throws SVMException {
+		var ex = assertThrows(SVMException.class, () -> this.instruction.execute(new byte[1]));
+		assertThat(ex.getLocalizedMessage(), equalTo("'Nop' erwartet 0 Parameter; erhalten '[0]'!"));
 	}
 
 }

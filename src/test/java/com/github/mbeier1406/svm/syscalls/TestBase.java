@@ -22,13 +22,22 @@ public abstract class TestBase {
 
 	/** Die ALU, mit dem der Syscall ausgeführt wird */
 	protected final ALU.Instruction<Short> alu = new ALU.Instruction<Short>() {
+		private short[] register = new short[4];
 		@Override
-		public void setStopFlag(Short code) {
-			returnCode = code;
+		public void setStopFlag() {
+			returnCode = this.register[0];
 		}
 		@Override
+		public void setRegisterValue(int register, Short value) throws SVMException {
+			if ( register < 0 || register >= this.register.length )
+				throw new SVMException("register="+register);
+			this.register[register] = value;
+		}		
+		@Override
 		public Short getRegisterValue(int register) throws SVMException {
-			return null;
+			if ( register < 0 || register >= this.register.length )
+				throw new SVMException("register="+register);
+			return this.register[register];
 		}		
 	};
 

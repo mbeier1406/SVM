@@ -18,20 +18,40 @@ public abstract class TestBase {
 	/** Das zu testende Objekt */
 	protected InstructionInterface<Short> instruction;
 
+	/** Für den Testfall {@linkplain Int} mit Code (Syscall) 0x1 -> Exit */
+	protected static int stopFlag = 0;
+
+	/** Für den Testfall {@linkplain Int} mit Code (Syscall) 0x1 -> Returncode für den Exit */
+	protected static int returnCode = 0;
+
 	/** Die ALU, mit dem der Syscall ausgeführt wird */
 	protected final ALU.Instruction<Short> alu = new ALU.Instruction<Short>() {
+		private short[] register = new short[4];
 		@Override
-		public void setStopFlag(Short code) {
+		public void setStopFlag() {
+			TestBase.stopFlag = 0x1;
+			TestBase.returnCode = this.register[0];
 		}
 		@Override
+		public void setRegisterValue(int register, Short value) throws SVMException {
+			if ( register < 0 || register >= this.register.length )
+				throw new SVMException("register="+register);
+			this.register[register] = value;
+		}		
+		@Override
 		public Short getRegisterValue(int register) throws SVMException {
-			return null;
+			if ( register < 0 || register >= this.register.length )
+				throw new SVMException("register="+register);
+			return this.register[register];
 		}		
 	};
 
+	/** Größe des Speichers {@linkplain MEM} ist {@value} Speicherworte. */
+	public static final int MEMSIZE = 100;
+
 	/** Der Speicher, mit dem der Syscall ausgeführt wird */
 	protected final MEM.Instruction<Short> mem = new MEM.Instruction<Short>() {
-		private Short[] ram = new Short[100];
+		private Short[] ram = new Short[MEMSIZE];
 		@Override
 		public Short read(int addr) throws SVMException {
 			if ( addr < 0 || addr >= ram.length )
@@ -46,9 +66,22 @@ public abstract class TestBase {
 		}
 	};
 
-	/** Lädt alle Instructions und initialisiert sie mit ALU und Speicher */
+	/** Lädt alle Instructions und initialisiert sie mit ALU und Speicher und fügt ein paar Strings ein */
 	protected TestBase() {
 		InstructionFactory.init(alu, mem);
+		TestBase.stopFlag = 0; // Definierte Testumgebung schaffen
+		TestBase.returnCode = 0;
+		/* Der Speicher, mit dem der int/Syscall ausgeführt wird */
+		try {
+			mem.write(0, (short) 'a');
+			mem.write(1, (short) 'b');
+			mem.write(2, (short) 'c');
+			mem.write(3, (short) '\n');
+			mem.write(4, (short) 'x');
+			mem.write(5, (short) '\n');
+		} catch (SVMException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/** Prüft die Exception für param1 == <b>null</b> */

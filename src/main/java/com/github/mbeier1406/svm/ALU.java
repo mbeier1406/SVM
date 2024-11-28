@@ -17,13 +17,22 @@ public interface ALU<T> {
 		/**
 		 * Dieser Aufruf wird von der Instruktion {@linkplain com.github.mbeier1406.Int.instructions.Syscall}
 		 * in Zusammenhang mit dem Syscall {@linkplain com.github.mbeier1406.SVM.syscalls.Exit} verwendet,
-		 * um das Stop-Flag zum Beenden der SVM zu bewirken.
-		 * @param returnCode mit welchem Return-Code die SVM beendet werdne soll
+		 * um das Stop-Flag zum Beenden der SVM zu bewirken.<br/>
+		 * Der <i>Return-Code</i> mit welchem die SVM beendet werden soll, wird aus dem Register
+		 * {@linkplain #getRegisterValue(int)} <b>0</b> gelesen und muss entsprechend zuvor gesetzt sein.
 		 */
-		public void setStopFlag(T returnCode);
+		public void setStopFlag();
 
 		/**
-		 * Liefert den Wert, den das angegebene Register enthält (1..).
+		 * Setzt das angegebene Register auf den übergebenen Wert.
+		 * @param register Das Register (0..)
+		 * @param value Den Wert
+		 * @throws SVMException wenn ein ungültiges Register angegeben wird
+		 */
+		public void setRegisterValue(int register, T value) throws SVMException;
+
+		/**
+		 * Liefert den Wert, den das angegebene Register enthält (10..).
 		 * @param register Nummer des registers
 		 * @return Den Wert des Registers
 		 * @throws SVMException wenn ein ungültiges Register angegeben wird

@@ -13,16 +13,19 @@ public class MEMShort implements MEM<Short>, MEM.Instruction<Short> {
 	/** Definiert den Speicher */
 	public final Short[] mem = new Short[1000];
 
+	/** {@inheritDoc} */
 	@Override
 	public int getHighAddr() {
 		return this.mem.length;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Short read(int addr) throws SVMException {
 		return this.mem[checkAddr(addr)];
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void write(int addr, Short data) throws SVMException {
 		this.mem[checkAddr(addr)] = data;

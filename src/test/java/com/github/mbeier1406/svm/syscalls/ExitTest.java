@@ -2,13 +2,13 @@ package com.github.mbeier1406.svm.syscalls;
 
 import static com.github.mbeier1406.svm.syscalls.SyscallFactory.SYSCALLS;
 import static com.github.mbeier1406.svm.syscalls.SyscallInterface.Codes.EXIT;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.github.mbeier1406.svm.ALUMock;
 import com.github.mbeier1406.svm.SVMException;
 
 /**
@@ -28,9 +28,9 @@ public class ExitTest extends TestBase {
 	/** Testet, ob der Exitcode gestzt wird */
 	@Test
 	public void testeSyscall() throws SVMException {
-		assertThat(returnCode, equalTo((short) 0));
+		assertThat(ALUMock.returnCode, equalTo(0));
 		syscall.execute((short) 1, null, null);
-		assertThat(returnCode, equalTo((short) 1));
+		assertThat(ALUMock.returnCode, equalTo(1));
 	}
 
 }

@@ -7,7 +7,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 
 import com.github.mbeier1406.svm.ALU;
+import com.github.mbeier1406.svm.ALUMock;
 import com.github.mbeier1406.svm.MEM;
+import com.github.mbeier1406.svm.MEMMock;
 import com.github.mbeier1406.svm.SVMException;
 import com.github.mbeier1406.svm.syscalls.SyscallFactory;
 
@@ -19,60 +21,18 @@ public abstract class TestBase {
 	/** Das zu testende Objekt */
 	protected InstructionInterface<Short> instruction;
 
-	/** Für den Testfall {@linkplain Int} mit Code (Syscall) 0x1 -> Exit */
-	protected static int stopFlag = 0;
+	/** Die Test-ALU mit Zugriff auf interne Variablen */
+	protected ALU.Instruction<Short> alu = new ALUMock();
 
-	/** Für den Testfall {@linkplain Int} mit Code (Syscall) 0x1 -> Returncode für den Exit */
-	protected static int returnCode = 0;
-
-	/** Die ALU, mit dem der Syscall ausgeführt wird */
-	protected final ALU.Instruction<Short> alu = new ALU.Instruction<Short>() {
-		private short[] register = new short[4];
-		@Override
-		public void setStopFlag() {
-			TestBase.stopFlag = 0x1;
-			TestBase.returnCode = this.register[0];
-		}
-		@Override
-		public void setRegisterValue(int register, Short value) throws SVMException {
-			if ( register < 0 || register >= this.register.length )
-				throw new SVMException("register="+register);
-			this.register[register] = value;
-		}		
-		@Override
-		public Short getRegisterValue(int register) throws SVMException {
-			if ( register < 0 || register >= this.register.length )
-				throw new SVMException("register="+register);
-			return this.register[register];
-		}		
-	};
-
-	/** Größe des Speichers {@linkplain MEM} ist {@value} Speicherworte. */
-	public static final int MEMSIZE = 100;
-
-	/** Der Speicher, mit dem der Syscall ausgeführt wird */
-	protected final MEM.Instruction<Short> mem = new MEM.Instruction<Short>() {
-		private Short[] ram = new Short[MEMSIZE];
-		@Override
-		public Short read(int addr) throws SVMException {
-			if ( addr < 0 || addr >= ram.length )
-				throw new SVMException("addr="+addr);
-			return ram[addr];
-		}
-		@Override
-		public void write(int addr, Short data) throws SVMException {
-			if ( addr < 0 || addr >= ram.length )
-				throw new SVMException("addr="+addr);
-			ram[addr] = data;
-		}
-	};
+	/** das test-MEM */
+	protected MEM.Instruction<Short> mem = new MEMMock();
 
 	/** Lädt alle Instructions und initialisiert sie mit ALU und Speicher und fügt ein paar Strings ein */
 	protected TestBase() {
 		SyscallFactory.init(alu, mem);
 		InstructionFactory.init(alu, mem);
-		TestBase.stopFlag = 0; // Definierte Testumgebung schaffen
-		TestBase.returnCode = 0;
+		ALUMock.stopFlag = 0; // Definierte Testumgebung schaffen
+		ALUMock.returnCode = 0;
 		/* Der Speicher, mit dem der int/Syscall ausgeführt wird */
 		try {
 			mem.write(0, (short) 'a');

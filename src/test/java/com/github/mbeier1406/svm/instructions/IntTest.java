@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.github.mbeier1406.svm.ALUMock;
 import com.github.mbeier1406.svm.SVMException;
 
 /**
@@ -25,22 +26,32 @@ public class IntTest extends TestBase {
 	/** Testet den Syscall Exit */
 	@Test
 	public void TesteIntSyscallExit() throws SVMException {
-		assertThat(TestBase.stopFlag, equalTo(0));
-		assertThat(TestBase.returnCode, equalTo(0));
+		assertThat(ALUMock.stopFlag, equalTo(0));
+		assertThat(ALUMock.returnCode, equalTo(0));
 		this.alu.setRegisterValue(0, (short) 0x1); // Funktion Exit
 		this.alu.setRegisterValue(1, (short) 0x3); // ReturnCode 3
 		this.instruction.execute(new byte[] { (byte) 0x1 /* Modul Syscalls */ });
-		assertThat(TestBase.stopFlag, equalTo(1));
-		assertThat(TestBase.returnCode, equalTo(3));
+		assertThat(ALUMock.stopFlag, equalTo(1));
+		assertThat(ALUMock.returnCode, equalTo(3));
+	}
+
+	/** Testet den Syscall IO mit Ausgabe auf den Bildschirm */
+	@Test
+	public void TesteIntSyscallIO() throws SVMException {
+		this.alu.setRegisterValue(0, (short) 0x2); // Funktion IO
+		this.alu.setRegisterValue(1, (short) 0x1); // Ausgabekanal 1
+		this.alu.setRegisterValue(2, (short) 0x0); // Ausgabe ab Adresse 0
+		this.alu.setRegisterValue(3, (short) 0x6); // X Bytes ausgeben
+		this.instruction.execute(new byte[] { (byte) 0x1 /* Modul Syscalls */ });
 	}
 
 	/** Aufruf mit zu vielen/wenigen Parametern löst einen Fehler aus. */
 	@Test
 	public void testeFehlerhaftenParameter() throws SVMException {
-		var ex = assertThrows(SVMException.class, () -> this.instruction.execute(new byte[2]));
-		assertThat(ex.getLocalizedMessage(), equalTo("'Int' erwartet 3 Parameter; erhalten '[0, 0]'!"));
-		ex = assertThrows(SVMException.class, () -> this.instruction.execute(new byte[4]));
-		assertThat(ex.getLocalizedMessage(), equalTo("'Int' erwartet 3 Parameter; erhalten '[0, 0, 0, 0]'!"));
+		var ex = assertThrows(SVMException.class, () -> this.instruction.execute(new byte[0]));
+		assertThat(ex.getLocalizedMessage(), equalTo("'Int' erwartet 1 Parameter; erhalten '[]'!"));
+		ex = assertThrows(SVMException.class, () -> this.instruction.execute(new byte[2]));
+		assertThat(ex.getLocalizedMessage(), equalTo("'Int' erwartet 1 Parameter; erhalten '[0, 0]'!"));
 	}
 
 }

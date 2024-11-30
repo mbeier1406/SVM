@@ -12,6 +12,9 @@ import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.github.mbeier1406.svm.SVM;
 import com.github.mbeier1406.svm.SVMException;
 
@@ -21,6 +24,8 @@ import com.github.mbeier1406.svm.SVMException;
  */
 @Syscall(code = 0x2)
 public class IO extends SyscallBase implements SyscallInterface<Short> {
+
+	public static final Logger LOGGER = LogManager.getLogger(IO.class);
 
 	/** Definiert die Audgabekanäle, in die standardmäßg geschrieben werden kann */
 	public static enum OutStream { NULL_FILE, STDOUT, STDERR, TEMP_FILE };
@@ -49,6 +54,7 @@ public class IO extends SyscallBase implements SyscallInterface<Short> {
 	/** {@inheritDoc} */
 	@Override
 	public int execute(Short param1, Short param2, Short param3) throws SVMException {
+		LOGGER.trace("param1={}; param2={}, param3={}", param1, param2, param3);
 		PrintStream out = requireNonNull(IO_MAP.get(requireNonNull(param1, "param1")), "Output '"+param1+"'!");
 		for ( short i=0; i < requireNonNull(param3, "param3"); i++ )
 			out.print((char) requireNonNull(super.mem, "mem").read(requireNonNull(param2, "param2")+i).shortValue());

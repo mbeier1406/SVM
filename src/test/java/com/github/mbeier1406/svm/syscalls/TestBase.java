@@ -5,9 +5,9 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.github.mbeier1406.svm.ALU;
+import com.github.mbeier1406.svm.ALUMock;
 import com.github.mbeier1406.svm.MEM;
-import com.github.mbeier1406.svm.SVMException;
-import com.github.mbeier1406.svm.impl.MEMShort;
+import com.github.mbeier1406.svm.MEMMock;
 
 /**
  * Basisfunktionen für alle Tests für {@linkplain SyscallInterface Syscalls}.
@@ -17,32 +17,12 @@ public abstract class TestBase {
 	/** Das zu testende Objekt */
 	protected SyscallInterface<Short> syscall;
 
-	/** Für den Test {@linkplain ExitTest} */
-	protected Short returnCode = 0;
+	/** Die Test-ALU mit Zugriff auf interne Variablen */
+	protected ALU.Instruction<Short> alu = new ALUMock();
 
-	/** Die ALU, mit dem der Syscall ausgeführt wird */
-	protected final ALU.Instruction<Short> alu = new ALU.Instruction<Short>() {
-		private short[] register = new short[4];
-		@Override
-		public void setStopFlag() {
-			returnCode = this.register[0];
-		}
-		@Override
-		public void setRegisterValue(int register, Short value) throws SVMException {
-			if ( register < 0 || register >= this.register.length )
-				throw new SVMException("register="+register);
-			this.register[register] = value;
-		}		
-		@Override
-		public Short getRegisterValue(int register) throws SVMException {
-			if ( register < 0 || register >= this.register.length )
-				throw new SVMException("register="+register);
-			return this.register[register];
-		}		
-	};
+	/** das test-MEM */
+	protected MEM.Instruction<Short> mem = new MEMMock();
 
-	/** Der Speicher, mit dem der Syscall ausgeführt wird */
-	protected final MEM.Instruction<Short> mem = new MEMShort();
 
 	/** Lädt alle Syscalls und initialisiert sie mit ALU und Speicher */
 	protected TestBase() {

@@ -87,16 +87,6 @@ public class ALUShort implements ALU<Short>, Instruction<Short> {
 		return (this.statusRegister & -128) == -128;
 	}
 
-	private String getBinaerDarstellung(byte rx) {
-		byte maske = 0b00000001;
-		var sb = new StringBuilder("        ");
-		for ( int i=0; i < 8; i++ ) {
-			sb.setCharAt(7-i, (rx & maske) == 0 ? '0' : '1');
-			maske = (byte) (maske << 1);
-		}
-		return sb.toString();
-	}
-
 	@Override
 	public String toString() {
 		var sb = new StringBuilder(100);

@@ -16,7 +16,7 @@ public class MEMShort implements MEM<Short>, MEM.Instruction<Short> {
 	/** {@inheritDoc} */
 	@Override
 	public int getHighAddr() {
-		return this.mem.length;
+		return this.mem.length-1;
 	}
 
 	/** {@inheritDoc} */
@@ -38,7 +38,7 @@ public class MEMShort implements MEM<Short>, MEM.Instruction<Short> {
 	 * @throws SVMException bei ungültigen Zugriffen
 	 */
 	private int checkAddr(int addr) throws SVMException {
-		if ( addr < 0 || addr >= getHighAddr() )
+		if ( addr < 0 || addr > getHighAddr() )
 			throw new SVMException("Ungültige Adresse: "+addr+" (max. "+getHighAddr()+")!");
 		return addr;
 	}

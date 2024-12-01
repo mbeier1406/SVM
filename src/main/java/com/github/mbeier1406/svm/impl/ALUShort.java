@@ -17,7 +17,7 @@ public class ALUShort implements ALU<Short>, Instruction<Short> {
 
 
 	/** Der Hauptspeicher für Programm und Daten */
-	private final MEM mem;
+	private final MEMShort mem;
 
 	/** Die Arbeitsregister */
 	private short[] register = new short[4];
@@ -38,9 +38,16 @@ public class ALUShort implements ALU<Short>, Instruction<Short> {
 	private int ip;
 
 
-	public ALUShort(MEM<Short> mem) {
+	public ALUShort(MEMShort mem) {
 		this.mem = mem;
 		this.init();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void init() {
+		this.statusRegister = 0;
+		this.ip = this.mem.getHighAddr(); // Programme werdne "von oben nach unten" ausgeführt
 	}
 
 	/** {@inheritDoc} */
@@ -67,16 +74,10 @@ public class ALUShort implements ALU<Short>, Instruction<Short> {
 
 	/** {@inheritDoc} */
 	@Override
-	public void init() {
-		this.statusRegister = 0;
-		this.ip = this.mem.getHighAddr(); // Programme werdne "von oben nach unten" ausgeführt
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public int start() throws SVMException {
 		for ( ; !isStopped(); ) {
-			
+			short instr = mem.read(this.ip); // Der aktuelle Machinenbefehl, ein Speicherwort = 1 Byte (Instruction) + ggf. 1 Byte Parametr 1
+			LOGGER.trace("instr={} ({})", instr, getBinaerDarstellung(instr));
 		}
 		return 0;
 	}		
@@ -92,6 +93,17 @@ public class ALUShort implements ALU<Short>, Instruction<Short> {
 		var sb = new StringBuilder(100);
 		sb.append("ALU:\n\tStatus-Register: ");
 		sb.append(getBinaerDarstellung(statusRegister));
+		sb.append("\n\tInstruktion: ");
+		Short instr = null;
+		try {
+			instr = mem.read(this.ip);
+		} catch (SVMException e) {
+			sb.append(e.getLocalizedMessage());
+		}
+		sb.append(instr);
+		sb.append(" (");
+		sb.append(getBinaerDarstellung(instr));
+		sb.append(")");
 		sb.append("\n");
 		return sb.toString();
 	}

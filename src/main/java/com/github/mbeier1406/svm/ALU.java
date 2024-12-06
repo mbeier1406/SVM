@@ -1,5 +1,7 @@
 package com.github.mbeier1406.svm;
 
+import com.github.mbeier1406.svm.instructions.InstructionInterface;
+
 /**
  * Definiert die Schnittstelle zu Arithmetisch-, logischen Einheit (ALU),
  * also zur CPU der SVM. Die in der ALU verwendeten Register sollen der Einfachheit
@@ -56,9 +58,5 @@ public interface ALU<T> {
 	 * @throws SVMException Falls bei der Ausführung des Programms ein Fehler auftrat
 	 */
 	public int start() throws SVMException;
-
-	public default <T extends Byte> byte getInstruction(T instr, int len) {
-		return (byte) (instr >> len);
-	}
 
 }

@@ -54,4 +54,14 @@ public interface MEM<T> {
 		return 0;
 	}
 
+	/**
+	 * Liefert den Inhalt des Speichers in {@linkplain BinaerDarstellung} an einer
+	 * vorgegebenen Adresse mit einer definierten Länge in Binärdarstellung.
+	 * @param addr Adresse, ab der der Inhalt ausgegeben werdne soll
+	 * @param len Länge der Ausgabe in Speicherwörtern
+	 * @return den Inhalt als Binärstring
+	 * @throws SVMException wenn von einer ungültige Adresse gelesen wird
+	 */
+	public String getBinaryContentStringAt(int addr, int len) throws SVMException;
+
 }

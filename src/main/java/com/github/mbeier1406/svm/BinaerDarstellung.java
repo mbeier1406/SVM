@@ -2,8 +2,13 @@ package com.github.mbeier1406.svm;
 
 import org.apache.commons.lang.StringUtils;
 
+/**
+ * Gibt den Wert eines Registers der {@linkplain SVM} in Binärdarstellung aus.
+ * @param <T> Wortlänge der {@linkplain SVM}.
+ */
 public class BinaerDarstellung<T extends Number> {
 
+	/** Liefert den Wert eines Speicherworts als Binär-String */
 	public String getBinaerDarstellung(T val) {
 		if ( val == null ) return "null";
 		return switch (val) {
@@ -15,6 +20,7 @@ public class BinaerDarstellung<T extends Number> {
 		};
 	}
 
+	/** Liefert den Wert eines Speicherworts als Binär-String mit Wortlänge {@linkplain Byte} */
 	private String getBinaerDarstellung(Byte b, int sizeOfType) {
 		Byte maske = 1;
 		var sb = new StringBuilder(StringUtils.repeat(" ", sizeOfType));
@@ -25,6 +31,7 @@ public class BinaerDarstellung<T extends Number> {
 		return sb.toString();
 	}
 
+	/** Liefert den Wert eines Speicherworts als Binär-String mit Wortlänge {@linkplain Short} */
 	private String getBinaerDarstellung(Short s, int sizeOfType) {
 		Short maske = 1;
 		var sb = new StringBuilder(StringUtils.repeat(" ", sizeOfType));
@@ -35,6 +42,7 @@ public class BinaerDarstellung<T extends Number> {
 		return sb.toString();
 	}
 
+	/** Liefert den Wert eines Speicherworts als Binär-String mit Wortlänge {@linkplain Integer} */
 	private String getBinaerDarstellung(Integer j, int sizeOfType) {
 		Integer maske = 1;
 		var sb = new StringBuilder(StringUtils.repeat(" ", sizeOfType));
@@ -45,6 +53,7 @@ public class BinaerDarstellung<T extends Number> {
 		return sb.toString();
 	}
 
+	/** Liefert den Wert eines Speicherworts als Binär-String mit Wortlänge {@linkplain Long} */
 	private String getBinaerDarstellung(Long l, int sizeOfType) {
 		Long maske = 1L;
 		var sb = new StringBuilder(StringUtils.repeat(" ", sizeOfType));

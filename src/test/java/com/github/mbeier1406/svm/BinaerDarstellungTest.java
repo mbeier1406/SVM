@@ -18,6 +18,12 @@ public class BinaerDarstellungTest {
 
 	public static final Logger LOGGER = LogManager.getLogger(BinaerDarstellungTest.class);
 
+	/**Das zu testende Objekt Typ {@linkplain Byte} */
+	public static BinaerDarstellung<Byte> bdByte = new BinaerDarstellung<>();
+
+	/**Das zu testende Objekt Typ {@linkplain Short} */
+	public static BinaerDarstellung<Short> bdShort = new BinaerDarstellung<>();
+
 	/** Stellt sicher, dass bei der binären Darstellung eines Wertes das korrekte Ergebnis je Typ ermittelt wird */
 	@ParameterizedTest
 	@MethodSource("getTestParameter")
@@ -30,12 +36,12 @@ public class BinaerDarstellungTest {
 	/** Liefert die Testfälle */
 	public static Stream<Arguments> getTestParameter() {
 		return Stream.of(
-				Arguments.of(new BinaerDarstellung<Byte>(), (short) 1 , "0000000000000001"), // Tests für den Typ Short
-				Arguments.of(new BinaerDarstellung<Byte>(), (short) 257 , "0000000100000001"),
-				Arguments.of(new BinaerDarstellung<Byte>(), (short) 769 , "0000001100000001"),
-				Arguments.of(new BinaerDarstellung<Byte>(), (short) -31999 , "1000001100000001"),
-				Arguments.of(new BinaerDarstellung<Byte>(), (byte) 1 , "00000001"), // Tests für den Typ Byte
-				Arguments.of(new BinaerDarstellung<Byte>(), (byte) -1 , "11111111")
+				Arguments.of(bdShort, (short) 1 , "0000000000000001"), // Tests für den Typ Short
+				Arguments.of(bdShort, (short) 257 , "0000000100000001"),
+				Arguments.of(bdShort, (short) 769 , "0000001100000001"),
+				Arguments.of(bdShort, (short) -31999 , "1000001100000001"),
+				Arguments.of(bdByte, (byte) 1 , "00000001"), // Tests für den Typ Byte
+				Arguments.of(bdByte, (byte) -1 , "11111111")
 			);
 	}
 

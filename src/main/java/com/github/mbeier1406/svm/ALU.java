@@ -57,34 +57,6 @@ public interface ALU<T> {
 	 */
 	public int start() throws SVMException;
 
-	/**
-	 * Gibt ein Byte-Register in Binärdarstellung aus.
-	 * Aus <b>-128</b> wird so <b>10000000</b>.
-	 * @param reg das Register
-	 * @return die Binärdarstellung
-	 */
-	public default <T extends Byte> String getBinaerDarstellung(T reg) {
-		if ( reg == null ) return "null";
-		byte maske = 0b00000001;
-		var sb = new StringBuilder("        ");
-		for ( int i=0; i < 8; i++ ) {
-			sb.setCharAt(7-i, (reg & maske) == 0 ? '0' : '1');
-			maske = (byte) (maske << 1);
-		}
-		return sb.toString();
-	}
-
-	public default <T extends Short> String getBinaerDarstellung(T reg) {
-		if ( reg == null ) return "null";
-		short maske = 1;
-		var sb = new StringBuilder("                ");
-		for ( int i=0; i < 16; i++ ) {
-			sb.setCharAt(15-i, (reg & maske) == 0 ? '0' : '1');
-			maske = (short) (maske << 1);
-		}
-		return sb.toString();
-	}
-
 	public default <T extends Byte> byte getInstruction(T instr, int len) {
 		return (byte) (instr >> len);
 	}

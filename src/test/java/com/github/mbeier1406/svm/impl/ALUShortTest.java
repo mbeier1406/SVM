@@ -1,5 +1,8 @@
 package com.github.mbeier1406.svm.impl;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,13 +24,17 @@ public class ALUShortTest {
 	public void init() {
 		this.mem = new MEMShort();
 		this.alu = new ALUShort(mem);
+		alu.init();
+		LOGGER.info("aluShort={}", alu);
 	}
 
+	/** Bei Setzen des Stopp-Flags muss das oberste Bit des Statusregisters gesetzt werden */
 	@Test
 	public void testeStatusRegister() {
-		LOGGER.info("aluShort={}", alu);
+		assertThat(alu.toString(), containsString("Status-Register: 0000000000000000"));
 		alu.setStopFlag();
 		LOGGER.info("aluShort={}", alu);
+		assertThat(alu.toString(), containsString("Status-Register: 1000000000000000"));
 	}
 
 	@Test

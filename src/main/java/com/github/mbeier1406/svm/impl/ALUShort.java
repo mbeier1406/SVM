@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.github.mbeier1406.svm.ALU;
 import com.github.mbeier1406.svm.ALU.Instruction;
-import com.github.mbeier1406.svm.MEM;
+import com.github.mbeier1406.svm.BinaerDarstellung;
 import com.github.mbeier1406.svm.SVMException;
 
 /**
@@ -28,7 +28,7 @@ public class ALUShort implements ALU<Short>, Instruction<Short> {
 	 * <li>Stop-Flag: 0=Programm weiter ausführen, 1=SVM anhalten</li>
 	 * </ol>
 	 */
-	private byte statusRegister;
+	private short statusRegister;
 
 	/**
 	 * Instruction-Pointer (IP), zeigt auf die nächste auszuführende Anweisung.
@@ -46,14 +46,14 @@ public class ALUShort implements ALU<Short>, Instruction<Short> {
 	/** {@inheritDoc} */
 	@Override
 	public void init() {
-		this.statusRegister = 0;
+		this.statusRegister = 0; // STatusregister löschen
 		this.ip = this.mem.getHighAddr(); // Programme werdne "von oben nach unten" ausgeführt
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void setStopFlag() {
-		this.statusRegister |= -128;
+		this.statusRegister |= Short.MIN_VALUE; // Oberstes Bit setzen
 	}
 
 	/** {@inheritDoc} */
@@ -77,7 +77,7 @@ public class ALUShort implements ALU<Short>, Instruction<Short> {
 	public int start() throws SVMException {
 		for ( ; !isStopped(); ) {
 			short instr = mem.read(this.ip); // Der aktuelle Machinenbefehl, ein Speicherwort = 1 Byte (Instruction) + ggf. 1 Byte Parametr 1
-			LOGGER.trace("instr={} ({})", instr, getBinaerDarstellung(instr));
+			LOGGER.trace("instr={} ({})", instr, bd.getBinaerDarstellung(instr));
 		}
 		return 0;
 	}		
@@ -85,14 +85,14 @@ public class ALUShort implements ALU<Short>, Instruction<Short> {
 
 	/** Prüft, ob das oberste Bit im Statusregister gesetzt ist */
 	private boolean isStopped() {
-		return (this.statusRegister & -128) == -128;
+		return (this.statusRegister & Short.MIN_VALUE) == Short.MIN_VALUE;
 	}
 
 	@Override
 	public String toString() {
 		var sb = new StringBuilder(100);
 		sb.append("ALU:\n\tStatus-Register: ");
-		sb.append(getBinaerDarstellung(statusRegister));
+		sb.append(bd.getBinaerDarstellung(statusRegister));
 		sb.append("\n\tInstruktion: ");
 		Short instr = null;
 		try {
@@ -102,10 +102,13 @@ public class ALUShort implements ALU<Short>, Instruction<Short> {
 		}
 		sb.append(instr);
 		sb.append(" (");
-		sb.append(getBinaerDarstellung(instr));
+		sb.append(bd.getBinaerDarstellung(instr));
 		sb.append(")");
 		sb.append("\n");
 		return sb.toString();
 	}
+
+	/** Dient der Darstellung von Werten in Registern oder Speicherworten in Binärdarstellung */
+	private BinaerDarstellung<Short> bd = new BinaerDarstellung<>();
 
 }

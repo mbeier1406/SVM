@@ -34,7 +34,10 @@ public class InstructionReaderShort implements InstructionReaderInterface<Short>
 			LOGGER.trace("nextWord={}", bdShort.getBinaerDarstellung(nextWord));
 			byte cmd = (byte) (nextWord << 8);
 			LOGGER.trace("cmd={}", bdByte.getBinaerDarstellung(cmd));
-			return null;
+			var instr = InstructionFactory.INSTRUCTIONS.get(cmd);
+			LOGGER.trace("instr={}", instr);
+			if ( instr == null ) throw new SVMException("addr="+addr+", ungültiger Code: '"+cmd+"'");
+			return instr;
 		}
 		catch ( Exception e ) {
 			throw new SVMException();

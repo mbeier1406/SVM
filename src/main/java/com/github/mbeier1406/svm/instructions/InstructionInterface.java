@@ -15,6 +15,29 @@ import com.github.mbeier1406.svm.SVMException;
  * | Speicherwort I                                    | Speicherwort II    | ...
  * | &lt;Instruction>[&lt;Parameter I>[&lt;Parameter II>[...]]] | [&lt;Parameter n>]... | ...
  * </code></pre><p/>
+ * Der Instruction-Pointer (IP) der {@linkplain ALU} zeigt immer auf den Beginn eines Speicherwortes.
+ * Endet eine Instruktion mit Parametern also nicht genau am Ende eines Speicheworts, dann werden
+ * beim Laden eines Programms die restlichen Bytes mit Null aufgefüllt.<p/>
+ * <p><u>Beispiele</u></p>
+ * <h3>Maschinenbefehl ohne Parameter bei Wortlänge {@linkplain Short}</h3>
+ * <pre></code>
+ * | Speicherwort 1         |
+ * | Byte 1        | Byte 2 |
+ * | &lt;Instruction> | &lt;NULL> |
+ * </code></pre>
+ * <h3>Maschinenbefehl mit einem Parameter bei Wortlänge {@linkplain Short}</h3>
+ * <pre></code>
+ * | Speicherwort 1                |
+ * | Byte 1        | Byte 2        |
+ * | &lt;Instruction> | &lt;Parameter 1> |
+ * </code></pre><p/>
+ * <h3>Maschinenbefehl mit zwei Parametern bei Wortlänge {@linkplain Short}</h3>
+ * <pre></code>
+ * | Speicherwort 1                | Speicherwort 2         |
+ * | Byte 1        | Byte 2        | Byte 3        | Byte 4 |
+ * | &lt;Instruction> | &lt;Parameter 1> | &lt;Parameter 2> | &lt;NULL> |
+ * </code></pre><p/>
+ *
  * @param <T> Die Wortgröße der {@linkplain ALU} und des Speicher {@linkplain MEM}
  * @see Instruction
  */
@@ -41,13 +64,16 @@ public interface InstructionInterface<T> {
 	}
 
 	/**
-	 * Liefert die Länge des Maschinenbefehls (mit seinen Parametern) in Anzahl
-	 * Speicherworten (Typ <b>T</b>). Der Instructionpointer der {@linkplain ALU}
-	 * wird nach Ausführung des Befehls um die angegebene Anzahl der Speicherworte
-	 * erhöht, um auf den danach folgenden Befehl zu zeigen.
-	 * @return Länge der Instruktion in Anzahl Speicherworten
+	 * Liefert die Anzahl der Parameter des Maschinenbefehls (änge jeweils 1 Byte).
+	 * Der Instructionpointer der {@linkplain ALU}
+	 * wird nach Ausführung des Befehls um die folgende Anzahl von Speicherworten
+	 * erhöht, um auf den danach folgenden Befehl zu zeigen:
+	 * <p>{@code (1+<Anzahl Parameter>)/<Wortlänge Speicher> + (mod((1+<Anzahl Parameter>), <Wortlänge Speicher>) > 0 ? 1 : 0)}</p>
+	 * Sobald also der letzte Parameter die Wortlänge des Speichers überschreitet, wird der rest des Worts mit Nullen aufgefüllt und
+	 * die nächste Instruction beginnt beim nächsten Speicherwort.
+	 * @return Anzahl der Parameter mit Länge Bytes
 	 */
-	public T getLength();
+	public T getAnzahlParameter();
 
 	/**
 	 * Führt den Maschinenbefehl/die Instruktion aus. Als Parameter werden die im

@@ -7,10 +7,14 @@ import com.github.mbeier1406.svm.SVMException;
 
 /**
  * Liest eine {@linkplain InstructionInterface Instruction} (einen Maschinenbefehl)
- * aus dem Hauptspeicher {@linkplain MEM} ein.
+ * aus dem Hauptspeicher {@linkplain MEM} ein.InstructionInterface<T> ins
  * @param <T> Die Wortlänge der {@linkplain SVM}
  */
 public interface InstructionReaderInterface<T> {
+
+	public static record InstructionDefinition<T>(InstructionInterface<T> instruction, int len) {
+		
+	}
 
 	/**
 	 * Liefert den nächsten, auszuführenden Maschinenbefehl aus dem Hauptspeicher.

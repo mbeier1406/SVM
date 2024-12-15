@@ -40,8 +40,8 @@ public class Int extends InstructionBase implements InstructionInterface<Short>,
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Short getLength() {
-		return 1;
+	public int getAnzahlParameter() {
+		return 1;  // Identifiziert das Modul, das den Interrupt bearbeitet
 	}
 
 	/**
@@ -55,7 +55,7 @@ public class Int extends InstructionBase implements InstructionInterface<Short>,
 	 * */
 	@Override
 	public int execute(byte[] params) throws SVMException {
-		checkParameter(params, 1); // Identifiziert das Modul, das den Interrupt bearbeitet
+		checkParameter(params);
 		byte code = params[0];
 		LOGGER.trace("INT: Modulcode='{}'", code);
 		var module = MODULES.get(code); // Das Byte nach der Instruktion setzt das Servicemodul

@@ -73,7 +73,7 @@ public interface InstructionInterface<T> {
 	 * die nächste Instruction beginnt beim nächsten Speicherwort.
 	 * @return Anzahl der Parameter mit Länge Bytes
 	 */
-	public T getAnzahlParameter();
+	public int getAnzahlParameter();
 
 	/**
 	 * Führt den Maschinenbefehl/die Instruktion aus. Als Parameter werden die im

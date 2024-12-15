@@ -43,10 +43,10 @@ public abstract class InstructionBase implements InstructionInterface<Short> {
 	}
 
 	/** Protokolliert den Aufruf der Instruktion und prüft die Parameterliste */
-	protected void checkParameter(byte[] params, int len) throws SVMException {
-		LOGGER.trace("{}: erwartete Parameterlänge {}, erhalten '{}'", this.getClass().getSimpleName(), len, params);
-		if ( requireNonNull(params, "param1").length != len )
-			throw new SVMException("'"+this.getClass().getSimpleName()+"' erwartet "+len+" Parameter; erhalten '"+Arrays.toString(params)+"'!");
+	protected void checkParameter(byte[] params) throws SVMException {
+		LOGGER.trace("{}: erwartete Parameterlänge {}, erhalten '{}'", this.getClass().getSimpleName(), requireNonNull(getAnzahlParameter(), "getAnzahlParameter"), params);
+		if ( requireNonNull(params, "param1").length != getAnzahlParameter() )
+			throw new SVMException("'"+this.getClass().getSimpleName()+"' erwartet "+getAnzahlParameter()+" Parameter; erhalten '"+Arrays.toString(params)+"'!");
 	}
 
 }

@@ -26,14 +26,14 @@ public class Nop extends InstructionBase implements InstructionInterface<Short> 
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Short getLength() {
-		return 1;
+	public int getAnzahlParameter() {
+		return 0;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public int execute(byte[] params) throws SVMException {
-		checkParameter(params, 0);
+		checkParameter(params);
 		return 0; // NOP tut nichts
 	}
 

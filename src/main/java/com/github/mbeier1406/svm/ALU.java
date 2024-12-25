@@ -1,7 +1,5 @@
 package com.github.mbeier1406.svm;
 
-import com.github.mbeier1406.svm.instructions.InstructionInterface;
-
 /**
  * Definiert die Schnittstelle zu Arithmetisch-, logischen Einheit (ALU),
  * also zur CPU der SVM. Die in der ALU verwendeten Register sollen der Einfachheit

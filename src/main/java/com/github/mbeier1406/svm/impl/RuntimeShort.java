@@ -11,12 +11,16 @@ import com.github.mbeier1406.svm.ALU;
 import com.github.mbeier1406.svm.MEM;
 import com.github.mbeier1406.svm.MEM.Instruction;
 import com.github.mbeier1406.svm.Runtime;
+import com.github.mbeier1406.svm.SVM;
 import com.github.mbeier1406.svm.SVMException;
 import com.github.mbeier1406.svm.syscalls.IO;
 import com.github.mbeier1406.svm.syscalls.SyscallFactory;
 import com.github.mbeier1406.svm.syscalls.SyscallInterface;
 
 public class RuntimeShort implements Runtime<Short> {
+
+	/** Wortlänge der {@linkplain SVM} ist zwei Bytes (Short) */
+	public static final int WORTLAENGE_IN_BYTES = 2;
 
 	/** {@linkplain SyscallInterface Syscalls} haben Zugriff auf bestimmte Funktionen der ALU */
 	private final ALU.Instruction<Short> alu;

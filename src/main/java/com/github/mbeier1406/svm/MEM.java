@@ -39,6 +39,11 @@ public interface MEM<T> {
 	}
 
 	/**
+	 * Füllt den Speicher mit Nullen auf (Löschen/Zurücksetzen).
+	 */
+	public void clear();
+
+	/**
 	 * Liefert die oberste Adresse des Hauptspeichers.
 	 * Hier beginnt jeweils die Programmausführung.
 	 * @return die oberste Adresse

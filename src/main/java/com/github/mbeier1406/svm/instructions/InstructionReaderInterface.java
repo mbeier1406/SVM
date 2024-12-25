@@ -24,9 +24,9 @@ public interface InstructionReaderInterface<T> {
 	 * nächste, auszuführende Instruktion zu zeigen.
 	 * @param <T> Wortlänge der {@linkplain SVM}
 	 */
-	public static record InstructionDefinition<T>(InstructionInterface<T> instruction, int len) {
+	public static record InstructionDefinition<T>(InstructionInterface<T> instr, int len) {
 		public InstructionDefinition {
-			requireNonNull(instruction, "instruction");
+			requireNonNull(instr, "instruction");
 		}
 	}
 

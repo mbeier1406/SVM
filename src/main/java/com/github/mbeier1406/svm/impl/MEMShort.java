@@ -20,6 +20,13 @@ public class MEMShort implements MEM<Short>, MEM.Instruction<Short> {
 
 	/** {@inheritDoc} */
 	@Override
+	public void clear() {
+		for ( int i=getLowAddr(); i < getHighAddr(); i++ )
+			mem[i] = 0;
+	}
+
+	/** {@inheritDoc} */
+	@Override
 	public int getHighAddr() {
 		return this.mem.length-1;
 	}

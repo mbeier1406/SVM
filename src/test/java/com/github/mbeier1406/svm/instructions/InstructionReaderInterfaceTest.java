@@ -1,5 +1,6 @@
 package com.github.mbeier1406.svm.instructions;
 
+import static com.github.mbeier1406.svm.impl.RuntimeShort.WORTLAENGE_IN_BYTES;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.when;
@@ -15,10 +16,8 @@ import org.mockito.Mock;
 // import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.github.mbeier1406.svm.SVM;
-
 /**
- * tests für die Klasse {@linkplain InstructionReaderInterface}.
+ * Tests für die Klasse {@linkplain InstructionReaderInterface}.
  */
 @ExtendWith(MockitoExtension.class)
 public class InstructionReaderInterfaceTest {
@@ -26,9 +25,6 @@ public class InstructionReaderInterfaceTest {
 	/** Die Instruktion, deren Länge berechnet werden soll */
 	@Mock
 	public InstructionInterface<Short> instruction;
-
-	/** Wortläng der {@linkplain SVM} ist zwei Bytes (Short) */
-	public final int wortLaengeInBytes = 2;
 
 	/** Das zu testende Objekt */
 	public InstructionReaderInterface<Short> instructionReader = new InstructionReaderShort();
@@ -38,7 +34,7 @@ public class InstructionReaderInterfaceTest {
 	@MethodSource("getTestParameter")
 	public void teste(int anzahlParameter, int erwarteteWortLaenge) {
 		when(instruction.getAnzahlParameter()).thenReturn(anzahlParameter);
-		int instrLenInWords = instructionReader.getInstrLenInWords(instruction, wortLaengeInBytes);
+		int instrLenInWords = instructionReader.getInstrLenInWords(instruction, WORTLAENGE_IN_BYTES);
 		assertThat(instrLenInWords, equalTo(erwarteteWortLaenge));
 	}
 

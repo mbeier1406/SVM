@@ -54,4 +54,12 @@ public class IntTest extends TestBase {
 		assertThat(ex.getLocalizedMessage(), equalTo("'Int' erwartet 1 Parameter; erhalten '[0, 0]'!"));
 	}
 
+	/** Stellt sicher, dass die Instruktion den korrekten Code liefert */
+	@Test
+	public void testeGetCode() throws SVMException {
+		byte erwarteterCode = 0x2;
+		assertThat(this.instruction.getClass().getAnnotation(Instruction.class).code(), equalTo(erwarteterCode));
+		assertThat(this.instruction.getCode(), equalTo(erwarteterCode));
+	}
+
 }

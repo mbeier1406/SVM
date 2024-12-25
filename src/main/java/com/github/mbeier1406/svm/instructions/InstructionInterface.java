@@ -52,8 +52,8 @@ public interface InstructionInterface<T> {
 	 * ausgelesen werden.
 	 */
 	public static enum Codes {
-		NOP((byte) Nop.class.getAnnotation(Instruction.class).code()),
-		INT((byte) Int.class.getAnnotation(Instruction.class).code());
+		NOP(Nop.CODE),
+		INT(Int.CODE);
 		private byte code;
 		private Codes(byte code) {
 			this.code = code;
@@ -102,5 +102,19 @@ public interface InstructionInterface<T> {
 	 * @see InstructionBase
 	 */
 	public void setMemory(final MEM.Instruction<T> mem);
+
+	/**
+	 * Liefert den Code einer Instruktion (wie aus der Annotation {@linkplain Instruction}) per Reflection.
+	 * @return den Code der Instruktion
+	 * @throws SVMException bei technischen Fehlern
+	 * @see Nop#CODE
+	 */
+	public default byte getCode() throws SVMException {
+		try {
+			return getClass().getField("CODE").getByte(this);
+		} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
+			throw new SVMException(this.toString(), e);
+		}	
+	}
 
 }

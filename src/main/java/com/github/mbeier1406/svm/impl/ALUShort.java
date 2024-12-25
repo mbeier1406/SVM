@@ -7,6 +7,9 @@ import com.github.mbeier1406.svm.ALU;
 import com.github.mbeier1406.svm.ALU.Instruction;
 import com.github.mbeier1406.svm.BinaerDarstellung;
 import com.github.mbeier1406.svm.SVMException;
+import com.github.mbeier1406.svm.instructions.InstructionInterface;
+import com.github.mbeier1406.svm.instructions.InstructionReaderInterface;
+import com.github.mbeier1406.svm.instructions.InstructionReaderShort;
 
 /**
  * Eine Implementierung der {@linkplain ALU} für Tests.
@@ -37,6 +40,13 @@ public class ALUShort implements ALU<Short>, Instruction<Short> {
 	 */
 	private int ip;
 
+	/**
+	 * Der {@linkplain InstructionReaderShort} liest die nächste, auszuführende
+	 * {@linkplain InstructionInterface Instruktion} ein, auf die der {@linkplain #ip}
+	 * gerade zeigt.
+	 */
+	private InstructionReaderInterface<Short> instructionReader = new InstructionReaderShort();
+
 
 	public ALUShort(MEMShort mem) {
 		this.mem = mem;
@@ -46,7 +56,7 @@ public class ALUShort implements ALU<Short>, Instruction<Short> {
 	/** {@inheritDoc} */
 	@Override
 	public void init() {
-		this.statusRegister = 0; // STatusregister löschen
+		this.statusRegister = 0; // Statusregister löschen
 		this.ip = this.mem.getHighAddr(); // Programme werdne "von oben nach unten" ausgeführt
 	}
 
@@ -76,8 +86,10 @@ public class ALUShort implements ALU<Short>, Instruction<Short> {
 	@Override
 	public int start() throws SVMException {
 		for ( ; !isStopped(); ) {
-			short instr = mem.read(this.ip); // Der aktuelle Machinenbefehl, ein Speicherwort = 1 Byte (Instruction) + ggf. 1 Byte Parametr 1
-			LOGGER.trace("instr={} ({})", instr, bd.getBinaerDarstellung(instr));
+			final var instr = instructionReader.getInstruction(mem, ip);
+			LOGGER.trace("instr={}; len={} ({})", instr, instr.len(), bdByte.getBinaerDarstellung(instr.instr().getCode()));
+			instr.instr().execute(null);
+			this.ip -= instr.len();
 		}
 		return 0;
 	}		
@@ -92,7 +104,7 @@ public class ALUShort implements ALU<Short>, Instruction<Short> {
 	public String toString() {
 		var sb = new StringBuilder(100);
 		sb.append("ALU:\n\tStatus-Register: ");
-		sb.append(bd.getBinaerDarstellung(statusRegister));
+		sb.append(bdShort.getBinaerDarstellung(statusRegister));
 		sb.append("\n\tInstruktion: ");
 		Short instr = null;
 		try {
@@ -102,13 +114,16 @@ public class ALUShort implements ALU<Short>, Instruction<Short> {
 		}
 		sb.append(instr);
 		sb.append(" (");
-		sb.append(bd.getBinaerDarstellung(instr));
+		sb.append(bdShort.getBinaerDarstellung(instr));
 		sb.append(")");
 		sb.append("\n");
 		return sb.toString();
 	}
 
 	/** Dient der Darstellung von Werten in Registern oder Speicherworten in Binärdarstellung */
-	private BinaerDarstellung<Short> bd = new BinaerDarstellung<>();
+	private BinaerDarstellung<Short> bdShort = new BinaerDarstellung<>();
+
+	/** Dient der Darstellung von Instruktionscodes in Binärdarstellung */
+	private BinaerDarstellung<Byte> bdByte = new BinaerDarstellung<>();
 
 }

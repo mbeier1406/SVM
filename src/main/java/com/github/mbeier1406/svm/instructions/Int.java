@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.github.mbeier1406.svm.ALU;
+import com.github.mbeier1406.svm.MEM;
 import com.github.mbeier1406.svm.SVMException;
 
 /**
@@ -24,10 +25,14 @@ import com.github.mbeier1406.svm.SVMException;
  * @see {@linkplain com.github.mbeier1406.svm.syscalls.Exit}
  * @see {@linkplain com.github.mbeier1406.svm.syscalls.IO}
  */
-@Instruction(code=0x2)
+@Instruction(code=Int.CODE)
 public class Int extends InstructionBase implements InstructionInterface<Short>, IntInterface<Short> {
 
 	public static final Logger LOGGER = LogManager.getLogger(Int.class);
+
+	/** Der Code im {@linkplain MEM Speicher}, die diesen Maschinenbefehl idebntifiziert */
+	public static final byte CODE = 0x2;
+
 
 	/**
 	 * <i>Interrupt</i> benutzt einen Parameter (<b>Code</b> des Moduls, das aufgerufen werden soll, ein Byte)

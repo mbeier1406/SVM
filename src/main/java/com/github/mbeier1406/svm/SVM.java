@@ -8,6 +8,13 @@ import java.net.URL;
  */
 public interface SVM {
 
+	/** Für die Protokollierung der Speicherinhalte */
+	public static final BinaerDarstellung<Short> BD_SHORT = new BinaerDarstellung<>();
+
+	/** Für die Protokollierung der Codes von Maschinenbefehlen */
+	public static final BinaerDarstellung<Byte> BD_BYTE = new BinaerDarstellung<>();
+
+
 	/**
 	 * Führt ein Programm in der SVM aus.
 	 * @param programm Lädt das auszuführend programm von dieser Adresse

@@ -87,9 +87,9 @@ public class Int extends InstructionBase implements InstructionInterface<Short>,
 			returnCode = execute.invoke(service, param1, param2, param3);
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			throw new SVMException("Fehler bei execute()-Funktion für Service '"+service+"' für Funktion '"+function+"' in Modul für Code '"+code+"'"
-					+ "; Param1='"+param1+"'; Param2='"+param2+"'; Param3='"+param3);
+					+ "; Param1='"+param1+"'; Param2='"+param2+"'; Param3='"+param3, e);
 		}
-		LOGGER.trace("INT: returnCode='{}'", returnCode);
+		LOGGER.trace("INT: returnCode INSTR='{}'", returnCode);
 		if ( returnCode instanceof Integer )
 			return (int) returnCode;
 		return 0; // erfolgreiche Ausführung

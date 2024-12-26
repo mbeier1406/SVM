@@ -2,6 +2,7 @@ package com.github.mbeier1406.svm.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,6 +10,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.github.mbeier1406.svm.SVMException;
+import com.github.mbeier1406.svm.instructions.InstructionFactory;
+import com.github.mbeier1406.svm.syscalls.SyscallFactory;
 
 /**
  * Tests für die Klasse {@linkplain ALUShort}.
@@ -24,8 +27,10 @@ public class ALUShortTest {
 	public void init() {
 		this.mem = new MEMShort();
 		this.alu = new ALUShort(mem);
-		alu.init();
+		this.alu.init();
 		LOGGER.info("aluShort={}", alu);
+		InstructionFactory.init(alu, mem);
+		SyscallFactory.init(alu, mem);
 	}
 
 	/** Bei Setzen des Stopp-Flags muss das oberste Bit des Statusregisters gesetzt werden */
@@ -39,8 +44,14 @@ public class ALUShortTest {
 
 	@Test
 	public void testeInstr() throws SVMException {
-		mem.write(mem.getHighAddr(), (short) 257);
+		this.mem.write(mem.getHighAddr(), (short) 256); // NOP
+		this.mem.write(mem.getHighAddr()-1, (short) 513); // INT 1 (Syscall)
+		this.alu.setRegisterValue(0, (short) 1); // Funktion EXIT
+		this.alu.setRegisterValue(1, (short) 55); // Return Code 55
 		LOGGER.info("aluShort={}", alu);
+		int exitCode = this.alu.start();
+		LOGGER.info("exitCode={}", exitCode);
+		assertThat(exitCode, equalTo(55));
 	}
 
 }

@@ -56,6 +56,7 @@ public class ALUShort implements ALU<Short>, Instruction<Short> {
 	/** {@inheritDoc} */
 	@Override
 	public void init() {
+		this.mem.clear(); // Speicher löschen
 		this.statusRegister = 0; // Statusregister löschen
 		this.ip = this.mem.getHighAddr(); // Programme werdne "von oben nach unten" ausgeführt
 	}
@@ -86,13 +87,14 @@ public class ALUShort implements ALU<Short>, Instruction<Short> {
 	@Override
 	public int start() throws SVMException {
 		for ( ; !isStopped(); ) {
-			final var instr = instructionReader.getInstruction(mem, ip);
-			LOGGER.trace("instr={}; len={} ({})", instr, instr.len(), bdByte.getBinaerDarstellung(instr.instr().getCode()));
-			instr.instr().execute(null);
-			this.ip -= instr.len();
+			LOGGER.trace("ip={}", ip);
+			final var instrDef = instructionReader.getInstruction(mem, ip);
+			LOGGER.trace("instr={}; len={} ({})", instrDef, instrDef.len(), bdByte.getBinaerDarstellung(instrDef.instr().getCode()));
+			instrDef.instr().execute(instrDef.args());
+			this.ip -= instrDef.len();
 		}
-		return 0;
-	}		
+		return this.register[0];
+	}
 
 
 	/** Prüft, ob das oberste Bit im Statusregister gesetzt ist */

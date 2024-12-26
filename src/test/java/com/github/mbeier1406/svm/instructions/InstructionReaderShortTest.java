@@ -44,10 +44,23 @@ public class InstructionReaderShortTest {
 	/** Prüft, ob die {@linkplain Nop}-Instruktion korrekt eingelesen wird */
 	@Test
 	public void testeNop() throws SVMException {
-		mem.write(mem.getHighAddr(), (short) (Nop.class.getAnnotation(Instruction.class).code()<<8));
+		mem.write(mem.getHighAddr(), (short) (Nop.CODE<<8));
 		var instructionDefinition = INSTRUCTION_READER.getInstruction(mem, mem.getHighAddr());
 		LOGGER.info("instructionDefinition={}",instructionDefinition);
 		assertThat(instructionDefinition.instr().getClass(), equalTo(Nop.class));
+		assertThat(instructionDefinition.args().length, equalTo(0));
+		assertThat(instructionDefinition.len(), equalTo(1));
+	}
+
+	/** Prüft, ob die {@linkplain Int}-Instruktion mitParametr korrekt eingelesen wird */
+	@Test
+	public void testeInt() throws SVMException {
+		mem.write(mem.getHighAddr(), (short) ((Int.class.getAnnotation(Instruction.class).code()<<8)+0x27));
+		var instructionDefinition = INSTRUCTION_READER.getInstruction(mem, mem.getHighAddr());
+		LOGGER.info("instructionDefinition={}",instructionDefinition);
+		assertThat(instructionDefinition.instr().getClass(), equalTo(Int.class));
+		assertThat(instructionDefinition.args().length, equalTo(1));
+		assertThat(instructionDefinition.args()[0], equalTo((byte) 0x27));
 		assertThat(instructionDefinition.len(), equalTo(1));
 	}
 
@@ -67,6 +80,7 @@ public class InstructionReaderShortTest {
 		var instructionDefinition = INSTRUCTION_READER.getInstruction(mem, mem.getHighAddr());
 		LOGGER.info("instructionDefinition={}",instructionDefinition);
 		assertThat(instructionDefinition.instr().getClass(), equalTo(instr.getClass()));
+		assertThat(instructionDefinition.args().length, equalTo(instructionDefinition.instr().getAnzahlParameter()));
 		assertThat(instructionDefinition.len(), equalTo(len));
 	}
 

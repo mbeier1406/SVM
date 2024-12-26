@@ -18,15 +18,17 @@ public interface InstructionReaderInterface<T> {
 
 	/**
 	 * Wenn eine Instruktion mit {@linkplain InstructionReaderInterface#getInstruction(com.github.mbeier1406.svm.MEM.Instruction, int)}
-	 * eingelesen sird, muss einerseits die {@linkplain InstructionInterface Instruktion} selber, und deren Länge (mit Paramteren) in
-	 * Wortlänge der {@linkplain SVM} geliefert werden (eine Instruktion "weiß" das nicht, da sie die Wortlänge des Speichers nicht kennt).
+	 * eingelesen sird, muss einerseits die {@linkplain InstructionInterface Instruktion} selber, die zu übergebenden Parameter
+	 * (als Liste von Bytes) und die Länge der Instruktion (mit Paramteren) im Speicher in Wortlänge der {@linkplain SVM}
+	 * geliefert werden (eine Instruktion "weiß" das nicht, da sie die Wortlänge des Speichers nicht kennt).
 	 * Diese Länge wird benötigt, der der Instructionpointer der {@linkplain ALU} um diesen Betrag verschoben werdne muss, um auf die
 	 * nächste, auszuführende Instruktion zu zeigen.
 	 * @param <T> Wortlänge der {@linkplain SVM}
 	 */
-	public static record InstructionDefinition<T>(InstructionInterface<T> instr, int len) {
+	public static record InstructionDefinition<T>(InstructionInterface<T> instr, byte[] args, int len) {
 		public InstructionDefinition {
 			requireNonNull(instr, "instruction");
+			requireNonNull(args, "args");
 		}
 	}
 

@@ -53,7 +53,8 @@ public interface InstructionInterface<T> {
 	 */
 	public static enum Codes {
 		NOP(Nop.CODE),
-		INT(Int.CODE);
+		INT(Int.CODE),
+		MOV(Mov.CODE);
 		private byte code;
 		private Codes(byte code) {
 			this.code = code;

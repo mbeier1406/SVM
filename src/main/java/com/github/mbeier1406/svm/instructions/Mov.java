@@ -128,7 +128,7 @@ public class Mov extends InstructionBase implements InstructionInterface<Short> 
 				break;
 			}
 			case ADDRESS: {
-				short wert = alu.getRegisterValue(wertVon);
+				short wert = mem.read(wertVon);
 				switch ( mcNach ) {
 					case REGISTER: {
 						/* Speicheradresse in ein Register */

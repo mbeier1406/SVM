@@ -44,19 +44,42 @@ public class ALUShortTest {
 
 	@Test
 	public void testeInstr() throws SVMException {
-		this.mem.write(this.mem.getHighAddr(), (short) 256); // NOP
-		this.mem.write(this.mem.getHighAddr()-1, (short) 513); // INT 1 (Syscall)
-		this.mem.write(this.mem.getLowAddr()+3, (short) 'a');
-		this.mem.write(this.mem.getLowAddr()+2, (short) 'b');
-		this.mem.write(this.mem.getLowAddr()+1, (short) 'c');
-		this.mem.write(this.mem.getLowAddr()+0, (short) '\n');
-		this.alu.setRegisterValue(0, (short) 2); // Funktion IO
-		this.alu.setRegisterValue(1, (short) 1); // Ausgabe stdout
-		this.alu.setRegisterValue(2, (short) (this.mem.getLowAddr()+3)); // Ausgabe Adresse
-		this.alu.setRegisterValue(3, (short) 4); // Ausgabe Länge
-		this.mem.write(this.mem.getHighAddr()-2, (short) 513); // INT 1 (Syscall)
-		this.alu.setRegisterValue(0, (short) 1); // Funktion EXIT
-		this.alu.setRegisterValue(1, (short) 55); // Return Code 55
+		/* Speicher mit Konstanten füllen */
+		this.mem.write(this.mem.getLowAddr()+3, (short) '\n');
+		this.mem.write(this.mem.getLowAddr()+2, (short) 'c');
+		this.mem.write(this.mem.getLowAddr()+1, (short) 'b');
+		this.mem.write(this.mem.getLowAddr()+0, (short) 'a');
+
+		/* Programm laden */
+		int addr = this.mem.getHighAddr();
+
+		/* NOP: No Operation */
+		this.mem.write(addr--, (short) 256); // NOP
+
+		/* INT(SYSCALL): IO */
+		this.mem.write(addr--, (short) 801); // MOV CONST->REG
+		this.mem.write(addr--, (short) 2);   // CONST $2
+		this.mem.write(addr--, (short) 0);   // REG(0) == this.alu.setRegisterValue(0, (short) 2); -- Funktion IO
+		this.mem.write(addr--, (short) 801); // MOV CONST->REG
+		this.mem.write(addr--, (short) 1);   // CONST $1
+		this.mem.write(addr--, (short) 1);   // REG(1) == this.alu.setRegisterValue(1, (short) 1); -- Ausgabe stdout
+		this.mem.write(addr--, (short) 801); // MOV CONST->REG
+		this.mem.write(addr--, (short) this.mem.getLowAddr());   // CONST $0
+		this.mem.write(addr--, (short) 2);   // REG(2) == this.alu.setRegisterValue(2, (short) 0); -- Ausgabe Startadresse
+		this.mem.write(addr--, (short) 801); // MOV CONST->REG
+		this.mem.write(addr--, (short) 4);   // CONST $4
+		this.mem.write(addr--, (short) 3);   // REG(3) == this.alu.setRegisterValue(3, (short) 4); -- Ausgabe Länge
+		this.mem.write(addr--, (short) 513); // INT 1 (Syscall)
+		
+		/* INT(SYSCALL): EXIT */
+		this.mem.write(addr--, (short) 801); // MOV CONST->REG
+		this.mem.write(addr--, (short) 1);   // CONST $1
+		this.mem.write(addr--, (short) 0);   // REG(0) == this.alu.setRegisterValue(0, (short) 1); -- Funktion EXIT
+		this.mem.write(addr--, (short) 801); // MOV CONST->REG
+		this.mem.write(addr--, (short) 55);  // CONST $55
+		this.mem.write(addr--, (short) 1);   // REG(1) == this.alu.setRegisterValue(1, (short) 55); -- Return Code 55
+		this.mem.write(addr--, (short) 513); // INT 1 (Syscall)
+		
 		LOGGER.info("aluShort={}", alu);
 		int exitCode = this.alu.start();
 		LOGGER.info("exitCode={}", exitCode);

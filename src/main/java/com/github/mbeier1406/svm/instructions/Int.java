@@ -62,15 +62,15 @@ public class Int extends InstructionBase implements InstructionInterface<Short>,
 	public int execute(byte[] params) throws SVMException {
 		checkParameter(params);
 		byte code = params[0];
-		LOGGER.trace("INT: Modulcode='{}'", code);
+		LOGGER.trace("Modulcode='{}'", code);
 		var module = MODULES.get(code); // Das Byte nach der Instruktion setzt das Servicemodul
 		if ( module == null ) throw new SVMException("Kein Modul für Code '"+code+"'!");
-		LOGGER.trace("INT: Module={}", module);
+		LOGGER.trace("Module={}", module);
 		Short function = this.alu.getRegisterValue(0); // Register 1 codiert die Funktion, die aufgerufen werden soll
-		LOGGER.trace("INT: Funktion='{}'", function);
+		LOGGER.trace("Funktion='{}'", function);
 		IntInterface<Short> service = module.getFunctions().get(function.byteValue());
 		if ( service == null ) throw new SVMException("Kein Service für Funktion '"+function+"' in Modul für Code '"+code+"'!");
-		LOGGER.trace("INT: Service='{}'", service);
+		LOGGER.trace("Service='{}'", service);
 		Method execute;
 		try {
 			execute = service.getClass().getDeclaredMethod("execute", Short.class, Short.class, Short.class);
@@ -81,7 +81,7 @@ public class Int extends InstructionBase implements InstructionInterface<Short>,
 		var param1 = this.alu.getRegisterValue(1); // Register 1 enthält immer den ersten Parameter der Servicefunktion
 		var param2 = this.alu.getRegisterValue(2); // Register 2 enthält immer den ersten Parameter der Servicefunktion
 		var param3 = this.alu.getRegisterValue(3); // Register 3 enthält immer den ersten Parameter der Servicefunktion
-		LOGGER.trace("INT: param1='{}'; param2='{}'; param3='{}'", param1, param2, param3);
+		LOGGER.trace("param1='{}'; param2='{}'; param3='{}'", param1, param2, param3);
 		Object returnCode;
 		try {
 			returnCode = execute.invoke(service, param1, param2, param3);
@@ -89,7 +89,7 @@ public class Int extends InstructionBase implements InstructionInterface<Short>,
 			throw new SVMException("Fehler bei execute()-Funktion für Service '"+service+"' für Funktion '"+function+"' in Modul für Code '"+code+"'"
 					+ "; Param1='"+param1+"'; Param2='"+param2+"'; Param3='"+param3, e);
 		}
-		LOGGER.trace("INT: returnCode INSTR='{}'", returnCode);
+		LOGGER.trace("returnCode INSTR='{}'", returnCode);
 		if ( returnCode instanceof Integer )
 			return (int) returnCode;
 		return 0; // erfolgreiche Ausführung

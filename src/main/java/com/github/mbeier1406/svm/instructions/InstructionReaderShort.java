@@ -42,7 +42,7 @@ public class InstructionReaderShort implements InstructionReaderInterface<Short>
 				args[i++] = (byte) ((nextWord << 8)>>8); // Rechtes Byte des aktuellen Speicherworts lesen
 				LOGGER.trace("args[{}]={}", i-1, BD_BYTE.getBinaerDarstellung(args[i-1]));
 				if ( i < args.length ) {
-					nextWord = mem.read(++addr);
+					nextWord = mem.read(--addr);
 					LOGGER.trace("nextWord={}", BD_SHORT.getBinaerDarstellung(nextWord));
 					args[i++] = (byte) (nextWord >> 8); // Linkes Byte des aktuellen Speicherworts lesen
 					LOGGER.trace("args[{}]={}", i-1, BD_BYTE.getBinaerDarstellung(args[i-1]));

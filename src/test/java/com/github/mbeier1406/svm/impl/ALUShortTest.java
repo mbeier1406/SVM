@@ -44,8 +44,17 @@ public class ALUShortTest {
 
 	@Test
 	public void testeInstr() throws SVMException {
-		this.mem.write(mem.getHighAddr(), (short) 256); // NOP
-		this.mem.write(mem.getHighAddr()-1, (short) 513); // INT 1 (Syscall)
+		this.mem.write(this.mem.getHighAddr(), (short) 256); // NOP
+		this.mem.write(this.mem.getHighAddr()-1, (short) 513); // INT 1 (Syscall)
+		this.mem.write(this.mem.getLowAddr()+3, (short) 'a');
+		this.mem.write(this.mem.getLowAddr()+2, (short) 'b');
+		this.mem.write(this.mem.getLowAddr()+1, (short) 'c');
+		this.mem.write(this.mem.getLowAddr()+0, (short) '\n');
+		this.alu.setRegisterValue(0, (short) 2); // Funktion IO
+		this.alu.setRegisterValue(1, (short) 1); // Ausgabe stdout
+		this.alu.setRegisterValue(2, (short) (this.mem.getLowAddr()+3)); // Ausgabe Adresse
+		this.alu.setRegisterValue(3, (short) 4); // Ausgabe Länge
+		this.mem.write(this.mem.getHighAddr()-2, (short) 513); // INT 1 (Syscall)
 		this.alu.setRegisterValue(0, (short) 1); // Funktion EXIT
 		this.alu.setRegisterValue(1, (short) 55); // Return Code 55
 		LOGGER.info("aluShort={}", alu);

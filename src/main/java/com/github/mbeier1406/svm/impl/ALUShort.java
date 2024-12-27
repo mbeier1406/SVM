@@ -1,11 +1,13 @@
 package com.github.mbeier1406.svm.impl;
 
+import static com.github.mbeier1406.svm.SVM.BD_BYTE;
+import static com.github.mbeier1406.svm.SVM.BD_SHORT;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.github.mbeier1406.svm.ALU;
 import com.github.mbeier1406.svm.ALU.Instruction;
-import com.github.mbeier1406.svm.BinaerDarstellung;
 import com.github.mbeier1406.svm.SVMException;
 import com.github.mbeier1406.svm.instructions.InstructionInterface;
 import com.github.mbeier1406.svm.instructions.InstructionReaderInterface;
@@ -89,7 +91,7 @@ public class ALUShort implements ALU<Short>, Instruction<Short> {
 		for ( ; !isStopped(); ) {
 			LOGGER.trace("ip={}", ip);
 			final var instrDef = instructionReader.getInstruction(mem, ip);
-			LOGGER.trace("instr={}; len={} ({})", instrDef, instrDef.len(), bdByte.getBinaerDarstellung(instrDef.instr().getCode()));
+			LOGGER.trace("instr={}; len={} ({})", instrDef, instrDef.len(), BD_BYTE.getBinaerDarstellung(instrDef.instr().getCode()));
 			instrDef.instr().execute(instrDef.args());
 			this.ip -= instrDef.len();
 		}
@@ -106,7 +108,7 @@ public class ALUShort implements ALU<Short>, Instruction<Short> {
 	public String toString() {
 		var sb = new StringBuilder(100);
 		sb.append("ALU:\n\tStatus-Register: ");
-		sb.append(bdShort.getBinaerDarstellung(statusRegister));
+		sb.append(BD_SHORT.getBinaerDarstellung(statusRegister));
 		sb.append("\n\tInstruktion: ");
 		Short instr = null;
 		try {
@@ -116,16 +118,10 @@ public class ALUShort implements ALU<Short>, Instruction<Short> {
 		}
 		sb.append(instr);
 		sb.append(" (");
-		sb.append(bdShort.getBinaerDarstellung(instr));
+		sb.append(BD_SHORT.getBinaerDarstellung(instr));
 		sb.append(")");
 		sb.append("\n");
 		return sb.toString();
 	}
-
-	/** Dient der Darstellung von Werten in Registern oder Speicherworten in Binärdarstellung */
-	private BinaerDarstellung<Short> bdShort = new BinaerDarstellung<>();
-
-	/** Dient der Darstellung von Instruktionscodes in Binärdarstellung */
-	private BinaerDarstellung<Byte> bdByte = new BinaerDarstellung<>();
 
 }

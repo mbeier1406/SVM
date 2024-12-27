@@ -49,4 +49,9 @@ public abstract class InstructionBase implements InstructionInterface<Short> {
 			throw new SVMException("'"+this.getClass().getSimpleName()+"' erwartet "+getAnzahlParameter()+" Parameter; erhalten '"+Arrays.toString(params)+"'!");
 	}
 
+	/** Fasst zwei Bytes aus der Parameterliste zu einem Short zusammen */
+	protected static short bytes2Short(byte links, byte rechts) {
+		return (short) ((links << 8) | rechts);
+	}
+
 }

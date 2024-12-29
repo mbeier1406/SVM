@@ -95,6 +95,7 @@ public class ALUShort implements ALU<Short>, Instruction<Short> {
 			instrDef.instr().execute(instrDef.args());
 			this.ip -= instrDef.len();
 		}
+		LOGGER.debug("Stopp: {}", this);
 		return this.register[0];
 	}
 

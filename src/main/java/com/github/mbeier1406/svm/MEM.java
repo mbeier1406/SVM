@@ -1,5 +1,7 @@
 package com.github.mbeier1406.svm;
 
+import com.github.mbeier1406.svm.instructions.InstructionInterface;
+
 /**
  * Definiert die Schnittstelle zum (Haupt-)Speicher der {@linkplain SVM}. Die Größe des Hauptspeichers
  * wird über desse Adressierbarkeit ({@linkplain Integer} festgelegt. Der Einfachheit haber kann immer nur
@@ -68,5 +70,11 @@ public interface MEM<T> {
 	 * @throws SVMException wenn von einer ungültige Adresse gelesen wird
 	 */
 	public String getBinaryContentStringAt(int addr, int len) throws SVMException;
+
+	/**
+	 * Liefert das Zugriffsinterface auf den Speicher für {@linkplain InstructionInterface Instruktionen}.
+	 * @return Das Interface zum Lesen und Schreiben von Daten
+	 */
+	public Instruction<T> getInstructionInterface();
 
 }

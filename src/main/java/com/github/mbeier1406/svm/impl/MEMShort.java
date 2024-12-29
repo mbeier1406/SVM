@@ -60,6 +60,13 @@ public class MEMShort implements MEM<Short>, MEM.Instruction<Short> {
 		}
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public Instruction<Short> getInstructionInterface() {
+		return (Instruction<Short>) this;
+	}
+
+
 	/**
 	 * Prüft eine angeforderte Adresse auf Zugriffsverletzung.
 	 * @param addr die angeforderte Adresse

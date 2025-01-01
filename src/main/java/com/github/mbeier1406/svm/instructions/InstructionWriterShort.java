@@ -1,5 +1,8 @@
 package com.github.mbeier1406.svm.instructions;
 
+import static com.github.mbeier1406.svm.impl.RuntimeShort.WORTLAENGE_IN_BYTES;
+import static java.util.Objects.requireNonNull;
+
 import org.apache.logging.log4j.CloseableThreadContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,9 +21,13 @@ public class InstructionWriterShort implements InstructionWriterInterface<Short>
 	/** {@inheritDoc} */
 	@Override
 	public Short[] instruction2Array(InstructionDefinition<Short> instr) throws SVMException {
-		try ( CloseableThreadContext.Instance ctx = CloseableThreadContext.put("instr", instr.toString()) ) {
+		try ( @SuppressWarnings("unused") CloseableThreadContext.Instance ctx = CloseableThreadContext.put("instr", requireNonNull(instr, "instr").toString()) ) {
+			int erwarteteAnzahlParameter = instr.instruction().getAnzahlParameter();
+			int erhalteneAnzahlParameter = instr.params().length;
+			if ( erwarteteAnzahlParameter != erhalteneAnzahlParameter )
+				throw new SVMException("instr="+instr+": erwartete Parameter: "+erwarteteAnzahlParameter+"; erhalteneAnzahlParameter: "+erhalteneAnzahlParameter);
 			int indexBuffer = 0, indexParameter = 0, anzahlParameter = instr.instruction().getAnzahlParameter();
-			Short[] buf = new Short[instr.instruction().getInstrLenInWords(instr.instruction(), 2)]; // Short = 2 Byte len
+			Short[] buf = new Short[instr.instruction().getInstrLenInWords(instr.instruction(), WORTLAENGE_IN_BYTES)]; // Short = 2 Byte len
 			buf[indexBuffer] = (short) ((instr.instruction().getCode() << 8) | ( anzahlParameter > 0 ? instr.params()[indexParameter] : 0x0));
 			LOGGER.trace("indexBuffer={}; indexParameter={}: {}", indexBuffer, indexParameter, SVM.BD_SHORT.getBinaerDarstellung(buf[indexBuffer]));
 			for ( ++indexBuffer ; ++indexParameter < anzahlParameter; indexBuffer++ ) {

@@ -47,8 +47,8 @@ public class InstructionReaderShortTest {
 		mem.write(mem.getHighAddr(), (short) (Nop.CODE<<8));
 		var instructionDefinition = INSTRUCTION_READER.getInstruction(mem, mem.getHighAddr());
 		LOGGER.info("instructionDefinition={}",instructionDefinition);
-		assertThat(instructionDefinition.instr().getClass(), equalTo(Nop.class));
-		assertThat(instructionDefinition.args().length, equalTo(0));
+		assertThat(instructionDefinition.instruction().getClass(), equalTo(Nop.class));
+		assertThat(instructionDefinition.params().length, equalTo(0));
 		assertThat(instructionDefinition.len(), equalTo(1));
 	}
 
@@ -58,9 +58,9 @@ public class InstructionReaderShortTest {
 		mem.write(mem.getHighAddr(), (short) ((Int.class.getAnnotation(Instruction.class).code()<<8)+0x27));
 		var instructionDefinition = INSTRUCTION_READER.getInstruction(mem, mem.getHighAddr());
 		LOGGER.info("instructionDefinition={}",instructionDefinition);
-		assertThat(instructionDefinition.instr().getClass(), equalTo(Int.class));
-		assertThat(instructionDefinition.args().length, equalTo(1));
-		assertThat(instructionDefinition.args()[0], equalTo((byte) 0x27));
+		assertThat(instructionDefinition.instruction().getClass(), equalTo(Int.class));
+		assertThat(instructionDefinition.params().length, equalTo(1));
+		assertThat(instructionDefinition.params()[0], equalTo((byte) 0x27));
 		assertThat(instructionDefinition.len(), equalTo(1));
 	}
 
@@ -79,8 +79,8 @@ public class InstructionReaderShortTest {
 		mem.write(mem.getHighAddr(), (short) (instr.getClass().getAnnotation(Instruction.class).code()<<8));
 		var instructionDefinition = INSTRUCTION_READER.getInstruction(mem, mem.getHighAddr());
 		LOGGER.info("instructionDefinition={}",instructionDefinition);
-		assertThat(instructionDefinition.instr().getClass(), equalTo(instr.getClass()));
-		assertThat(instructionDefinition.args().length, equalTo(instructionDefinition.instr().getAnzahlParameter()));
+		assertThat(instructionDefinition.instruction().getClass(), equalTo(instr.getClass()));
+		assertThat(instructionDefinition.params().length, equalTo(instructionDefinition.instruction().getAnzahlParameter()));
 		assertThat(instructionDefinition.len(), equalTo(len));
 	}
 
@@ -93,7 +93,7 @@ public class InstructionReaderShortTest {
 				.map(codeAndInstr -> new Object[] {
 						codeAndInstr[0],
 						codeAndInstr[1],
-						INSTRUCTION_READER.getInstrLenInWords((InstructionInterface<Short>) codeAndInstr[1], WORTLAENGE_IN_BYTES)})
+						new Nop().getInstrLenInWords((InstructionInterface<Short>) codeAndInstr[1], WORTLAENGE_IN_BYTES)})
 				.map(Arguments::of);
 	}
 

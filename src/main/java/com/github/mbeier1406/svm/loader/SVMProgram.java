@@ -7,11 +7,13 @@ import java.util.List;
 import com.github.mbeier1406.svm.MEM;
 import com.github.mbeier1406.svm.SVM;
 import com.github.mbeier1406.svm.SVMException;
+import com.github.mbeier1406.svm.instructions.InstructionDefinition;
 import com.github.mbeier1406.svm.instructions.InstructionInterface;
 
 /**
  * Definiert alle Datenstrukturen und Methoden zur Speicherung
  * und zum Laden eines durch die {@linkplain SVM} ausführbaren Programms.
+ * Es handelt sich um die interne Repräsentation.
  */
 public interface SVMProgram<T> {
 
@@ -23,14 +25,7 @@ public interface SVMProgram<T> {
 		}
 	}
 
-	public static record InstructionDefinition<T>(InstructionInterface<T> instruction, byte[] params) {
-		public InstructionDefinition {
-			requireNonNull(instruction, "instruction");
-			requireNonNull(params, "params");
-		}
-	}
-
-	public void addCmd(final InstructionDefinition<T> instruction) throws SVMException;
+	public void addInstruction(final InstructionDefinition<T> instruction) throws SVMException;
 
 	/**
 	 * Diese Methode übernimmt die interne Repräsentation einer {@linkplain InstructionInterface Instruktion}

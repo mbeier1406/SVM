@@ -14,7 +14,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.github.mbeier1406.svm.MEM;
 import com.github.mbeier1406.svm.SVMException;
-import com.github.mbeier1406.svm.loader.SVMProgram.InstructionDefinition;
+import com.github.mbeier1406.svm.instructions.InstructionDefinition;
 
 public class SVMProgramShort implements SVMProgram<Short> {
 
@@ -41,7 +41,7 @@ public class SVMProgramShort implements SVMProgram<Short> {
 
 	/** {@inheritDoc} */
 	@Override
-	public void addCmd(InstructionDefinition<Short> instruction) throws SVMException {
+	public void addInstruction(InstructionDefinition<Short> instruction) throws SVMException {
 		int anzahlParameterErwartet = requireNonNull(instruction, "instruction").instruction().getAnzahlParameter();
 		int anzahlParameterErhalten = instruction.params().length;
 		if ( anzahlParameterErwartet != anzahlParameterErhalten )

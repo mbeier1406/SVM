@@ -40,13 +40,6 @@ public class SVMLoaderShort implements SVMLoader<Short> {
 			/* Schritt II: Programmcode einspielen */
 			LOGGER.debug("Code schreiben...");
 			for ( var cmd : svmProgram.getInstructionList() ) {
-				int indexParameter = 0, anzahlParameter = cmd.instruction().getAnzahlParameter();
-				short speicherWort = (short) ((cmd.instruction().getCode() << 8) | ( anzahlParameter > 0 ? cmd.params()[indexParameter] : 0x0));
-				LOGGER.trace("prgAddr={}; indexParameter={}: {}", prgAddr, indexParameter, SVM.BD_SHORT.getBinaerDarstellung(speicherWort));
-				mem.getInstructionInterface().write(this.prgAddr, speicherWort);
-				for ( ; ++indexParameter < anzahlParameter; ) {
-					
-				}
 			};
 
 		}

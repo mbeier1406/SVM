@@ -19,7 +19,7 @@ public class InstructionFactoryTest {
 	@Test
 	public void pruefeSyscalls() {
 		LOGGER.info("Instructions: {}", InstructionFactory.INSTRUCTIONS);
-		assertThat(InstructionFactory.INSTRUCTIONS.values(), contains(new Nop(), new Int()));
+		assertThat(InstructionFactory.INSTRUCTIONS.values(), contains(new Nop(), new Int(), new Mov()));
 	}
 
 }

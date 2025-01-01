@@ -34,7 +34,7 @@ public class InstructionReaderShort implements InstructionReaderInterface<Short>
 			LOGGER.trace("instr={}", instr);
 			if ( instr == null ) throw new SVMException("addr="+addr+", ungültiger Code: '"+cmd+"'");
 			/* Teil II: Länge der Instruktion mit Parametern in Wortlänge der SVM (hier: Short) ermitteln */
-			int lenInWords = getInstrLenInWords(instr, 2);
+			int lenInWords = instr.getInstrLenInWords(instr, 2);
 			LOGGER.trace("lenInWords={}", lenInWords);
 			/* Teil III: Parameterliste der Instruktion erstellen */
 			var args = new byte[instr.getAnzahlParameter()];

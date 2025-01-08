@@ -1,4 +1,4 @@
-package com.github.mbeier1406.svm.loader;
+package com.github.mbeier1406.svm.prg;
 
 import com.github.mbeier1406.svm.ALU;
 import com.github.mbeier1406.svm.ALU.Instruction;
@@ -6,7 +6,7 @@ import com.github.mbeier1406.svm.MEM;
 import com.github.mbeier1406.svm.SVM;
 import com.github.mbeier1406.svm.SVMException;
 import com.github.mbeier1406.svm.instructions.InstructionInterface;
-import com.github.mbeier1406.svm.loader.SVMProgram.Label;
+import com.github.mbeier1406.svm.prg.SVMProgram.Label;
 import com.github.mbeier1406.svm.syscalls.IO;
 
 /**

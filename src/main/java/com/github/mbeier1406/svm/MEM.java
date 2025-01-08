@@ -42,8 +42,9 @@ public interface MEM<T> {
 
 	/**
 	 * Füllt den Speicher mit Nullen auf (Löschen/Zurücksetzen).
+	 * @return Die Referenz auf den Speicher
 	 */
-	public void clear();
+	public MEM<T> clear();
 
 	/**
 	 * Liefert die oberste Adresse des Hauptspeichers.

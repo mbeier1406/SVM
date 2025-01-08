@@ -2,6 +2,9 @@ package com.github.mbeier1406.svm.instructions;
 
 import static com.github.mbeier1406.svm.impl.RuntimeShort.WORTLAENGE_IN_BYTES;
 import static java.util.Objects.requireNonNull;
+import static org.apache.logging.log4j.CloseableThreadContext.put;
+
+import java.util.Arrays;
 
 import org.apache.logging.log4j.CloseableThreadContext;
 import org.apache.logging.log4j.LogManager;
@@ -21,7 +24,7 @@ public class InstructionWriterShort implements InstructionWriterInterface<Short>
 	/** {@inheritDoc} */
 	@Override
 	public Short[] instruction2Array(InstructionDefinition<Short> instr) throws SVMException {
-		try ( @SuppressWarnings("unused") CloseableThreadContext.Instance ctx = CloseableThreadContext.put("instr", requireNonNull(instr, "instr").toString()) ) {
+		try ( @SuppressWarnings("unused") CloseableThreadContext.Instance ctx = put("instr", requireNonNull(instr, "instr").toString()) ) {
 			int erwarteteAnzahlParameter = instr.instruction().getAnzahlParameter();
 			int erhalteneAnzahlParameter = instr.params().length;
 			if ( erwarteteAnzahlParameter != erhalteneAnzahlParameter )
@@ -43,8 +46,13 @@ public class InstructionWriterShort implements InstructionWriterInterface<Short>
 	/** {@inheritDoc} */
 	@Override
 	public void writeInstruction(Instruction<Short> mem, int addr, InstructionDefinition<Short> instr) throws SVMException {
-		// TODO Auto-generated method stub
-		
+		try ( @SuppressWarnings("unused") CloseableThreadContext.Instance ctx =
+				put("mem", requireNonNull(mem, "mem").toString()).put("instr", requireNonNull(instr, "instr").toString()).put("addr", String.valueOf(addr)) ) {
+			Short[] instrInWords = instruction2Array(instr);
+			LOGGER.trace("instrInWords={}", Arrays.toString(instrInWords));
+			for ( short s : instrInWords )
+				mem.write(addr++, s);
+		}
 	}
 
 }

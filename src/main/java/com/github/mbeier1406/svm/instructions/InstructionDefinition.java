@@ -2,9 +2,12 @@ package com.github.mbeier1406.svm.instructions;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.Optional;
+
 import com.github.mbeier1406.svm.ALU;
 import com.github.mbeier1406.svm.MEM;
 import com.github.mbeier1406.svm.SVM;
+import com.github.mbeier1406.svm.SVMException;
 import com.github.mbeier1406.svm.prg.SVMProgram;
 
 /**
@@ -32,10 +35,18 @@ import com.github.mbeier1406.svm.prg.SVMProgram;
  * @see InstructionReaderInterface
  * @see SVMProgram
  */
-public record InstructionDefinition<T>(InstructionInterface<T> instruction, byte[] params, int lenInWords) {
+public record InstructionDefinition<T>(InstructionInterface<T> instruction, byte[] params, Optional<Integer> lenInWords) {
 	public InstructionDefinition {
 		requireNonNull(instruction, "instruction");
 		requireNonNull(params, "params");
+		requireNonNull(lenInWords, "lenInWords");
+		int erwarteteAnzahlParameter = instruction.getAnzahlParameter();
+		int erhalteneAnzahlParameter = params.length;
+		if ( erwarteteAnzahlParameter != erhalteneAnzahlParameter )
+			throw new IllegalArgumentException("instruction="+instruction+": erwartete Parameter: "+erwarteteAnzahlParameter+"; erhalteneAnzahlParameter: "+erhalteneAnzahlParameter);
+	}
+	/** Liefert die Größe der Instruktion mit Parametern im Hauptspeicher damit der IP entsprechend weitergesetzt werden kann */
+	public int getLenInMemoryInWords() throws SVMException {
+		return this.lenInWords.orElseThrow(() -> new SVMException("leninWords nicht gesetzt: "+this));
 	}
 }
-

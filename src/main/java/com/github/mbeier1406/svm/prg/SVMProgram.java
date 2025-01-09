@@ -62,6 +62,10 @@ public interface SVMProgram<T> {
 			requireNonNull(labelList, "labelList");			
 			for ( int i=0; i < labelList.length; i++ )
 				requireNonNull(labelList[i], "labelList["+i+"]");
+			int erwarteteAnzahlParameter = instruction.instruction().getAnzahlParameter();
+			int erhalteneAnzahlParameter = labelList.length;
+			if ( erwarteteAnzahlParameter != erhalteneAnzahlParameter )
+				throw new IllegalArgumentException("instruction="+instruction+": erwartete Parameter: "+erwarteteAnzahlParameter+"; erhalteneAnzahlParameter: "+erhalteneAnzahlParameter);
 		}
 	}
 

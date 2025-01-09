@@ -93,7 +93,7 @@ public class ALUShort implements ALU<Short>, Instruction<Short> {
 			final var instrDef = instructionReader.getInstruction(mem, ip);
 			LOGGER.trace("instr={}; len={} ({})", instrDef, instrDef.lenInWords(), BD_BYTE.getBinaerDarstellung(instrDef.instruction().getCode()));
 			instrDef.instruction().execute(instrDef.params());
-			this.ip -= instrDef.lenInWords();
+			this.ip -= instrDef.getLenInMemoryInWords();
 		}
 		LOGGER.debug("Stopp: {}", this);
 		return this.register[0];

@@ -25,10 +25,6 @@ public class InstructionWriterShort implements InstructionWriterInterface<Short>
 	@Override
 	public Short[] instruction2Array(InstructionDefinition<Short> instr) throws SVMException {
 		try ( @SuppressWarnings("unused") CloseableThreadContext.Instance ctx = put("instr", requireNonNull(instr, "instr").toString()) ) {
-			int erwarteteAnzahlParameter = instr.instruction().getAnzahlParameter();
-			int erhalteneAnzahlParameter = instr.params().length;
-			if ( erwarteteAnzahlParameter != erhalteneAnzahlParameter )
-				throw new SVMException("instr="+instr+": erwartete Parameter: "+erwarteteAnzahlParameter+"; erhalteneAnzahlParameter: "+erhalteneAnzahlParameter);
 			int indexBuffer = 0, indexParameter = 0, anzahlParameter = instr.instruction().getAnzahlParameter();
 			Short[] buf = new Short[instr.instruction().getInstrLenInWords(instr.instruction(), WORTLAENGE_IN_BYTES)]; // Short = 2 Byte len
 			buf[indexBuffer] = (short) ((instr.instruction().getCode() << 8) | ( anzahlParameter > 0 ? instr.params()[indexParameter] : 0x0));

@@ -49,7 +49,7 @@ public class InstructionReaderShortTest {
 		LOGGER.info("instructionDefinition={}",instructionDefinition);
 		assertThat(instructionDefinition.instruction().getClass(), equalTo(Nop.class));
 		assertThat(instructionDefinition.params().length, equalTo(0));
-		assertThat(instructionDefinition.lenInWords(), equalTo(1));
+		assertThat(instructionDefinition.getLenInMemoryInWords(), equalTo(1));
 	}
 
 	/** Prüft, ob die {@linkplain Int}-Instruktion mitParametr korrekt eingelesen wird */
@@ -61,7 +61,7 @@ public class InstructionReaderShortTest {
 		assertThat(instructionDefinition.instruction().getClass(), equalTo(Int.class));
 		assertThat(instructionDefinition.params().length, equalTo(1));
 		assertThat(instructionDefinition.params()[0], equalTo((byte) 0x27));
-		assertThat(instructionDefinition.lenInWords(), equalTo(1));
+		assertThat(instructionDefinition.getLenInMemoryInWords(), equalTo(1));
 	}
 
 	/**
@@ -81,7 +81,7 @@ public class InstructionReaderShortTest {
 		LOGGER.info("instructionDefinition={}",instructionDefinition);
 		assertThat(instructionDefinition.instruction().getClass(), equalTo(instr.getClass()));
 		assertThat(instructionDefinition.params().length, equalTo(instructionDefinition.instruction().getAnzahlParameter()));
-		assertThat(instructionDefinition.lenInWords(), equalTo(len));
+		assertThat(instructionDefinition.getLenInMemoryInWords(), equalTo(len));
 	}
 
 	/** Liefert die Testfälle (alle Instruktionen): 1. den Code der Instruktion, die erwartete Instruktion und die erwartete Länge der Instruktion */

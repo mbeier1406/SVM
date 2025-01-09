@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -44,7 +45,7 @@ public class SVMProgramShortTest {
 	public final InstructionInterface<Short> INT = InstructionFactory.INSTRUCTIONS.get(Int.CODE);
 	public final InstructionInterface<Short> MOV = InstructionFactory.INSTRUCTIONS.get(Mov.CODE);
 
-	public final InstructionDefinition<Short> instrNop = new InstructionDefinition<>(NOP, new byte[] {}, 0);
+	public final InstructionDefinition<Short> instrNop = new InstructionDefinition<>(NOP, new byte[] {}, Optional.empty());
 //	public final SVMProgram.VirtualInstruction<Short> instrNop = new SVMProgram.VirtualInstruction<>(labelA, new Short[]{1, 2, 3});
 
 

@@ -1,5 +1,6 @@
 package com.github.mbeier1406.svm.prg;
 
+import static com.github.mbeier1406.svm.instructions.InstructionFactory.INSTRUCTIONS;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -9,7 +10,8 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 import com.github.mbeier1406.svm.instructions.InstructionDefinition;
-import com.github.mbeier1406.svm.instructions.InstructionFactory;
+import com.github.mbeier1406.svm.instructions.Int;
+import com.github.mbeier1406.svm.instructions.Mov;
 import com.github.mbeier1406.svm.instructions.Nop;
 import com.github.mbeier1406.svm.prg.SVMProgram.LabelType;
 
@@ -21,8 +23,14 @@ public class SVMProgramTest {
 	/** Als Parameter für die Tests */
 	public SVMProgram.Label label = new SVMProgram.Label(LabelType.DATA, "A");
 
-	/** Als Parameter für die Tests */
-	public InstructionDefinition<Short> instructionDefinition = new InstructionDefinition<Short>(InstructionFactory.INSTRUCTIONS.get(Nop.CODE), new byte[] {}, 1);
+	/** NOP Als Parameter für die Tests */
+	public InstructionDefinition<Short> instructionDefinitionNOP = new InstructionDefinition<Short>(INSTRUCTIONS.get(Nop.CODE), new byte[] {}, Optional.of(1));
+
+	/** INT Als Parameter für die Tests */
+	public InstructionDefinition<Short> instructionDefinitionINT = new InstructionDefinition<Short>(INSTRUCTIONS.get(Int.CODE), new byte[] {1}, Optional.of(1));
+
+	/** MOV Als Parameter für die Tests */
+	public InstructionDefinition<Short> instructionDefinitionMOV = new InstructionDefinition<Short>(INSTRUCTIONS.get(Mov.CODE), new byte[] {1,2,3,4,5}, Optional.of(1));
 
 
 	/** Label ist <b>null</b> */
@@ -41,7 +49,7 @@ public class SVMProgramTest {
 	/** VirtualInstruction: Label ist <b>null</b> */
 	@Test
 	public void testeVirtualInstructionNullLabel() {
-		assertThrows(NullPointerException.class, () -> new SVMProgram.VirtualInstruction<Short>(null, instructionDefinition, new SVMProgram.Label[] {}));
+		assertThrows(NullPointerException.class, () -> new SVMProgram.VirtualInstruction<Short>(null, instructionDefinitionNOP, new SVMProgram.Label[] {}));
 	}
 
 	/** VirtualInstruction: InstructionDefinition ist <b>null</b> */
@@ -53,15 +61,39 @@ public class SVMProgramTest {
 	/** VirtualInstruction: LabelListe ist <b>null</b> */
 	@Test
 	public void testeVirtualInstructionNullLabelList() {
-		assertThrows(NullPointerException.class, () -> new SVMProgram.VirtualInstruction<Short>(Optional.empty(), instructionDefinition, null));
+		assertThrows(NullPointerException.class, () -> new SVMProgram.VirtualInstruction<Short>(Optional.empty(), instructionDefinitionNOP, null));
 	}
 
 	/** VirtualInstruction: LabelListe enthält einen <b>null</b>-Wert */
 	@Test
 	public void testeVirtualInstructionNullValueInLabelList() {
 		final NullPointerException ex = assertThrows(NullPointerException.class, () ->
-			new SVMProgram.VirtualInstruction<Short>(Optional.empty(), instructionDefinition, new SVMProgram.Label[] { label, null, label}));
+			new SVMProgram.VirtualInstruction<Short>(Optional.empty(), instructionDefinitionNOP, new SVMProgram.Label[] { label, null, label}));
 		assertThat(ex.getLocalizedMessage(), containsString("labelList[1]"));
+	}
+
+	/** VirtualInstruction (NOP): LabelListe enthält nicht die erwartete Anzahl Elemente */
+	@Test
+	public void testeVirtualInstructionLenLabelListNOP() {
+		final IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () ->
+			new SVMProgram.VirtualInstruction<Short>(Optional.empty(), instructionDefinitionNOP, new SVMProgram.Label[] { label }));
+		assertThat(ex.getLocalizedMessage(), containsString("erwartete Parameter: 0; erhalteneAnzahlParameter: 1"));
+	}
+
+	/** VirtualInstruction (INT): LabelListe enthält nicht die erwartete Anzahl Elemente */
+	@Test
+	public void testeVirtualInstructionLenLabelListINT() {
+		final IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () ->
+			new SVMProgram.VirtualInstruction<Short>(Optional.empty(), instructionDefinitionINT, new SVMProgram.Label[] {}));
+		assertThat(ex.getLocalizedMessage(), containsString("erwartete Parameter: 1; erhalteneAnzahlParameter: 0"));
+	}
+
+	/** VirtualInstruction (MOV): LabelListe enthält nicht die erwartete Anzahl Elemente */
+	@Test
+	public void testeVirtualInstructionLenLabelListMOV() {
+		final IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () ->
+			new SVMProgram.VirtualInstruction<Short>(Optional.empty(), instructionDefinitionMOV, new SVMProgram.Label[] {label,label,label}));
+		assertThat(ex.getLocalizedMessage(), containsString("erwartete Parameter: 5; erhalteneAnzahlParameter: 3"));
 	}
 
 	/** Data: Label ist <b>null</b> */

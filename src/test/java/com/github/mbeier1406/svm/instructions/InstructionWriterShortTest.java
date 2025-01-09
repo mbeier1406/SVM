@@ -1,12 +1,11 @@
 package com.github.mbeier1406.svm.instructions;
 
-import static com.github.mbeier1406.svm.impl.RuntimeShort.WORTLAENGE_IN_BYTES;
 import static com.github.mbeier1406.svm.instructions.InstructionFactory.INSTRUCTIONS;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.apache.logging.log4j.LogManager;
@@ -37,19 +36,12 @@ public class InstructionWriterShortTest {
 		assertThat(ex.getMessage(), equalTo("instr"));
 	}
 
-	/** Stellt sicher, dass bei unpassender Parameterliste ein entsprechender Fehöer erzeugt wird */
-	@Test
-	public void teste2ArrayFalscheAnzahlParameter() {
-		SVMException ex = assertThrows(SVMException.class, () -> instructionWriter.instruction2Array(new InstructionDefinition<>(new Nop(), new byte[1], WORTLAENGE_IN_BYTES)));
-		assertThat(ex.getMessage(), containsString("erwartete Parameter: 0; erhalteneAnzahlParameter: 1"));
-	}
-
 	/** Stellt sicher, dass aus einer Instruktion mit Parametern die korrekte Wortfolge für den Speicher wird */
 	@ParameterizedTest
 	@MethodSource("getTestParameter")
 	public void testeInstruction2Array(final InstructionInterface<Short> instr, byte[] params, Short[] speicherErwartet) throws SVMException {
 		LOGGER.trace("instr={}", instr);
-		Short[] instruction2Array = instructionWriter.instruction2Array(new InstructionDefinition<>(instr, params, WORTLAENGE_IN_BYTES));
+		Short[] instruction2Array = instructionWriter.instruction2Array(new InstructionDefinition<>(instr, params, Optional.empty()));
 		for ( int i=0; i < speicherErwartet.length; i++ )
 			LOGGER.info("speicherErwartet[{}]={}\t({})", i, speicherErwartet[i], SVM.BD_SHORT.getBinaerDarstellung(speicherErwartet[i]));
 		for ( int i=0; i < instruction2Array.length; i++ )
@@ -64,8 +56,8 @@ public class InstructionWriterShortTest {
 		LOGGER.trace("instr={}", instr);
 		var mem = new MEMShort().clear();
 		var instructionInterface = mem.getInstructionInterface();
-		var instructionDefinition = new InstructionDefinition<>(instr, params, WORTLAENGE_IN_BYTES);
-		var instruction2Array = instructionWriter.instruction2Array(new InstructionDefinition<>(instr, params, WORTLAENGE_IN_BYTES));
+		var instructionDefinition = new InstructionDefinition<>(instr, params, Optional.empty());
+		var instruction2Array = instructionWriter.instruction2Array(new InstructionDefinition<>(instr, params, Optional.empty()));
 		instructionWriter.writeInstruction(instructionInterface, mem.getLowAddr(), instructionDefinition);
 		for ( int i=0; i < instruction2Array.length; i++ )
 			assertThat(instructionInterface.read(mem.getLowAddr()+i), equalTo(instruction2Array[i]));

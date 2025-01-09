@@ -40,7 +40,7 @@ public class SVMProgramShort implements SVMProgram<Short> {
 
 	/** {@inheritDoc} */
 	@Override
-	public void addData(Data<Short> data) throws SVMException {
+	public void addData(Data<Short> data) {
 		LOGGER.trace("Index {}: data={}", this.dataList.size(), data);
 		this.dataList.add(data);
 	}
@@ -58,15 +58,14 @@ public class SVMProgramShort implements SVMProgram<Short> {
 			LOGGER.debug("SVMProgramm={}", this);
 			final List<Label> labelList = new ArrayList<>();
 
-			/* Schritt I: Daten prüfen; 1.Label eindeutig,  */
+			/* Schritt I: Daten prüfen; Label eindeutig */
 			for ( int i=0; i < this.dataList.size(); i++ ) {
 				Label labelZuPruefen = this.dataList.get(i).label();
 				int indexOfLabel = labelList.indexOf(labelZuPruefen);
 				LOGGER.trace("labelZuPruefen={}; indexOfLabel={}: ", labelZuPruefen, indexOfLabel);
 				String s = "[Data] Index "+i+": Label "+labelZuPruefen;
-				if ( indexOfLabel >= 0 ) throw new SVMException(s+"Label doppelt (an Index "+indexOfLabel+")!");
-				if ( labelZuPruefen.labelType() !=  LabelType.DATA )
-					throw new SVMException(s+"Label ist nicht vom Typ '"+LabelType.DATA+"': "+labelZuPruefen.labelType());
+				if ( indexOfLabel >= 0 ) throw new SVMException(s+": Label doppelt (an Index "+indexOfLabel+")!");
+				labelList.add(labelZuPruefen);
 			};
 
 //			int anzahlParameterErwartet = requireNonNull(instruction, "instruction").instruction().getAnzahlParameter();

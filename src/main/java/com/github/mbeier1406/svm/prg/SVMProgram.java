@@ -86,7 +86,7 @@ public interface SVMProgram<T> {
 	}
 
 	/** Fügt ein Datenobjekt in die Liste der Objekte ein */
-	public void addData(final Data<T> data) throws SVMException;
+	public void addData(final Data<T> data);
 
 	/** Liefert die Liste der Datenobjekte, diese hat keine Ordnung, da die Objekte selber Adressen über den Label erhalten */
 	public List<Data<T>> getDataList();

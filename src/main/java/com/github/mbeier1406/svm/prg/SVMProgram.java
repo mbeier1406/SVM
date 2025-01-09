@@ -3,6 +3,7 @@ package com.github.mbeier1406.svm.prg;
 import static java.util.Objects.requireNonNull;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.github.mbeier1406.svm.MEM;
 import com.github.mbeier1406.svm.SVM;
@@ -32,9 +33,10 @@ public interface SVMProgram<T> {
 	}
 
 	/**
-	 * {@linkplain InstructionDefinition Instruktionen} können Parameter erthalten, die Adressen sind,
-	 * deren Wert zum Zeitpunkt der Programmerstellung noch nicht bekannt ist. Diese werden erst beim
-	 * Laden in den Speicher der SVM bestimmt. Bei einer virtuellen Instruktion werden für jeden
+	 * {@linkplain InstructionDefinition Instruktionen} können einem {@linkplain Label} nachgestellt
+	 * sein, d. h. sie sind das Ziel eines Sprungbefehls sein. Sie können auch  Parameter erthalten, die
+	 * Adressen sind, deren Wert zum Zeitpunkt der Programmerstellung noch nicht bekannt ist. Diese werden
+	 * erst beim Laden in den Speicher der SVM bestimmt. Bei einer virtuellen Instruktion werden für jeden
 	 * Parameter in der Liste ({@linkplain InstructionDefinition#params()}, Anzahl bestimmt durch
 	 * {@linkplain InstructionInterface#getAnzahlParameter()}) eine Information bereitgestellt, die
 	 * aussagt, ob es sich bei dem Parameter um eine absolute (oder gar keine) Adresse handelt, oder
@@ -48,10 +50,14 @@ public interface SVMProgram<T> {
 	 * <li>{@code Label[i]} ist <u>nicht</u> <b>null</b>: es wird die sich beim Laden ergebende
 	 * Adresse des labels verwendet.</li>
 	 * </ul>
+	 * @param label der Label, der dieser Instruktion vorangestellt ist, d. h. die Instruktion kann Ziel eines Sprungbefehls sein
+	 * @param instruction die auszuführende Instruktion
+	 * @param labelList falls die Instruktion Parameter erhält, können hier virtuelle Adresse/Label eingesetzt werden
 	 * @param <T> Die Wortänge der {@linkplain SVM}
 	 */
-	public record VirtualInstruction<T>(InstructionDefinition<T> instruction, Label[] labelList) {
+	public record VirtualInstruction<T>(Optional<Label> label, InstructionDefinition<T> instruction, Label[] labelList) {
 		public VirtualInstruction {
+			requireNonNull(label, "label");			
 			requireNonNull(instruction, "instruction");			
 			requireNonNull(labelList, "labelList");			
 			for ( int i=0; i < labelList.length; i++ )

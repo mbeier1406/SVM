@@ -1,7 +1,10 @@
 package com.github.mbeier1406.svm.prg;
 
+import static com.github.mbeier1406.svm.instructions.InstructionFactory.INSTRUCTIONS;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import com.github.mbeier1406.svm.SVM;
 import com.github.mbeier1406.svm.SVMException;
 import com.github.mbeier1406.svm.instructions.InstructionInterface;
+import com.github.mbeier1406.svm.instructions.Int;
 
 /**
  * Dies Klasse speichert die interne Repräsentation eines Programms, das durch die
@@ -56,17 +60,42 @@ public class SVMProgramShort implements SVMProgram<Short> {
 	public void validate() throws SVMException {
 		try {
 			LOGGER.debug("SVMProgramm={}", this);
-			final List<Label> labelList = new ArrayList<>();
+			final List<Label> labelListDaten = new ArrayList<>();
 
 			/* Schritt I: Daten prüfen; Label eindeutig */
+			LOGGER.trace("[Data] prüfen...");
 			for ( int i=0; i < this.dataList.size(); i++ ) {
 				Label labelZuPruefen = this.dataList.get(i).label();
-				int indexOfLabel = labelList.indexOf(labelZuPruefen);
-				LOGGER.trace("labelZuPruefen={}; indexOfLabel={}: ", labelZuPruefen, indexOfLabel);
-				String s = "[Data] Index "+i+": Label "+labelZuPruefen;
-				if ( indexOfLabel >= 0 ) throw new SVMException(s+": Label doppelt (an Index "+indexOfLabel+")!");
-				labelList.add(labelZuPruefen);
+				int indexOfLabel = labelListDaten.indexOf(labelZuPruefen);
+				LOGGER.trace("[Data] labelZuPruefen={}; indexOfLabel={}: ", labelZuPruefen, indexOfLabel);
+				if ( indexOfLabel >= 0 ) throw new SVMException("[Data] Index "+i+": Label "+labelZuPruefen+": Label doppelt (an Index "+indexOfLabel+")!");
+				labelListDaten.add(labelZuPruefen);
 			};
+
+			/* Schritt II: Programm muss mindestens eine Instruktion enthalten  */
+			LOGGER.trace("[Instr] prüfen...");
+			if ( this.instructionList.isEmpty() ) throw new SVMException("[Instr] Leeres Programm: mindestens eine Instruktion wird erwartet!");
+
+			/* Schritt III: Label als Ziel von Sprungbefehlen dürfen nicht doppel oder in den Daten verwendet worden sein */
+			LOGGER.trace("[Instr] Ziel-Label prüfen...");
+			final List<Label> labelListInstr = new ArrayList<>();
+			for ( int i=0; i < this.instructionList.size(); i++ )
+				if ( this.instructionList.get(i).label().isPresent() ) {
+					Label labelZuPruefen = this.instructionList.get(i).label().get();
+					int indexOfLabel = labelListDaten.indexOf(labelZuPruefen);
+					LOGGER.trace("[Instr] in Daten: labelZuPruefen={}; indexOfLabel={}: ", labelZuPruefen, indexOfLabel);
+					if ( indexOfLabel >= 0 ) throw new SVMException("[Instr] in Daten:  Index "+i+": Label "+labelZuPruefen+": Label doppelt (an Index "+indexOfLabel+")!");
+				}
+
+
+			/* letzte Instruktion muss INT/Syscall sein (EXIT) */
+			var anzInstr = this.instructionList.size();
+			var lastInstr = this.instructionList.get(anzInstr-1);
+			LOGGER.trace("anzInstr={}; lastInstr={}", anzInstr, lastInstr);
+			if ( lastInstr.instruction().instruction().equals(INSTRUCTIONS.get(Int.CODE)) )
+				throw new SVMException("INT wird als letzte Instruktion erwartet!");
+
+
 
 //			int anzahlParameterErwartet = requireNonNull(instruction, "instruction").instruction().getAnzahlParameter();
 //			int anzahlParameterErhalten = instruction.params().length;

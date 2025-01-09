@@ -4,6 +4,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
 
 import com.github.mbeier1406.svm.instructions.InstructionDefinition;
@@ -36,23 +38,29 @@ public class SVMProgramTest {
 		assertThat(ex.getLocalizedMessage(), containsString("label"));
 	}
 
+	/** VirtualInstruction: Label ist <b>null</b> */
+	@Test
+	public void testeVirtualInstructionNullLabel() {
+		assertThrows(NullPointerException.class, () -> new SVMProgram.VirtualInstruction<Short>(null, instructionDefinition, new SVMProgram.Label[] {}));
+	}
+
 	/** VirtualInstruction: InstructionDefinition ist <b>null</b> */
 	@Test
 	public void testeVirtualInstructionNullInstructionDefinition() {
-		assertThrows(NullPointerException.class, () -> new SVMProgram.VirtualInstruction<Short>(null, new SVMProgram.Label[] {}));
+		assertThrows(NullPointerException.class, () -> new SVMProgram.VirtualInstruction<Short>(Optional.empty(), null, new SVMProgram.Label[] {}));
 	}
 
 	/** VirtualInstruction: LabelListe ist <b>null</b> */
 	@Test
 	public void testeVirtualInstructionNullLabelList() {
-		assertThrows(NullPointerException.class, () -> new SVMProgram.VirtualInstruction<Short>(instructionDefinition, null));
+		assertThrows(NullPointerException.class, () -> new SVMProgram.VirtualInstruction<Short>(Optional.empty(), instructionDefinition, null));
 	}
 
 	/** VirtualInstruction: LabelListe enthält einen <b>null</b>-Wert */
 	@Test
 	public void testeVirtualInstructionNullValueInLabelList() {
 		final NullPointerException ex = assertThrows(NullPointerException.class, () ->
-			new SVMProgram.VirtualInstruction<Short>(instructionDefinition, new SVMProgram.Label[] { label, null, label}));
+			new SVMProgram.VirtualInstruction<Short>(Optional.empty(), instructionDefinition, new SVMProgram.Label[] { label, null, label}));
 		assertThat(ex.getLocalizedMessage(), containsString("labelList[1]"));
 	}
 

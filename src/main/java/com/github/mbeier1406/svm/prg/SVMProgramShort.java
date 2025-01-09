@@ -4,7 +4,6 @@ import static com.github.mbeier1406.svm.instructions.InstructionFactory.INSTRUCT
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -84,9 +83,12 @@ public class SVMProgramShort implements SVMProgram<Short> {
 					Label labelZuPruefen = this.instructionList.get(i).label().get();
 					int indexOfLabel = labelListDaten.indexOf(labelZuPruefen);
 					LOGGER.trace("[Instr] in Daten: labelZuPruefen={}; indexOfLabel={}: ", labelZuPruefen, indexOfLabel);
-					if ( indexOfLabel >= 0 ) throw new SVMException("[Instr] in Daten:  Index "+i+": Label "+labelZuPruefen+": Label doppelt (an Index "+indexOfLabel+")!");
+					if ( indexOfLabel >= 0 ) throw new SVMException("[Instr] in Daten: Index "+i+": Label "+labelZuPruefen+": Label doppelt (an Index "+indexOfLabel+")!");
+					indexOfLabel = labelListInstr.indexOf(labelZuPruefen);
+					LOGGER.trace("[Instr] labelZuPruefen={}; indexOfLabel={}: ", labelZuPruefen, indexOfLabel);
+					if ( indexOfLabel >= 0 ) throw new SVMException("[Instr] Index "+i+": Label "+labelZuPruefen+": Label doppelt (an Index "+indexOfLabel+")!");
+					labelListInstr.add(labelZuPruefen);
 				}
-
 
 			/* letzte Instruktion muss INT/Syscall sein (EXIT) */
 			var anzInstr = this.instructionList.size();
@@ -95,18 +97,6 @@ public class SVMProgramShort implements SVMProgram<Short> {
 			if ( lastInstr.instruction().instruction().equals(INSTRUCTIONS.get(Int.CODE)) )
 				throw new SVMException("INT wird als letzte Instruktion erwartet!");
 
-
-
-//			int anzahlParameterErwartet = requireNonNull(instruction, "instruction").instruction().getAnzahlParameter();
-//			int anzahlParameterErhalten = instruction.params().length;
-//			if ( anzahlParameterErwartet != anzahlParameterErhalten )
-//				throw new SVMException(
-//						"instruction="+instruction+
-//						" (Index "+this.instructionList.size()+")"+
-//						": erwartete Parameter "+anzahlParameterErwartet+
-//						"; erhalten "+anzahlParameterErhalten);
-
-			// TODO letzte Instruktion syscall exit
 		}
 		catch ( Exception e ) {
 			LOGGER.error("{}", this, e);

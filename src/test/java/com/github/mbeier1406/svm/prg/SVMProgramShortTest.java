@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.github.mbeier1406.svm.SVMException;
@@ -25,7 +26,7 @@ import com.github.mbeier1406.svm.prg.SVMProgram.LabelType;
 public class SVMProgramShortTest {
 
 	/** Das zu testende Objekt */
-	public final SVMProgramShort svmProgram = new SVMProgramShort();
+	public SVMProgramShort svmProgram;
 
 	/** Ein paar Label zum Test */
 	public final Label labelA = new Label(LabelType.DATA, "A");
@@ -45,11 +46,24 @@ public class SVMProgramShortTest {
 	public final InstructionInterface<Short> INT = InstructionFactory.INSTRUCTIONS.get(Int.CODE);
 	public final InstructionInterface<Short> MOV = InstructionFactory.INSTRUCTIONS.get(Mov.CODE);
 
+	/** Instruktionen mit Parametern */
 	public final InstructionDefinition<Short> instrNop = new InstructionDefinition<>(NOP, new byte[] {}, Optional.empty());
-//	public final SVMProgram.VirtualInstruction<Short> instrNop = new SVMProgram.VirtualInstruction<>(labelA, new Short[]{1, 2, 3});
+	public final InstructionDefinition<Short> instrInt = new InstructionDefinition<>(INT, new byte[] {1}, Optional.empty());
+	public final InstructionDefinition<Short> instrMov = new InstructionDefinition<>(MOV, new byte[] {1,2,3,4,5}, Optional.empty());
+
+	/** Einige Instruktionen <b>ohne</b> Label */
+	public final SVMProgram.VirtualInstruction<Short> virtInstrNopOhneLabel = new SVMProgram.VirtualInstruction<>(Optional.empty(), instrNop, new Label[]{});
+
+	/** Einige Instruktionen <b>mit</b> Label */
+	public final SVMProgram.VirtualInstruction<Short> virtInstrNopMitLabelA = new SVMProgram.VirtualInstruction<>(Optional.of(labelA), instrNop, new Label[]{});
 
 
-	/** Datenprüfung: Stellt sicher, dass die Labels für Datenobjekte eindeutig sind */
+	@BeforeEach
+	public void init() {
+		svmProgram = new SVMProgramShort();
+	}
+
+	/** Daten: Stellt sicher, dass die Labels für Datenobjekte eindeutig sind */
 	@Test
 	public void testeDoppelteDatenlabel() throws SVMException {
 		Stream.of(dataA, dataB, dataC, dataA).forEach(svmProgram::addData);
@@ -57,10 +71,32 @@ public class SVMProgramShortTest {
 		assertThat(svmException.getLocalizedMessage(), containsString("label=A]: Label doppelt (an Index 0)"));
 	}
 
-	/** Stellt sicher, dass das Programm mind. eine Instruktion enthält */
+	/** Instr: Stellt sicher, dass das Programm mind. eine Instruktion enthält */
 	public void testeLeeresProgramm() throws SVMException {
 		SVMException svmException = assertThrows(SVMException.class, () -> svmProgram.validate());
 		assertThat(svmException.getLocalizedMessage(), containsString("Leeres Programm"));
+	}
+
+	/** Instr: Stellt sicher, dass die Labels der Instruktionen nicht auf die Labels der Daten verweisen */
+	@Test
+	public void testeDatenlabelInInstrVerwendet() throws SVMException {
+		Stream.of(dataA, dataB, dataC).forEach(svmProgram::addData);
+		Stream.of(virtInstrNopOhneLabel, virtInstrNopMitLabelA).forEach(svmProgram::addInstruction);
+		SVMException svmException = assertThrows(SVMException.class, () -> svmProgram.validate());
+		assertThat(svmException.getLocalizedMessage(), containsString("[Instr] in Daten: Index 1: Label Label[labelType=DATA, label=A]: Label doppelt (an Index 0)"));
+	}
+
+	/** Instr: Stellt sicher, dass die Labels für Sprungadressen nicht doppelt vergeben werden */
+	@Test
+	public void testeLabelInInstrDoppeltVerwendet() throws SVMException {
+		Stream.of(virtInstrNopMitLabelA, virtInstrNopOhneLabel, virtInstrNopMitLabelA).forEach(svmProgram::addInstruction);
+		SVMException svmException = assertThrows(SVMException.class, () -> svmProgram.validate());
+		assertThat(svmException.getLocalizedMessage(), containsString("[Instr] Index 2: Label Label[labelType=DATA, label=A]: Label doppelt (an Index 0)"));
+	}
+
+	@Test
+	public void testeLetzteInstruktionInt1() {
+		
 	}
 
 }

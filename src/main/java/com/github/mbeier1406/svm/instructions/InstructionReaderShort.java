@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import com.github.mbeier1406.svm.MEM;
 import com.github.mbeier1406.svm.SVM;
 import com.github.mbeier1406.svm.SVMException;
+import com.github.mbeier1406.svm.impl.RuntimeShort;
 
 /**
  * Implementierung für das Einlesen des nächsten, auszuführenden Maschinenbefehls
@@ -34,7 +35,7 @@ public class InstructionReaderShort implements InstructionReaderInterface<Short>
 			LOGGER.trace("instr={}", instr);
 			if ( instr == null ) throw new SVMException("addr="+addr+", ungültiger Code: '"+cmd+"'");
 			/* Teil II: Länge der Instruktion mit Parametern in Wortlänge der SVM (hier: Short) ermitteln */
-			int lenInWords = instr.getInstrLenInWords(instr, 2);
+			int lenInWords = instr.getInstrLenInWords(instr, RuntimeShort.WORTLAENGE_IN_BYTES);
 			LOGGER.trace("lenInWords={}", lenInWords);
 			/* Teil III: Parameterliste der Instruktion erstellen */
 			var args = new byte[instr.getAnzahlParameter()];

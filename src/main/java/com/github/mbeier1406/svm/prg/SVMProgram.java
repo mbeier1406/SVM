@@ -54,6 +54,8 @@ public interface SVMProgram<T> {
 		public VirtualInstruction {
 			requireNonNull(instruction, "instruction");			
 			requireNonNull(labelList, "labelList");			
+			for ( int i=0; i < labelList.length; i++ )
+				requireNonNull(labelList[i], "labelList["+i+"]");
 		}
 	}
 
@@ -73,12 +75,13 @@ public interface SVMProgram<T> {
 	public List<VirtualInstruction<T>> getInstructionList();
 
 	/** Daten, die im {@linkplain MEM Speicher} abgelegt werden, können über einen Labe adressiert werden */
-	public static record Data<T>(Label label, T[] data) {
+	public static record Data<T>(Label label, T[] dataList) {
 		public Data {
 			requireNonNull(label, "label");
-			if ( requireNonNull(data, "data").length == 0 ) throw new IllegalArgumentException("data");
-			for ( int i=0; i < data.length; i++ )
-				requireNonNull(data[i], "data["+i+"]");
+			if ( label.labelType != LabelType.DATA ) throw new IllegalArgumentException("Labeltyp ungültig: "+label.labelType);
+			if ( requireNonNull(dataList, "dataList").length == 0 ) throw new IllegalArgumentException("dataList");
+			for ( int i=0; i < dataList.length; i++ )
+				requireNonNull(dataList[i], "dataList["+i+"]");
 		}
 	}
 

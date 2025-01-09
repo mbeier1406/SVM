@@ -58,7 +58,7 @@ public class SVMProgramShort implements SVMProgram<Short> {
 			LOGGER.debug("SVMProgramm={}", this);
 			final List<Label> labelList = new ArrayList<>();
 
-			/* Schritt I: Daten prüfen */
+			/* Schritt I: Daten prüfen; 1.Label eindeutig,  */
 			for ( int i=0; i < this.dataList.size(); i++ ) {
 				Label labelZuPruefen = this.dataList.get(i).label();
 				int indexOfLabel = labelList.indexOf(labelZuPruefen);

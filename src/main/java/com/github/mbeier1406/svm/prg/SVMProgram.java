@@ -46,16 +46,15 @@ public interface SVMProgram<T> {
 	 * &lt;Label1>&lt;Label2>&lt;...></code>. Die beiden Listen müssen gleich lang sein. Folgende
 	 * Kombinationen sind zulässig:
 	 * <ul>
-	 * <li>{@code Label[i]} ist <b>null</b>: es wird der Wert in {@code Param[i]} verwendet.</li>
-	 * <li>{@code Label[i]} ist <u>nicht</u> <b>null</b>: es wird die sich beim Laden ergebende
-	 * Adresse des labels verwendet.</li>
+	 * <li>{@code Label[i]} ist <b>nicht gesetzt</b>: es wird der Wert in {@code Param[i]} verwendet.</li>
+	 * <li>{@code Label[i]} ist <b>gesetzt</b>: es wird die sich beim Laden ergebende Adresse des Labels verwendet.</li>
 	 * </ul>
 	 * @param label der Label, der dieser Instruktion vorangestellt ist, d. h. die Instruktion kann Ziel eines Sprungbefehls sein
 	 * @param instruction die auszuführende Instruktion
 	 * @param labelList falls die Instruktion Parameter erhält, können hier virtuelle Adresse/Label eingesetzt werden
 	 * @param <T> Die Wortänge der {@linkplain SVM}
 	 */
-	public record VirtualInstruction<T>(Optional<Label> label, InstructionDefinition<T> instruction, Label[] labelList) {
+	public record VirtualInstruction<T>(Optional<Label> label, InstructionDefinition<T> instruction, Optional<Label>[] labelList) {
 		public VirtualInstruction {
 			requireNonNull(label, "label");			
 			requireNonNull(instruction, "instruction");			

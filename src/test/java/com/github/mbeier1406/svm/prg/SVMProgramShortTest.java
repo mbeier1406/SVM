@@ -32,9 +32,15 @@ public class SVMProgramShortTest {
 	public final Label labelA = new Label(LabelType.DATA, "A");
 	public final Label labelB = new Label(LabelType.DATA, "B");
 	public final Label labelC = new Label(LabelType.DATA, "C");
+	public final Label labelD = new Label(LabelType.INSTRUCTION, "D");
 
 	/** Dieser Label gilt nur für Instruktionen */
 	public final Label labelFalscherTypData = new Label(LabelType.INSTRUCTION, "L");
+
+	/** Verschiedene Label-Listen für Instruktionen mit und ohne Parameter */
+	@SuppressWarnings("unchecked") public Optional<SVMProgram.Label>[] emptyLabelList = (Optional<SVMProgram.Label>[]) new Optional[0];
+	@SuppressWarnings("unchecked") public Optional<SVMProgram.Label>[] oneLabelList = (Optional<SVMProgram.Label>[]) new Optional[] { Optional.empty() };
+
 
 	/** Ein paar Datensätze zum Test */
 	public final SVMProgram.Data<Short> dataA = new SVMProgram.Data<>(labelA, new Short[]{1, 2, 3});
@@ -52,10 +58,11 @@ public class SVMProgramShortTest {
 	public final InstructionDefinition<Short> instrMov = new InstructionDefinition<>(MOV, new byte[] {1,2,3,4,5}, Optional.empty());
 
 	/** Einige Instruktionen <b>ohne</b> Label */
-	public final SVMProgram.VirtualInstruction<Short> virtInstrNopOhneLabel = new SVMProgram.VirtualInstruction<>(Optional.empty(), instrNop, new Label[]{});
+	public final SVMProgram.VirtualInstruction<Short> virtInstrNopOhneLabel = new SVMProgram.VirtualInstruction<>(Optional.empty(), instrNop, emptyLabelList);
 
 	/** Einige Instruktionen <b>mit</b> Label */
-	public final SVMProgram.VirtualInstruction<Short> virtInstrNopMitLabelA = new SVMProgram.VirtualInstruction<>(Optional.of(labelA), instrNop, new Label[]{});
+	public final SVMProgram.VirtualInstruction<Short> virtInstrNopMitLabelA = new SVMProgram.VirtualInstruction<>(Optional.of(labelA), instrNop, emptyLabelList);
+	public final SVMProgram.VirtualInstruction<Short> virtInstrInt1 = new SVMProgram.VirtualInstruction<>(Optional.empty(), instrInt, oneLabelList);
 
 
 	@BeforeEach
@@ -94,9 +101,12 @@ public class SVMProgramShortTest {
 		assertThat(svmException.getLocalizedMessage(), containsString("[Instr] Index 2: Label Label[labelType=DATA, label=A]: Label doppelt (an Index 0)"));
 	}
 
+	/** Syscall INT(1) wird als letzte Instruktion im programm erwartet */
 	@Test
-	public void testeLetzteInstruktionInt1() {
-		
+	public void testeLetzteInstruktionNichtInt1() {
+		Stream.of(virtInstrNopMitLabelA, virtInstrInt1, virtInstrNopOhneLabel).forEach(svmProgram::addInstruction);
+		SVMException svmException = assertThrows(SVMException.class, () -> svmProgram.validate());
+		assertThat(svmException.getLocalizedMessage(), containsString("[Instr] INT(1) wird als letzte Instruktion erwartet"));
 	}
 
 }

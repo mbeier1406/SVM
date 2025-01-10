@@ -90,12 +90,12 @@ public class SVMProgramShort implements SVMProgram<Short> {
 					labelListInstr.add(labelZuPruefen);
 				}
 
-			/* letzte Instruktion muss INT/Syscall sein (EXIT) */
+			/* letzte Instruktion muss INT/Syscall sein (EXIT, Werte der Register werden aber nicht geprüft) */
 			var anzInstr = this.instructionList.size();
 			var lastInstr = this.instructionList.get(anzInstr-1);
-			LOGGER.trace("anzInstr={}; lastInstr={}", anzInstr, lastInstr);
-			if ( lastInstr.instruction().instruction().equals(INSTRUCTIONS.get(Int.CODE)) )
-				throw new SVMException("INT wird als letzte Instruktion erwartet!");
+			LOGGER.trace("[Instr] anzInstr={}; lastInstr={}", anzInstr, lastInstr);
+			if ( !lastInstr.instruction().instruction().equals(INSTRUCTIONS.get(Int.CODE)) )
+				throw new SVMException("[Instr] INT(1) wird als letzte Instruktion erwartet: "+lastInstr.instruction().instruction());
 
 		}
 		catch ( Exception e ) {

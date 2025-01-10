@@ -11,7 +11,15 @@ import com.github.mbeier1406.svm.syscalls.IO;
 
 /**
  * Lädt ein SVM-Programm in interner Repräsentation ({@linkplain SVMProgram}) zur Ausführung über
- * {@linkplain ALU#start()} in den Hauptspeicher ({@linkplain MEM} einer {@linkplain SVM}
+ * {@linkplain ALU#start()} in den Hauptspeicher ({@linkplain MEM}) einer {@linkplain SVM}.
+ * Dazu müssen
+ * <ol>
+ * <li>die statischen Daten in den unteren Bereich des Speichers, und</li>
+ * <li>der Programmcode von den oberen Adressen her</li>
+ * </ol>
+ * in den Speicher geladen werden. Hierbei müssen die im Programm verwendeten {@linkplain SVMProgram.Label}
+ * durch konkrete Adressen ersetzt werden.
+ * @see SVMProgram
  */
 public interface SVMLoader<T> {
 

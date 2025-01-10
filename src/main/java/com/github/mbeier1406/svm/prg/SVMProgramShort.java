@@ -4,6 +4,9 @@ import static com.github.mbeier1406.svm.instructions.InstructionFactory.INSTRUCT
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Stream;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -89,6 +92,26 @@ public class SVMProgramShort implements SVMProgram<Short> {
 					if ( indexOfLabel >= 0 ) throw new SVMException("[Instr] Index "+i+": Label "+labelZuPruefen+": Label doppelt (an Index "+indexOfLabel+")!");
 					labelListInstr.add(labelZuPruefen);
 				}
+
+			/* Schritt IV: für alle in Instruktionen verwendeten Label muss es eine Definition geben */
+			// TODO: Label muss zur Instruktion passen: JMP -> INSTRUCTION; SYSCALL IO -> DATA usw.
+			LOGGER.trace("[Instr] Label-Referenzen prüfen...");
+			for ( int i=0; i < this.instructionList.size(); i++ ) {
+				var virtualInstruction = this.instructionList.get(i);
+				for ( Optional<Label> label : virtualInstruction.labelList() ) {
+					if ( label.isPresent() ) {
+						var labelName = label.get().label();
+						LOGGER.trace("[Instr] {}: pruefe Label '{}'", virtualInstruction, labelName);
+						AtomicBoolean labelIstDefiniert = new AtomicBoolean(false);
+						Stream.of(labelListDaten, labelListInstr).forEach(labelList -> {
+							if ( labelList.stream().map(Label::label).filter(l -> l.equals(labelName)).findAny().isPresent() )
+								labelIstDefiniert.set(true);
+						});
+						if ( !labelIstDefiniert.get() )
+							throw new SVMException("[Instr] Index "+i+" ("+virtualInstruction+"): Label '"+labelName+"' ist nicht definiert!");
+					}
+				}
+			}
 
 			/* letzte Instruktion muss INT/Syscall sein (EXIT, Werte der Register werden aber nicht geprüft) */
 			var anzInstr = this.instructionList.size();

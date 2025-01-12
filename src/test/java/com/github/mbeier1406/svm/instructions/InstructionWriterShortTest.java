@@ -58,7 +58,8 @@ public class InstructionWriterShortTest {
 		var instructionInterface = mem.getInstructionInterface();
 		var instructionDefinition = new InstructionDefinition<>(instr, params, Optional.empty());
 		var instruction2Array = instructionWriter.instruction2Array(new InstructionDefinition<>(instr, params, Optional.empty()));
-		instructionWriter.writeInstruction(instructionInterface, mem.getLowAddr(), instructionDefinition);
+		int lenInWords = instructionWriter.writeInstruction(instructionInterface, mem.getLowAddr(), instructionDefinition);
+		assertThat(lenInWords, equalTo(instruction2Array.length));
 		for ( int i=0; i < instruction2Array.length; i++ )
 			assertThat(instructionInterface.read(mem.getLowAddr()+i), equalTo(instruction2Array[i]));
 	}

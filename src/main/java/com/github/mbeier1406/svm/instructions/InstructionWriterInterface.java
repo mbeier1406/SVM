@@ -10,7 +10,7 @@ import com.github.mbeier1406.svm.SVMException;
  * geschrieben wird.
  * @param <T> Die Wortlänge der {@linkplain SVM}
  */
-public interface InstructionWriterInterface<T> {
+public interface InstructionWriterInterface<T> extends InstructionIO<T> {
 
 	/**
 	 * Erzeugt aus einer Instruktion und deren Parameter eine Bytefolge, die in den Hauptspeicher
@@ -26,9 +26,10 @@ public interface InstructionWriterInterface<T> {
 	 * @param mem der Hauptspeicher
 	 * @param addr die Adresse, an die geschrieben werden soll
 	 * @param instr die zu schreibende Instruktion und die Parameterliste zur Instruktion
+	 * @return Wie viele Speicherwörter das Schreiben der Instruktion mit Parametern benötigt hat
 	 * @throws SVMException wenn die Parameterliste nicht zur Instruktion passt oder es sich um oder einen ungültigen Speicherbereich handelt
 	 * @see #instruction2Array(InstructionDefinition, byte[])
 	 */
-	public void writeInstruction(final MEM.Instruction<T> mem, int addr, final InstructionDefinition<T> instr) throws SVMException;
+	public int writeInstruction(final MEM.Instruction<T> mem, int addr, final InstructionDefinition<T> instr) throws SVMException;
 
 }

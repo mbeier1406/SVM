@@ -34,7 +34,7 @@ public class InstructionReaderInterfaceTest {
 	@MethodSource("getTestParameter")
 	public void teste(int anzahlParameter, int erwarteteWortLaenge) {
 		when(instruction.getAnzahlParameter()).thenReturn(anzahlParameter);
-		int instrLenInWords = new Nop().getInstrLenInWords(instruction, WORTLAENGE_IN_BYTES);
+		int instrLenInWords = instructionReader.getInstrLenInWords(instruction, WORTLAENGE_IN_BYTES);
 		assertThat(instrLenInWords, equalTo(erwarteteWortLaenge));
 	}
 

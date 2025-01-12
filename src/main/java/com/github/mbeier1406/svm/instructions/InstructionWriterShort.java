@@ -26,7 +26,7 @@ public class InstructionWriterShort implements InstructionWriterInterface<Short>
 	public Short[] instruction2Array(InstructionDefinition<Short> instr) throws SVMException {
 		try ( @SuppressWarnings("unused") CloseableThreadContext.Instance ctx = put("instr", requireNonNull(instr, "instr").toString()) ) {
 			int indexBuffer = 0, indexParameter = 0, anzahlParameter = instr.instruction().getAnzahlParameter();
-			Short[] buf = new Short[instr.instruction().getInstrLenInWords(instr.instruction(), WORTLAENGE_IN_BYTES)]; // Short = 2 Byte len
+			Short[] buf = new Short[getInstrLenInWords(instr.instruction(), WORTLAENGE_IN_BYTES)]; // Short = 2 Byte len
 			buf[indexBuffer] = (short) ((instr.instruction().getCode() << 8) | ( anzahlParameter > 0 ? instr.params()[indexParameter] : 0x0));
 			LOGGER.trace("indexBuffer={}; indexParameter={}: {}", indexBuffer, indexParameter, SVM.BD_SHORT.getBinaerDarstellung(buf[indexBuffer]));
 			for ( ++indexBuffer ; ++indexParameter < anzahlParameter; indexBuffer++ ) {
@@ -41,13 +41,14 @@ public class InstructionWriterShort implements InstructionWriterInterface<Short>
 
 	/** {@inheritDoc} */
 	@Override
-	public void writeInstruction(Instruction<Short> mem, int addr, InstructionDefinition<Short> instr) throws SVMException {
+	public int writeInstruction(Instruction<Short> mem, int addr, InstructionDefinition<Short> instr) throws SVMException {
 		try ( @SuppressWarnings("unused") CloseableThreadContext.Instance ctx =
 				put("mem", requireNonNull(mem, "mem").toString()).put("instr", requireNonNull(instr, "instr").toString()).put("addr", String.valueOf(addr)) ) {
 			Short[] instrInWords = instruction2Array(instr);
 			LOGGER.trace("instrInWords={}", Arrays.toString(instrInWords));
 			for ( short s : instrInWords )
 				mem.write(addr++, s);
+			return instrInWords.length;
 		}
 	}
 

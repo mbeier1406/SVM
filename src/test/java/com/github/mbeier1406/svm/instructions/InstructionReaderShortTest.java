@@ -93,7 +93,7 @@ public class InstructionReaderShortTest {
 				.map(codeAndInstr -> new Object[] {
 						codeAndInstr[0],
 						codeAndInstr[1],
-						new Nop().getInstrLenInWords((InstructionInterface<Short>) codeAndInstr[1], WORTLAENGE_IN_BYTES)})
+						INSTRUCTION_READER.getInstrLenInWords((InstructionInterface<Short>) codeAndInstr[1], WORTLAENGE_IN_BYTES)})
 				.map(Arguments::of);
 	}
 

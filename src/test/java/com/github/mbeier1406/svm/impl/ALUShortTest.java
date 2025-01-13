@@ -91,6 +91,7 @@ public class ALUShortTest {
 		assertThat(exitCode, equalTo(55));
 	}
 
+	/** Führt ein Programm aus interner Darstellung aus */
 	@Test
 	public void testeProgrammAusInternerDarstellungAusfuehren() throws SVMException {
 		SVMLoader<Short> svmLoader = new SVMLoaderShort();
@@ -99,7 +100,7 @@ public class ALUShortTest {
 		LOGGER.info("aluShort={}", alu);
 		int exitCode = this.alu.start();
 		LOGGER.info("exitCode={}", exitCode);
-		assertThat(exitCode, equalTo(55));
+		assertThat(exitCode, equalTo(1));
 	}
 
 }

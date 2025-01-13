@@ -72,11 +72,11 @@ public class SVMLoaderShortTest {
 	/** Verschiedene Instruktionsdefinition */
 	public static final InstructionDefinition<Short> NOP0 = new InstructionDefinition<Short>(NOP, new byte[] {}, Optional.empty()); // NOP
 	public static final InstructionDefinition<Short> INT1 = new InstructionDefinition<Short>(INT, new byte[] {1}, Optional.empty()); // INT(1)
-	public static final InstructionDefinition<Short> MOV2_REG0 = new InstructionDefinition<Short>(MOV, new byte[] {2,0,2,0,0}, Optional.empty()); // MOV $2 -> REG(0)
-	public static final InstructionDefinition<Short> MOV1_REG1 = new InstructionDefinition<Short>(MOV, new byte[] {2,0,1,0,1}, Optional.empty()); // MOV $1 -> REG(1)
-	public static final InstructionDefinition<Short> MOVX_REG2 = new InstructionDefinition<Short>(MOV, new byte[] {2,0,0,0,2}, Optional.empty()); // MOV X -> REG(2) X == virt Addr
-	public static final InstructionDefinition<Short> MOVL_REG3 = new InstructionDefinition<Short>(MOV, new byte[] {2,0,(byte) THREE_WORDS_DATA.dataList().length,0,3}, Optional.empty()); // MOV len -> REG(3)
-	public static final InstructionDefinition<Short> MOV1_REG0 = new InstructionDefinition<Short>(MOV, new byte[] {2,0,1,0,0}, Optional.empty()); // MOV $1 -> REG(0)
+	public static final InstructionDefinition<Short> MOV2_REG0 = new InstructionDefinition<Short>(MOV, new byte[] {0x21,0,2,0,0}, Optional.empty()); // MOV $2 -> REG(0)
+	public static final InstructionDefinition<Short> MOV1_REG1 = new InstructionDefinition<Short>(MOV, new byte[] {0x21,0,1,0,1}, Optional.empty()); // MOV $1 -> REG(1)
+	public static final InstructionDefinition<Short> MOVX_REG2 = new InstructionDefinition<Short>(MOV, new byte[] {0x21,0,0,0,2}, Optional.empty()); // MOV X -> REG(2) X == virt Addr
+	public static final InstructionDefinition<Short> MOVL_REG3 = new InstructionDefinition<Short>(MOV, new byte[] {0x21,0,(byte) THREE_WORDS_DATA.dataList().length,0,3}, Optional.empty()); // MOV len -> REG(3)
+	public static final InstructionDefinition<Short> MOV1_REG0 = new InstructionDefinition<Short>(MOV, new byte[] {0x21,0,1,0,0}, Optional.empty()); // MOV $1 -> REG(0)
 
 	/** Verschiedene virtuelle Instruktion */
 	public static final VirtualInstruction<Short> NOP0_OHNE_LABEL = new VirtualInstruction<Short>(Optional.empty(), NOP0, ZERO_REF_LABEL); // INT(1) kein Label

@@ -1,5 +1,7 @@
 package com.github.mbeier1406.svm.instructions;
 
+import java.io.Serializable;
+
 import com.github.mbeier1406.svm.ALU;
 import com.github.mbeier1406.svm.MEM;
 import com.github.mbeier1406.svm.SVMException;
@@ -41,7 +43,7 @@ import com.github.mbeier1406.svm.SVMException;
  * @param <T> Die Wortgröße der {@linkplain ALU} und des Speicher {@linkplain MEM}
  * @see Instruction
  */
-public interface InstructionInterface<T> {
+public interface InstructionInterface<T> extends Serializable {
 
 	/**
 	 * Diese Aufzählung bietet eine Zuordnung des Codes (das byte im {@linkplain MEM Speicher},

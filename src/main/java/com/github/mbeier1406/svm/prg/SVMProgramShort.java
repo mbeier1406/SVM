@@ -23,6 +23,7 @@ import com.github.mbeier1406.svm.instructions.Int;
  */
 public class SVMProgramShort implements SVMProgram<Short> {
 
+	private static final long serialVersionUID = 2768412187261092955L;
 	public static final Logger LOGGER = LogManager.getLogger(SVMProgramShort.class);
 
 	/** Die Liste der virtuellen Instruktionen (Adressen sind ggf. noch nicht definiert; {@linkplain Label} */
@@ -136,7 +137,7 @@ public class SVMProgramShort implements SVMProgram<Short> {
 
 	@Override
 	public String toString() {
-		return "SVMProgramShort [instructionList=" + instructionList + ", dataList=" + dataList + "]";
+		return "SVMProgramShort [instructionList=" + instructionList.size() + ", dataList=" + dataList.size() + "]";
 	}
 
 }

@@ -2,6 +2,7 @@ package com.github.mbeier1406.svm.prg;
 
 import static java.util.Objects.requireNonNull;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,7 +17,7 @@ import com.github.mbeier1406.svm.instructions.Mov;
  * Definiert alle Datenstrukturen und Methoden zur internen Darstellung
  * eines ausführbaren {@linkplain SVM}-Programms. Es handelt sich um die interne Repräsentation.
  */
-public interface SVMProgram<T> {
+public interface SVMProgram<T> extends Serializable {
 
 	/** Typen von symbolischen Adressen */
 	public static enum LabelType { INSTRUCTION, DATA };
@@ -26,7 +27,7 @@ public interface SVMProgram<T> {
 	 * um Sprungadressen für die {@code JMP}-Anweisung, Lade- oder Speicheradressen für
 	 * {@linkplain Mov} usw.
 	 */
-	public static record Label(LabelType labelType, String label) {
+	public static record Label(LabelType labelType, String label) implements Serializable {
 		public Label {
 			if ( requireNonNull(label, "label").isEmpty() ) throw new IllegalArgumentException("label");
 		}
@@ -54,7 +55,7 @@ public interface SVMProgram<T> {
 	 * @param labelList falls die Instruktion Parameter erhält, können hier virtuelle Adresse/Label eingesetzt werden
 	 * @param <T> Die Wortänge der {@linkplain SVM}
 	 */
-	public record VirtualInstruction<T>(Optional<Label> label, InstructionDefinition<T> instruction, Optional<Label>[] labelList) {
+	public record VirtualInstruction<T>(Optional<Label> label, InstructionDefinition<T> instruction, Optional<Label>[] labelList) implements Serializable {
 		public VirtualInstruction {
 			requireNonNull(label, "label");			
 			requireNonNull(instruction, "instruction");			
@@ -84,7 +85,7 @@ public interface SVMProgram<T> {
 	public List<VirtualInstruction<T>> getInstructionList();
 
 	/** Daten, die im {@linkplain MEM Speicher} abgelegt werden, können über einen Labe adressiert werden */
-	public static record Data<T>(Label label, T[] dataList) {
+	public static record Data<T>(Label label, T[] dataList) implements Serializable {
 		public Data {
 			requireNonNull(label, "label");
 			if ( label.labelType != LabelType.DATA ) throw new IllegalArgumentException("Labeltyp ungültig: "+label.labelType);

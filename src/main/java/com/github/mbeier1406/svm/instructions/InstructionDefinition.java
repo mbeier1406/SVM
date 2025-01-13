@@ -2,6 +2,7 @@ package com.github.mbeier1406.svm.instructions;
 
 import static java.util.Objects.requireNonNull;
 
+import java.io.Serializable;
 import java.util.Optional;
 
 import com.github.mbeier1406.svm.ALU;
@@ -35,7 +36,7 @@ import com.github.mbeier1406.svm.prg.SVMProgram;
  * @see InstructionReaderInterface
  * @see SVMProgram
  */
-public record InstructionDefinition<T>(InstructionInterface<T> instruction, byte[] params, Optional<Integer> lenInWords) {
+public record InstructionDefinition<T>(InstructionInterface<T> instruction, byte[] params, Optional<Integer> lenInWords) implements Serializable {
 	public InstructionDefinition {
 		requireNonNull(instruction, "instruction");
 		requireNonNull(params, "params");

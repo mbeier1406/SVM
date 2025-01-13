@@ -82,7 +82,7 @@ public class SVMLoaderShort implements SVMLoader<Short>, InstructionIO<Short> {
 				for ( int i=0; i < data.dataList().length; i++ )
 					mem.getInstructionInterface().write(this.dataAddr+i, (Short) data.dataList()[i]);
 				this.dataAddr += data.dataList().length;
-				if ( this.dataAddr >= this.prgAddr )
+				if ( this.dataAddr >= mem.getHighAddr() )
 					throw new SVMException("Zu viele Daten: dataAddr="+this.dataAddr+"; prgAddr="+this.prgAddr);
 			}
 
@@ -127,6 +127,7 @@ public class SVMLoaderShort implements SVMLoader<Short>, InstructionIO<Short> {
 				}
 				int instrLenInWords = instructionWriter.writeInstruction(mem.getInstructionInterface(), this.prgAddr, instrDef);
 				LOGGER.trace("instrLenInWords={}", instrLenInWords);
+				this.prgAddr -= instrLenInWords;
 			};
 
 		}
@@ -134,6 +135,17 @@ public class SVMLoaderShort implements SVMLoader<Short>, InstructionIO<Short> {
 			LOGGER.error("{} {}", mem, svmProgram, e);
 			throw new SVMException(e);
 		}
+	}
+
+	/**	{@inheritDoc} */
+	@Override
+	public Map<Label, Integer> getLabelList() {
+		return this.labelList;
+	}
+
+	@Override
+	public String toString() {
+		return "SVMLoaderShort [dataAddr=" + dataAddr + ", prgAddr=" + prgAddr + ", labelList=" + labelList + "]";
 	}
 
 }

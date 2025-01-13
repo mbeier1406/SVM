@@ -1,5 +1,7 @@
 package com.github.mbeier1406.svm.prg;
 
+import java.util.Map;
+
 import com.github.mbeier1406.svm.ALU;
 import com.github.mbeier1406.svm.ALU.Instruction;
 import com.github.mbeier1406.svm.MEM;
@@ -35,5 +37,13 @@ public interface SVMLoader<T> {
 	 * @throws SVMException falls {@linkplain SVMProgram#validate(MEM)} fehlschlägt
 	 */
 	public void load(final MEM<T> mem, final SVMProgram<T> svmProgram) throws SVMException;
+
+	/**
+	 * Nach dem Laden eines {@linkplain SVMProgram}s müssen allen virtuellen Adressen ({@linkplain Label}n)
+	 * die konkreten Adressen im Speicher zugeordnet sein. Diese Zuordnungstabelle wird während des
+	 * ladens mit {@linkplain #load(MEM, SVMProgram)} gepflegt.
+	 * @return Liste der im geladenen Programm verwendeten labeln mit Adresse
+	 */
+	public Map<Label, Integer> getLabelList();
 
 }

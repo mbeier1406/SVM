@@ -103,8 +103,11 @@ public class SVMProgramShort implements SVMProgram<Short> {
 					if ( label.isPresent() ) {
 						var labelName = label.get().label();
 						LOGGER.trace("[Instr] {}; Index {}: pruefe Label '{}'", virtualInstruction, j, labelName);
-						/* Da Wortlänge <Short> aus zwei Bytes (Byte[] = Parameterliste der Instruktion!!!) besteht, darf nur max. jedes zweite einen Label verwenden */
-						if ( j%2 != 0 ) throw new SVMException("[Instr] "+virtualInstruction+" Index "+j+": Label "+labelName+": Label !");
+						/*
+						 * Da Wortlänge <Short> aus zwei Bytes (Byte[] = Parameterliste der Instruktion!!!) besteht, darf nur max. jedes zweite einen Label verwenden.
+						 * Erster Parameter gehört immer zur Instruktion und verwendet keine Label
+						 */
+						if ( j%2 == 0 ) throw new SVMException("[Instr] "+virtualInstruction+" Index "+j+": Label "+labelName+": Label an diesem Index nicht erlaubt!");
 						AtomicBoolean labelIstDefiniert = new AtomicBoolean(false);
 						Stream.of(labelListDaten, labelListInstr).forEach(labelList -> {
 							if ( labelList.stream().map(Label::label).filter(l -> l.equals(labelName)).findAny().isPresent() )

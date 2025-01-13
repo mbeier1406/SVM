@@ -76,7 +76,7 @@ public class MEMShort implements MEM<Short>, MEM.Instruction<Short> {
 	 */
 	private int checkAddr(int addr) throws SVMException {
 		if ( addr < 0 || addr > getHighAddr() )
-			throw new SVMException("Ungültige Adresse: "+addr+" (max. "+getHighAddr()+")!");
+			throw new SVMException("Ungültige Adresse: "+addr+" (min. "+getLowAddr()+"; max. "+getHighAddr()+")!");
 		return addr;
 	}
 

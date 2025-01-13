@@ -11,6 +11,10 @@ import org.junit.jupiter.api.Test;
 
 import com.github.mbeier1406.svm.SVMException;
 import com.github.mbeier1406.svm.instructions.InstructionFactory;
+import com.github.mbeier1406.svm.prg.SVMLoader;
+import com.github.mbeier1406.svm.prg.SVMLoaderShort;
+import com.github.mbeier1406.svm.prg.SVMLoaderShortTest;
+import com.github.mbeier1406.svm.prg.SVMProgram;
 import com.github.mbeier1406.svm.syscalls.SyscallFactory;
 
 /**
@@ -42,8 +46,9 @@ public class ALUShortTest {
 		assertThat(alu.toString(), containsString("Status-Register: 1000000000000000"));
 	}
 
+	/** Führt ein manuell zusammengebautes Programm aus */
 	@Test
-	public void testeInstr() throws SVMException {
+	public void testeInstrManuell() throws SVMException {
 		/* Speicher mit Konstanten füllen */
 		this.mem.write(this.mem.getLowAddr()+3, (short) '\n');
 		this.mem.write(this.mem.getLowAddr()+2, (short) 'c');
@@ -80,6 +85,17 @@ public class ALUShortTest {
 		this.mem.write(addr--, (short) 1);   // REG(1) == this.alu.setRegisterValue(1, (short) 55); -- Return Code 55
 		this.mem.write(addr--, (short) 513); // INT 1 (Syscall)
 		
+		LOGGER.info("aluShort={}", alu);
+		int exitCode = this.alu.start();
+		LOGGER.info("exitCode={}", exitCode);
+		assertThat(exitCode, equalTo(55));
+	}
+
+	@Test
+	public void testeProgrammAusInternerDarstellungAusfuehren() throws SVMException {
+		SVMLoader<Short> svmLoader = new SVMLoaderShort();
+		SVMProgram<Short> korrektesProgramm = SVMLoaderShortTest.getKorrektesProgramm();
+		svmLoader.load(this.mem, korrektesProgramm);
 		LOGGER.info("aluShort={}", alu);
 		int exitCode = this.alu.start();
 		LOGGER.info("exitCode={}", exitCode);

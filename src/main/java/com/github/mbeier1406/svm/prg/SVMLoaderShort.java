@@ -121,8 +121,8 @@ public class SVMLoaderShort implements SVMLoader<Short>, InstructionIO<Short> {
 						if ( addr < mem.getLowAddr() || addr >= mem.getHighAddr() )
 							throw new SVMException("[Intern] Label-Adresse außerhalb MEM: Instr "+i+"; Index "+j+" ("+virtInstr+" / "+label.get()+" / "+mem+"): addr="+addr);
 						// Jetzt die ermittelte Adresse einsetzen
+						instrDef.params()[j+1] = (byte) (addr.shortValue() & 255);
 						instrDef.params()[j] = (byte) (addr.shortValue() >> 8);
-						instrDef.params()[j+1] = (byte) (addr.shortValue() << 8);
 					}
 				}
 				int instrLenInWords = instructionWriter.writeInstruction(mem.getInstructionInterface(), this.prgAddr, instrDef);

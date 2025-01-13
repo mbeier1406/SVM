@@ -39,7 +39,7 @@ public class SVMProgramShortTest {
 
 	/** Verschiedene Label-Listen für Instruktionen mit und ohne Parameter */
 	@SuppressWarnings("unchecked") public Optional<SVMProgram.Label>[] emptyLabelList = (Optional<SVMProgram.Label>[]) new Optional[0];
-	@SuppressWarnings("unchecked") public Optional<SVMProgram.Label>[] oneLabelList = (Optional<SVMProgram.Label>[]) new Optional[] { Optional.of(labelD) };
+	@SuppressWarnings("unchecked") public Optional<SVMProgram.Label>[] fiveLabelList = (Optional<SVMProgram.Label>[]) new Optional[] { Optional.empty(), Optional.of(labelD), Optional.empty(), Optional.empty(), Optional.empty() };
 	@SuppressWarnings("unchecked") public Optional<SVMProgram.Label>[] oneEmptyLabelList = (Optional<SVMProgram.Label>[]) new Optional[] { Optional.empty() };
 
 
@@ -63,7 +63,7 @@ public class SVMProgramShortTest {
 
 	/** Einige Instruktionen <b>mit</b> Label */
 	public final SVMProgram.VirtualInstruction<Short> virtInstrNopMitLabelA = new SVMProgram.VirtualInstruction<>(Optional.of(labelA), instrNop, emptyLabelList);
-	public final SVMProgram.VirtualInstruction<Short> virtInstrIntLabelD = new SVMProgram.VirtualInstruction<>(Optional.empty(), instrInt, oneLabelList);
+	public final SVMProgram.VirtualInstruction<Short> virtInstrIntLabelD = new SVMProgram.VirtualInstruction<>(Optional.empty(), instrMov, fiveLabelList);
 	public final SVMProgram.VirtualInstruction<Short> virtInstrInt1 = new SVMProgram.VirtualInstruction<>(Optional.empty(), instrInt, oneEmptyLabelList);
 
 

@@ -58,10 +58,10 @@ public class InstructionWriterShortTest {
 		var instructionInterface = mem.getInstructionInterface();
 		var instructionDefinition = new InstructionDefinition<>(instr, params, Optional.empty());
 		var instruction2Array = instructionWriter.instruction2Array(new InstructionDefinition<>(instr, params, Optional.empty()));
-		int lenInWords = instructionWriter.writeInstruction(instructionInterface, mem.getLowAddr(), instructionDefinition);
+		int lenInWords = instructionWriter.writeInstruction(instructionInterface, mem.getHighAddr(), instructionDefinition);
 		assertThat(lenInWords, equalTo(instruction2Array.length));
 		for ( int i=0; i < instruction2Array.length; i++ )
-			assertThat(instructionInterface.read(mem.getLowAddr()+i), equalTo(instruction2Array[i]));
+			assertThat(instructionInterface.read(mem.getHighAddr()-i), equalTo(instruction2Array[i]));
 	}
 
 	/** Liefert die Testfälle: 1. die Instruktion 2. die Parametern 3. die erwartete Bytefolge */

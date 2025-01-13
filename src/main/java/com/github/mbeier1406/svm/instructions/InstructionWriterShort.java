@@ -47,7 +47,7 @@ public class InstructionWriterShort implements InstructionWriterInterface<Short>
 			Short[] instrInWords = instruction2Array(instr);
 			LOGGER.trace("instrInWords={}", Arrays.toString(instrInWords));
 			for ( short s : instrInWords )
-				mem.write(addr++, s);
+				mem.write(addr--, s);
 			return instrInWords.length;
 		}
 	}

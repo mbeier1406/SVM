@@ -5,7 +5,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.apache.logging.log4j.LogManager;
@@ -41,7 +40,7 @@ public class InstructionWriterShortTest {
 	@MethodSource("getTestParameter")
 	public void testeInstruction2Array(final InstructionInterface<Short> instr, byte[] params, Short[] speicherErwartet) throws SVMException {
 		LOGGER.trace("instr={}", instr);
-		Short[] instruction2Array = instructionWriter.instruction2Array(new InstructionDefinition<>(instr, params, Optional.empty()));
+		Short[] instruction2Array = instructionWriter.instruction2Array(new InstructionDefinition<>(instr, params, null));
 		for ( int i=0; i < speicherErwartet.length; i++ )
 			LOGGER.info("speicherErwartet[{}]={}\t({})", i, speicherErwartet[i], SVM.BD_SHORT.getBinaerDarstellung(speicherErwartet[i]));
 		for ( int i=0; i < instruction2Array.length; i++ )
@@ -56,8 +55,8 @@ public class InstructionWriterShortTest {
 		LOGGER.trace("instr={}", instr);
 		var mem = new MEMShort().clear();
 		var instructionInterface = mem.getInstructionInterface();
-		var instructionDefinition = new InstructionDefinition<>(instr, params, Optional.empty());
-		var instruction2Array = instructionWriter.instruction2Array(new InstructionDefinition<>(instr, params, Optional.empty()));
+		var instructionDefinition = new InstructionDefinition<>(instr, params, null);
+		var instruction2Array = instructionWriter.instruction2Array(new InstructionDefinition<>(instr, params, null));
 		int lenInWords = instructionWriter.writeInstruction(instructionInterface, mem.getHighAddr(), instructionDefinition);
 		assertThat(lenInWords, equalTo(instruction2Array.length));
 		for ( int i=0; i < instruction2Array.length; i++ )

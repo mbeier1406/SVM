@@ -6,7 +6,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -44,24 +43,20 @@ public class SVMLoaderShortTest {
 	public static final Label LABEL2 = new Label(LabelType.DATA, "text2");
 
 	/** Zugehörige Label-Referenz */
-	public static final Optional<Label> EMPTY_VIRT_LABEL = Optional.empty();
-	public static final Optional<Label> LABEL2_VIRT_LABEL = Optional.of(LABEL2);
+	public static final Label EMPTY_VIRT_LABEL = null;
+	public static final Label LABEL2_VIRT_LABEL = LABEL2;
 
 	/** Labellisten für virtuelle Instruktionen */
-	@SuppressWarnings({ "unchecked", "serial" })
-	public static final Optional<Label>[] ZERO_REF_LABEL = (Optional<Label>[]) new ArrayList<Optional<Label>>() {}.toArray(new Optional[0]);
-	@SuppressWarnings({ "unchecked", "serial" })
-	public static final Optional<Label>[] ONE_EMPTY_REF_LABEL = (Optional<Label>[]) new ArrayList<Optional<Label>>() {{ // ein Parameter ohne Label
+	@SuppressWarnings("serial") public static final Label[] ZERO_REF_LABEL = new ArrayList<Label>() {}.toArray(new Label[0]);
+	@SuppressWarnings("serial") public static final Label[] ONE_EMPTY_REF_LABEL = new ArrayList<Label>() {{ // ein Parameter ohne Label
 		add(EMPTY_VIRT_LABEL);
-	}}.toArray(new Optional[0]);
-	@SuppressWarnings({ "unchecked", "serial" })
-	public static final Optional<Label>[] FIVE_EMPTY_REF_LABEL = (Optional<Label>[]) new ArrayList<Optional<Label>>() {{ // fünf Parameter ohne Label
+	}}.toArray(new Label[0]);
+	@SuppressWarnings("serial") public static final Label[] FIVE_EMPTY_REF_LABEL = new ArrayList<Label>() {{ // fünf Parameter ohne Label
 		add(EMPTY_VIRT_LABEL); add(EMPTY_VIRT_LABEL); add(EMPTY_VIRT_LABEL); add(EMPTY_VIRT_LABEL); add(EMPTY_VIRT_LABEL);
-	}}.toArray(new Optional[0]);
-	@SuppressWarnings({ "unchecked", "serial" })
-	public static final Optional<Label>[] FIVE_REF_LABEL_TEXT1 = (Optional<Label>[]) new ArrayList<Optional<Label>>() {{ // fünf Parameter Label2 an Pos(1)
+	}}.toArray(new Label[0]);
+	@SuppressWarnings("serial") public static final Label[] FIVE_REF_LABEL_TEXT1 = new ArrayList<Label>() {{ // fünf Parameter Label2 an Pos(1)
 		add(EMPTY_VIRT_LABEL); add(LABEL2_VIRT_LABEL); add(EMPTY_VIRT_LABEL); add(EMPTY_VIRT_LABEL); add(EMPTY_VIRT_LABEL);
-	}}.toArray(new Optional[0]);
+	}}.toArray(new Label[0]);
 
 	/** Daten: 4-Worte String */
 	public static final Data<Short> FOUR_WORDS_DATA = new Data<Short>(LABEL1, new Short[] { (short) 'a', (short) 'b', (short) 'c', (short) '\n' });
@@ -70,22 +65,22 @@ public class SVMLoaderShortTest {
 	public static final Data<Short> THREE_WORDS_DATA = new Data<Short>(LABEL2, new Short[] { (short) 'X', (short) 'Y', (short) '\n' });
 
 	/** Verschiedene Instruktionsdefinition */
-	public static final InstructionDefinition<Short> NOP0 = new InstructionDefinition<Short>(NOP, new byte[] {}, Optional.empty()); // NOP
-	public static final InstructionDefinition<Short> INT1 = new InstructionDefinition<Short>(INT, new byte[] {1}, Optional.empty()); // INT(1)
-	public static final InstructionDefinition<Short> MOV2_REG0 = new InstructionDefinition<Short>(MOV, new byte[] {0x21,0,2,0,0}, Optional.empty()); // MOV $2 -> REG(0)
-	public static final InstructionDefinition<Short> MOV1_REG1 = new InstructionDefinition<Short>(MOV, new byte[] {0x21,0,1,0,1}, Optional.empty()); // MOV $1 -> REG(1)
-	public static final InstructionDefinition<Short> MOVX_REG2 = new InstructionDefinition<Short>(MOV, new byte[] {0x21,0,0,0,2}, Optional.empty()); // MOV X -> REG(2) X == virt Addr
-	public static final InstructionDefinition<Short> MOVL_REG3 = new InstructionDefinition<Short>(MOV, new byte[] {0x21,0,(byte) THREE_WORDS_DATA.dataList().length,0,3}, Optional.empty()); // MOV len -> REG(3)
-	public static final InstructionDefinition<Short> MOV1_REG0 = new InstructionDefinition<Short>(MOV, new byte[] {0x21,0,1,0,0}, Optional.empty()); // MOV $1 -> REG(0)
+	public static final InstructionDefinition<Short> NOP0 = new InstructionDefinition<Short>(NOP, new byte[] {}, null); // NOP
+	public static final InstructionDefinition<Short> INT1 = new InstructionDefinition<Short>(INT, new byte[] {1}, null); // INT(1)
+	public static final InstructionDefinition<Short> MOV2_REG0 = new InstructionDefinition<Short>(MOV, new byte[] {0x21,0,2,0,0}, null); // MOV $2 -> REG(0)
+	public static final InstructionDefinition<Short> MOV1_REG1 = new InstructionDefinition<Short>(MOV, new byte[] {0x21,0,1,0,1}, null); // MOV $1 -> REG(1)
+	public static final InstructionDefinition<Short> MOVX_REG2 = new InstructionDefinition<Short>(MOV, new byte[] {0x21,0,0,0,2}, null); // MOV X -> REG(2) X == virt Addr
+	public static final InstructionDefinition<Short> MOVL_REG3 = new InstructionDefinition<Short>(MOV, new byte[] {0x21,0,(byte) THREE_WORDS_DATA.dataList().length,0,3}, null); // MOV len -> REG(3)
+	public static final InstructionDefinition<Short> MOV1_REG0 = new InstructionDefinition<Short>(MOV, new byte[] {0x21,0,1,0,0}, null); // MOV $1 -> REG(0)
 
 	/** Verschiedene virtuelle Instruktion */
-	public static final VirtualInstruction<Short> NOP0_OHNE_LABEL = new VirtualInstruction<Short>(Optional.empty(), NOP0, ZERO_REF_LABEL); // INT(1) kein Label
-	public static final VirtualInstruction<Short> INT1_OHNE_LABEL = new VirtualInstruction<Short>(Optional.empty(), INT1, ONE_EMPTY_REF_LABEL); // INT(1) kein Label
-	public static final VirtualInstruction<Short> MOV2_REG0_OHNE_LABEL = new VirtualInstruction<Short>(Optional.empty(), MOV2_REG0, FIVE_EMPTY_REF_LABEL); // MOV $2 REG(0) kein Label
-	public static final VirtualInstruction<Short> MOV1_REG1_OHNE_LABEL = new VirtualInstruction<Short>(Optional.empty(), MOV1_REG1, FIVE_EMPTY_REF_LABEL); // MOV $1 REG(1) kein Label
-	public static final VirtualInstruction<Short> MOVX_REG2_LABEL2 = new VirtualInstruction<Short>(Optional.empty(), MOVX_REG2, FIVE_REF_LABEL_TEXT1); // MOV $1 REG(1) kein Label
-	public static final VirtualInstruction<Short> MOVL_REG3_OHNE_LABEL = new VirtualInstruction<Short>(Optional.empty(), MOVL_REG3, FIVE_EMPTY_REF_LABEL); // MOV $1 REG(1) kein Label
-	public static final VirtualInstruction<Short> MOV1_REG0_OHNE_LABEL = new VirtualInstruction<Short>(Optional.empty(), MOV1_REG0, FIVE_EMPTY_REF_LABEL); // MOV $2 REG(0) kein Label
+	public static final VirtualInstruction<Short> NOP0_OHNE_LABEL = new VirtualInstruction<Short>(null, NOP0, ZERO_REF_LABEL); // INT(1) kein Label
+	public static final VirtualInstruction<Short> INT1_OHNE_LABEL = new VirtualInstruction<Short>(null, INT1, ONE_EMPTY_REF_LABEL); // INT(1) kein Label
+	public static final VirtualInstruction<Short> MOV2_REG0_OHNE_LABEL = new VirtualInstruction<Short>(null, MOV2_REG0, FIVE_EMPTY_REF_LABEL); // MOV $2 REG(0) kein Label
+	public static final VirtualInstruction<Short> MOV1_REG1_OHNE_LABEL = new VirtualInstruction<Short>(null, MOV1_REG1, FIVE_EMPTY_REF_LABEL); // MOV $1 REG(1) kein Label
+	public static final VirtualInstruction<Short> MOVX_REG2_LABEL2 = new VirtualInstruction<Short>(null, MOVX_REG2, FIVE_REF_LABEL_TEXT1); // MOV $1 REG(1) kein Label
+	public static final VirtualInstruction<Short> MOVL_REG3_OHNE_LABEL = new VirtualInstruction<Short>(null, MOVL_REG3, FIVE_EMPTY_REF_LABEL); // MOV $1 REG(1) kein Label
+	public static final VirtualInstruction<Short> MOV1_REG0_OHNE_LABEL = new VirtualInstruction<Short>(null, MOV1_REG0, FIVE_EMPTY_REF_LABEL); // MOV $2 REG(0) kein Label
 
 	/** Das einzuspielende Programm */
 	public SVMProgram<Short> svmProgramm;

@@ -3,8 +3,9 @@ package com.github.mbeier1406.svm.prg;
 import static java.util.Objects.requireNonNull;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 
 import com.github.mbeier1406.svm.MEM;
 import com.github.mbeier1406.svm.SVM;
@@ -50,22 +51,41 @@ public interface SVMProgram<T> extends Serializable {
 	 * <li>{@code Label[i]} ist <b>nicht gesetzt</b>: es wird der Wert in {@code Param[i]} verwendet.</li>
 	 * <li>{@code Label[i]} ist <b>gesetzt</b>: es wird die sich beim Laden ergebende Adresse des Labels verwendet.</li>
 	 * </ul>
-	 * @param label der Label, der dieser Instruktion vorangestellt ist, d. h. die Instruktion kann Ziel eines Sprungbefehls sein
+	 * @implNote Standard hashCode()/equals()-Methoden funktionieren nicht!
+	 * @param label der Label, der dieser Instruktion vorangestellt ist, d. h. die Instruktion kann Ziel eines Sprungbefehls sein, <b>null</b> wenn keine Sprungmarke
 	 * @param instruction die auszuführende Instruktion
-	 * @param labelList falls die Instruktion Parameter erhält, können hier virtuelle Adresse/Label eingesetzt werden
+	 * @param labelList falls die Instruktion Parameter erhält, können hier virtuelle Adresse/Label eingesetzt werden, <b>null</b> wenn nicht
 	 * @param <T> Die Wortänge der {@linkplain SVM}
 	 */
-	public record VirtualInstruction<T>(Optional<Label> label, InstructionDefinition<T> instruction, Optional<Label>[] labelList) implements Serializable {
+	public record VirtualInstruction<T>(Label label, InstructionDefinition<T> instruction, Label[] labelList) implements Serializable {
 		public VirtualInstruction {
-			requireNonNull(label, "label");			
 			requireNonNull(instruction, "instruction");			
-			requireNonNull(labelList, "labelList");			
-			for ( int i=0; i < labelList.length; i++ )
-				requireNonNull(labelList[i], "labelList["+i+"]");
+			requireNonNull(labelList, "labelList");
 			int erwarteteAnzahlParameter = instruction.instruction().getAnzahlParameter();
 			int erhalteneAnzahlParameter = labelList.length;
 			if ( erwarteteAnzahlParameter != erhalteneAnzahlParameter )
 				throw new IllegalArgumentException("instruction="+instruction+": erwartete Parameter: "+erwarteteAnzahlParameter+"; erhalteneAnzahlParameter: "+erhalteneAnzahlParameter);
+		}
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + Arrays.hashCode(labelList);
+			result = prime * result + Objects.hash(instruction, label);
+			return result;
+		}
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			@SuppressWarnings("rawtypes")
+			VirtualInstruction other = (VirtualInstruction) obj;
+			return Objects.equals(instruction, other.instruction) && Objects.equals(label, other.label)
+					&& Arrays.equals(labelList, other.labelList);
 		}
 	}
 
@@ -84,7 +104,11 @@ public interface SVMProgram<T> extends Serializable {
 	 */
 	public List<VirtualInstruction<T>> getInstructionList();
 
-	/** Daten, die im {@linkplain MEM Speicher} abgelegt werden, können über einen Labe adressiert werden */
+	/**
+	 * Daten, die im {@linkplain MEM Speicher} abgelegt werden, können über einen Labe adressiert werden.
+	 * @implNote Standard hashCode()/equals()-Methoden funktionieren nicht!
+	 * @param <T> Wortlänge der {@linkplain SVM}
+	 */
 	public static record Data<T>(Label label, T[] dataList) implements Serializable {
 		public Data {
 			requireNonNull(label, "label");
@@ -92,6 +116,26 @@ public interface SVMProgram<T> extends Serializable {
 			if ( requireNonNull(dataList, "dataList").length == 0 ) throw new IllegalArgumentException("dataList");
 			for ( int i=0; i < dataList.length; i++ )
 				requireNonNull(dataList[i], "dataList["+i+"]");
+		}
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + Arrays.deepHashCode(dataList);
+			result = prime * result + Objects.hash(label);
+			return result;
+		}
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			@SuppressWarnings("rawtypes")
+			Data other = (Data) obj;
+			return Arrays.deepEquals(dataList, other.dataList) && Objects.equals(label, other.label);
 		}
 	}
 

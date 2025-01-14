@@ -16,13 +16,14 @@ import com.github.mbeier1406.svm.SVMException;
  */
 public abstract class InstructionBase implements InstructionInterface<Short> {
 
+	private static final long serialVersionUID = 1743282704168266537L;
 	public static final Logger LOGGER = LogManager.getLogger(InstructionBase.class);
 
 	/** Erlaubt den Systemaufrufen den Zugriff auf die ALU */
-	protected ALU.Instruction<Short> alu;
+	protected transient ALU.Instruction<Short> alu;
 
 	/** Erlaubt den Systemaufrufen den Zugriff auf den Hauptspeicher */
-	protected MEM.Instruction<Short> mem;
+	protected transient MEM.Instruction<Short> mem;
 
 	/** {@inheritDoc} */
 	@Override

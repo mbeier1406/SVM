@@ -4,7 +4,6 @@ import static org.apache.logging.log4j.CloseableThreadContext.put;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import org.apache.logging.log4j.CloseableThreadContext;
 import org.apache.logging.log4j.LogManager;
@@ -92,9 +91,9 @@ public class SVMLoaderShort implements SVMLoader<Short>, InstructionIO<Short> {
 			for ( var virtInstr : svmProgram.getInstructionList() ) {
 				LOGGER.trace("Label: prgAddr={}; instr={}", this.prgAddr, virtInstr);
 				var label = virtInstr.label();
-				if ( label.isPresent() ) {
-					LOGGER.trace("Label: prgAddr={}; label={}", this.prgAddr, label.get());
-					this.labelList.put(label.get(), this.prgAddr);
+				if ( label != null ) { // Diese Instruktion dient als Ziel für einen Sprungbefehl
+					LOGGER.trace("Label: prgAddr={}; label={}", this.prgAddr, label);
+					this.labelList.put(label, this.prgAddr);
 				}
 				int instrLenInWords = instructionWriter.instruction2Array(virtInstr.instruction()).length;
 				LOGGER.trace("instrLenInWords={}", instrLenInWords);
@@ -109,17 +108,17 @@ public class SVMLoaderShort implements SVMLoader<Short>, InstructionIO<Short> {
 				LOGGER.trace("Code: prgAddr={}; instrIndex={}; instr={}", this.prgAddr, i, virtInstr);
 				var instrDef = virtInstr.instruction();
 				for ( int j=0; j < virtInstr.labelList().length; j++ ) {
-					Optional<Label> label = virtInstr.labelList()[j];
+					Label label = virtInstr.labelList()[j];
 					LOGGER.trace("Code: Index={}; label={}", j, label);
-					if ( label.isPresent() ) {
-						Integer addr = this.labelList.get(label.get());
+					if ( label!= null ) { // Die Instruktion verwendet eine virtuelle Adresse, deren Wert erst jetzt (zum Zeitpunkt des Ladens) ermittelt werdne kann
+						Integer addr = this.labelList.get(label);
 						if ( addr == null )
 							/* Darf nie passieren, muss zuvor oben mit validate() geprüft worden sein */
 							throw new SVMException("[Intern] Label nicht definiert: Instr "+i+"; Index "+j+": "+virtInstr);
 						if ( addr > Short.MAX_VALUE )
-							throw new SVMException("[Intern] Label-Adresse größer Wortgröße MEM: Instr "+i+"; Index "+j+" ("+virtInstr+" / "+label.get()+" / "+mem+"): addr="+addr);
+							throw new SVMException("[Intern] Label-Adresse größer Wortgröße MEM: Instr "+i+"; Index "+j+" ("+virtInstr+" / "+label+" / "+mem+"): addr="+addr);
 						if ( addr < mem.getLowAddr() || addr >= mem.getHighAddr() )
-							throw new SVMException("[Intern] Label-Adresse außerhalb MEM: Instr "+i+"; Index "+j+" ("+virtInstr+" / "+label.get()+" / "+mem+"): addr="+addr);
+							throw new SVMException("[Intern] Label-Adresse außerhalb MEM: Instr "+i+"; Index "+j+" ("+virtInstr+" / "+label+" / "+mem+"): addr="+addr);
 						// Jetzt die ermittelte Adresse einsetzen
 						instrDef.params()[j+1] = (byte) (addr.shortValue() & 255);
 						instrDef.params()[j] = (byte) (addr.shortValue() >> 8);

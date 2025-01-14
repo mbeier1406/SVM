@@ -6,8 +6,6 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.Optional;
-
 import org.junit.jupiter.api.Test;
 
 import com.github.mbeier1406.svm.SVMException;
@@ -24,51 +22,45 @@ public class InstructionDefinitionTest {
 	/** Instruction ist <b>null</b> */
 	@Test
 	public void testeNullInstructionInterface() {
-		assertThrows(NullPointerException.class, () -> new InstructionDefinition<Short>(null, new byte[]{}, Optional.empty()));
+		assertThrows(NullPointerException.class, () -> new InstructionDefinition<Short>(null, new byte[]{}, null));
 	}
 
 	/** Parameterliste ist <b>null</b> */
 	@Test
 	public void testeNullParams() {
-		assertThrows(NullPointerException.class, () -> new InstructionDefinition<Short>(instruction, null, Optional.empty()));
-	}
-
-	/** Länge im Speicher ist <b>null</b> */
-	@Test
-	public void testeNullLenInWords() {
-		assertThrows(NullPointerException.class, () -> new InstructionDefinition<Short>(instruction, new byte[]{}, null));
+		assertThrows(NullPointerException.class, () -> new InstructionDefinition<Short>(instruction, null, null));
 	}
 
 	/** Wenn die Länge im Speicher nicht gesetzt ist, darf sie nicht abgefragt werden! */
 	@Test
 	public void testeLenInWordsNotSet() {
-		assertThrows(SVMException.class, () -> new InstructionDefinition<Short>(instruction, new byte[]{}, Optional.empty()).getLenInMemoryInWords());
+		assertThrows(SVMException.class, () -> new InstructionDefinition<Short>(instruction, new byte[]{}, null).getLenInMemoryInWords());
 	}
 
 	/** Wenn die Länge im Speicher gesetzt ist, muss sie korrekt zurückgegeben werden! */
 	@Test
 	public void testeLenInWordsSet() throws SVMException {
-		assertThat(new InstructionDefinition<Short>(instruction, new byte[]{}, Optional.of(3)).getLenInMemoryInWords(), equalTo(3));
+		assertThat(new InstructionDefinition<Short>(instruction, new byte[]{}, 3).getLenInMemoryInWords(), equalTo(3));
 	}
 
 	/** Stellt sicher, dass bei unpassender Parameterliste NOP ein entsprechender Fehöer erzeugt wird */
 	@Test
 	public void testeFalscheAnzahlParameterNop() {
-		final IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> new InstructionDefinition<Short>(instruction, new byte[]{1}, Optional.empty()));
+		final IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> new InstructionDefinition<Short>(instruction, new byte[]{1}, null));
 		assertThat(ex.getMessage(), containsString("erwartete Parameter: 0; erhalteneAnzahlParameter: 1"));
 	}
 
 	/** Stellt sicher, dass bei unpassender Parameterliste INT ein entsprechender Fehöer erzeugt wird */
 	@Test
 	public void testeFalscheAnzahlParameterInt() {
-		final IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> new InstructionDefinition<Short>(INSTRUCTIONS.get(Int.CODE), new byte[]{1,2}, Optional.empty()));
+		final IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> new InstructionDefinition<Short>(INSTRUCTIONS.get(Int.CODE), new byte[]{1,2}, null));
 		assertThat(ex.getMessage(), containsString("erwartete Parameter: 1; erhalteneAnzahlParameter: 2"));
 	}
 
 	/** Stellt sicher, dass bei unpassender Parameterliste MOV ein entsprechender Fehöer erzeugt wird */
 	@Test
 	public void testeFalscheAnzahlParameterMov() {
-		final IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> new InstructionDefinition<Short>(INSTRUCTIONS.get(Mov.CODE), new byte[]{1}, Optional.empty()));
+		final IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> new InstructionDefinition<Short>(INSTRUCTIONS.get(Mov.CODE), new byte[]{1}, null));
 		assertThat(ex.getMessage(), containsString("erwartete Parameter: 5; erhalteneAnzahlParameter: 1"));
 	}
 

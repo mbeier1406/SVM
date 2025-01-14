@@ -4,7 +4,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -38,9 +37,9 @@ public class SVMProgramShortTest {
 	public final Label labelFalscherTypData = new Label(LabelType.INSTRUCTION, "L");
 
 	/** Verschiedene Label-Listen für Instruktionen mit und ohne Parameter */
-	@SuppressWarnings("unchecked") public Optional<SVMProgram.Label>[] emptyLabelList = (Optional<SVMProgram.Label>[]) new Optional[0];
-	@SuppressWarnings("unchecked") public Optional<SVMProgram.Label>[] fiveLabelList = (Optional<SVMProgram.Label>[]) new Optional[] { Optional.empty(), Optional.of(labelD), Optional.empty(), Optional.empty(), Optional.empty() };
-	@SuppressWarnings("unchecked") public Optional<SVMProgram.Label>[] oneEmptyLabelList = (Optional<SVMProgram.Label>[]) new Optional[] { Optional.empty() };
+	public SVMProgram.Label[] emptyLabelList = new SVMProgram.Label[0];
+	public SVMProgram.Label[] fiveLabelList = new SVMProgram.Label[] { null, labelD, null, null, null };
+	public SVMProgram.Label[] oneEmptyLabelList = new SVMProgram.Label[] { null };
 
 
 	/** Ein paar Datensätze zum Test */
@@ -54,17 +53,17 @@ public class SVMProgramShortTest {
 	public final InstructionInterface<Short> MOV = InstructionFactory.INSTRUCTIONS.get(Mov.CODE);
 
 	/** Instruktionen mit Parametern */
-	public final InstructionDefinition<Short> instrNop = new InstructionDefinition<>(NOP, new byte[] {}, Optional.empty());
-	public final InstructionDefinition<Short> instrInt = new InstructionDefinition<>(INT, new byte[] {1}, Optional.empty());
-	public final InstructionDefinition<Short> instrMov = new InstructionDefinition<>(MOV, new byte[] {1,2,3,4,5}, Optional.empty());
+	public final InstructionDefinition<Short> instrNop = new InstructionDefinition<>(NOP, new byte[] {}, null);
+	public final InstructionDefinition<Short> instrInt = new InstructionDefinition<>(INT, new byte[] {1}, null);
+	public final InstructionDefinition<Short> instrMov = new InstructionDefinition<>(MOV, new byte[] {1,2,3,4,5}, null);
 
 	/** Einige Instruktionen <b>ohne</b> Label */
-	public final SVMProgram.VirtualInstruction<Short> virtInstrNopOhneLabel = new SVMProgram.VirtualInstruction<>(Optional.empty(), instrNop, emptyLabelList);
+	public final SVMProgram.VirtualInstruction<Short> virtInstrNopOhneLabel = new SVMProgram.VirtualInstruction<>(null, instrNop, emptyLabelList);
 
 	/** Einige Instruktionen <b>mit</b> Label */
-	public final SVMProgram.VirtualInstruction<Short> virtInstrNopMitLabelA = new SVMProgram.VirtualInstruction<>(Optional.of(labelA), instrNop, emptyLabelList);
-	public final SVMProgram.VirtualInstruction<Short> virtInstrIntLabelD = new SVMProgram.VirtualInstruction<>(Optional.empty(), instrMov, fiveLabelList);
-	public final SVMProgram.VirtualInstruction<Short> virtInstrInt1 = new SVMProgram.VirtualInstruction<>(Optional.empty(), instrInt, oneEmptyLabelList);
+	public final SVMProgram.VirtualInstruction<Short> virtInstrNopMitLabelA = new SVMProgram.VirtualInstruction<>(labelA, instrNop, emptyLabelList);
+	public final SVMProgram.VirtualInstruction<Short> virtInstrIntLabelD = new SVMProgram.VirtualInstruction<>(null, instrMov, fiveLabelList);
+	public final SVMProgram.VirtualInstruction<Short> virtInstrInt1 = new SVMProgram.VirtualInstruction<>(null, instrInt, oneEmptyLabelList);
 
 
 	@BeforeEach

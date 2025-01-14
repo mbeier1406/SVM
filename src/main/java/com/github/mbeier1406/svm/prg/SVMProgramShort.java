@@ -4,7 +4,6 @@ import static com.github.mbeier1406.svm.instructions.InstructionFactory.INSTRUCT
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 
@@ -83,8 +82,8 @@ public class SVMProgramShort implements SVMProgram<Short> {
 			LOGGER.trace("[Instr] Ziel-Label prüfen...");
 			final List<Label> labelListInstr = new ArrayList<>();
 			for ( int i=0; i < this.instructionList.size(); i++ )
-				if ( this.instructionList.get(i).label().isPresent() ) {
-					Label labelZuPruefen = this.instructionList.get(i).label().get();
+				if ( this.instructionList.get(i).label() != null ) { // Diese Instruktion dient als Ziel für einen Sprungbefehl
+					Label labelZuPruefen = this.instructionList.get(i).label();
 					int indexOfLabel = labelListDaten.indexOf(labelZuPruefen);
 					LOGGER.trace("[Instr] in Daten: labelZuPruefen={}; indexOfLabel={}: ", labelZuPruefen, indexOfLabel);
 					if ( indexOfLabel >= 0 ) throw new SVMException("[Instr] in Daten: Index "+i+": Label "+labelZuPruefen+": Label doppelt (an Index "+indexOfLabel+")!");
@@ -100,9 +99,9 @@ public class SVMProgramShort implements SVMProgram<Short> {
 			for ( int i=0; i < this.instructionList.size(); i++ ) {
 				var virtualInstruction = this.instructionList.get(i);
 				for ( int j=0; j < virtualInstruction.labelList().length; j++ ) {
-					Optional<Label> label = virtualInstruction.labelList()[j];
-					if ( label.isPresent() ) {
-						var labelName = label.get().label();
+					Label label = virtualInstruction.labelList()[j];
+					if ( label != null ) { // Die Instruktion verwendet eine virtuelle Adresse, die erst zum Zeitpunkt des Ladens feststeht
+						var labelName = label.label();
 						LOGGER.trace("[Instr] {}; Index {}: pruefe Label '{}'", virtualInstruction, j, labelName);
 						/*
 						 * Da Wortlänge <Short> aus zwei Bytes (Byte[] = Parameterliste der Instruktion!!!) besteht, darf nur max. jedes zweite einen Label verwenden.

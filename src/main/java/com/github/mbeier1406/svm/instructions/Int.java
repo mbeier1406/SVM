@@ -28,6 +28,7 @@ import com.github.mbeier1406.svm.SVMException;
 @Instruction(code=Int.CODE)
 public class Int extends InstructionBase implements InstructionInterface<Short>, IntInterface<Short> {
 
+	private static final long serialVersionUID = -6921900912891344055L;
 	public static final Logger LOGGER = LogManager.getLogger(Int.class);
 
 	/** Der Code im {@linkplain MEM Speicher}, die diesen Maschinenbefehl idebntifiziert */

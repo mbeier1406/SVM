@@ -5,8 +5,6 @@ import static com.github.mbeier1406.svm.SVM.BD_SHORT;
 import static java.util.Objects.requireNonNull;
 import static org.apache.logging.log4j.CloseableThreadContext.put;
 
-import java.util.Optional;
-
 import org.apache.logging.log4j.CloseableThreadContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -52,7 +50,7 @@ public class InstructionReaderShort implements InstructionReaderInterface<Short>
 				}
 			}
 			/* Fertig */
-			return new InstructionDefinition<Short>(instr, args, Optional.of(lenInWords));
+			return new InstructionDefinition<Short>(instr, args, lenInWords);
 		}
 		catch ( Exception e ) {
 			throw new SVMException("mem="+mem.toString()+"; addr="+addr, e);

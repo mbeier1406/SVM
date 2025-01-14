@@ -14,6 +14,7 @@ import com.github.mbeier1406.svm.SVMException;
 @Instruction(code = Nop.CODE)
 public class Nop extends InstructionBase implements InstructionInterface<Short> {
 
+	private static final long serialVersionUID = 1441433188003990456L;
 	public static final Logger LOGGER = LogManager.getLogger(Nop.class);
 
 	/** Der Code im {@linkplain MEM Speicher}, die diesen Maschinenbefehl idebntifiziert */

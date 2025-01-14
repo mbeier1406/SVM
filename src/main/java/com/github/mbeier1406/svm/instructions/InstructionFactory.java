@@ -18,7 +18,7 @@ public class InstructionFactory {
 	 * {@linkplain Instruction#code() Code}	im {@linkplain MEM}, die von der {@linkplain ALU}
 	 * ausgeführt werden können.
 	 */
-	public static final Map<Byte, InstructionInterface<Short>> INSTRUCTIONS;
+	public transient static final Map<Byte, InstructionInterface<Short>> INSTRUCTIONS;
 
 	/** Lädt die definierten {@linkplain InstructionInterface Maschinenbefehle} */
 	static {

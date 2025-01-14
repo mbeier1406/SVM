@@ -33,6 +33,7 @@ import com.github.mbeier1406.svm.SVMException;
 @Instruction(code = Mov.CODE)
 public class Mov extends InstructionBase implements InstructionInterface<Short> {
 
+	private static final long serialVersionUID = -6101257415849808446L;
 	public static final Logger LOGGER = LogManager.getLogger(Mov.class);
 
 	/** Der Code im {@linkplain MEM Speicher}, die diesen Maschinenbefehl idebntifiziert */

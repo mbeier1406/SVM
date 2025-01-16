@@ -117,8 +117,8 @@ public class SVMLoaderShortTest {
 		prg.addInstruction(NOP0_OHNE_LABEL);		// NOP
 		prg.addInstruction(MOV2_REG0_OHNE_LABEL);	// MOV $2 REG(0) 			-- Funktion IO
 		prg.addInstruction(MOV1_REG1_OHNE_LABEL);	// MOV $1 REG(1)			-- stdout
-		prg.addInstruction(MOVX_REG2_LABEL2);		// MOV .text2 REG(1)		-- Startadresse
-		prg.addInstruction(MOVL_REG3_OHNE_LABEL);	// MOV len(.text2) REG(2)	-- Länge Ausgabestring
+		prg.addInstruction(MOVX_REG2_LABEL2);		// MOV .text2 REG(2)		-- Startadresse
+		prg.addInstruction(MOVL_REG3_OHNE_LABEL);	// MOV len(.text2) REG(3)	-- Länge Ausgabestring
 		prg.addInstruction(INT1_OHNE_LABEL);		// INT(1)					-- Int für Ausgabe
 		prg.addInstruction(MOV1_REG0_OHNE_LABEL);	// MOV $1 REG(0) 			-- Funktion EXIT
 		prg.addInstruction(MOV1_REG1_OHNE_LABEL);	// MOV $1 REG(1)			-- Exit Code 1

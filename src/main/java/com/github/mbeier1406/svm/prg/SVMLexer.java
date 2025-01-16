@@ -1,6 +1,7 @@
 package com.github.mbeier1406.svm.prg;
 
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,15 +14,16 @@ import com.github.mbeier1406.svm.SVMException;
 public interface SVMLexer {
 
 	public static enum TokenType {
-		DOT("."),			// Definiert einen Label
-		TAB("\t"),			// Zu Beginn der Zeile leitet es eine Instruktion oder eine Programmkonfiguration ein
-		HASH("#"),			// Definiert eine Programmkonfiguration
-		SPACE(" "),			// Leerzeichen zur Trennung von Token
-		COMMA(","),			// Trennt Parameter von Instruktionen
-		PERCENT("%"),		// Definiert ein Register
-		AMPERSAND("&"),		// Leerzeichen zur Trennung von Token
-		NUMBER("0-9"),		// Definiert eine Zahl
-		STRING("A-Za-z\n");	// Definiert eine Bezeichner (zum Beispiel einen Label)
+		DOT("\\."),				// Definiert einen Label
+		TAB("\t"),				// Zu Beginn der Zeile leitet es eine Instruktion oder eine Programmkonfiguration ein
+		HASH("#"),				// Definiert eine Programmkonfiguration
+		SPACE(" "),				// Leerzeichen zur Trennung von Token
+		COMMA(","),				// Trennt Parameter von Instruktionen
+		DOLLAR("\\$"),			// Markiert eine Zahl
+		PERCENT("%"),			// Definiert ein Register
+		AMPERSAND("&"),			// Leerzeichen zur Trennung von Token
+		NUMBER("\\d+"),			// Definiert eine Zahl
+		STRING("[A-Za-z][A-Za-z0-9]*");	// Definiert eine Bezeichner (zum Beispiel einen Label)
 		private String text;
 		private static Map<TokenType, Pattern> regex = null;
 		private TokenType(String text) {
@@ -43,6 +45,19 @@ public interface SVMLexer {
 			throw new IllegalArgumentException("Kein Token: '"+ch+"'");
 		}
 	};
+
+	public static String getTokenTypePattern() {
+		final StringBuilder pattern = new StringBuilder("");
+		Arrays.stream(TokenType.values()).forEach(t -> {
+			if ( !pattern.isEmpty() ) pattern.append("|"); // EInzelne Token durch '|' trennen
+			pattern.append("(?<"); // Neue Gruppe beginnen
+			pattern.append(t.toString()); // Gruppennanme = TokenTyp
+			pattern.append(">"); // Gruppenname schließen
+			pattern.append(t.getText()); // Regulären Ausdruck zum Erkennen des Tokens
+			pattern.append(")"); // Gruppefür den Tokentyp schließen
+		});
+		return pattern.toString();
+	}
 
 	public static record Token(TokenType token, String value) {
 		public Token {

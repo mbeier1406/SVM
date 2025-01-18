@@ -15,7 +15,7 @@ public interface SVMLexer {
 
 	public static enum TokenType {
 		DOT("\\."),				// Definiert einen Label
-		TAB("\t"),				// Zu Beginn der Zeile leitet es eine Instruktion oder eine Programmkonfiguration ein
+		TAB("\\\\t"),				// Zu Beginn der Zeile leitet es eine Instruktion oder eine Programmkonfiguration ein
 		HASH("#"),				// Definiert eine Programmkonfiguration
 		SPACE(" "),				// Leerzeichen zur Trennung von Token
 		COMMA(","),				// Trennt Parameter von Instruktionen
@@ -59,21 +59,31 @@ public interface SVMLexer {
 		return pattern.toString();
 	}
 
-	public static record Token(TokenType token, String value) {
-		public Token {
+	public static enum Token { SPACE, TAB, TOKEN_DATA, DATA, TOKEN_CODE, LABEL, CODE, CONSTANT, REGISTER }
+
+	public static record Symbol(Token token, String value) {
+		public Symbol {
 			Objects.requireNonNull(token, "token");
 		}
-		public Optional<String> getValue() {
+		public Optional<String> getStringValue() {
 			return Optional.ofNullable(value);
+		}
+		public Optional<Integer> getIntValue() {
+			return Optional.ofNullable(Integer.parseInt(value));
 		}
 	}
 
-	public List<List<Token>> scan(String file, Charset encoding) throws SVMException;
+	public static final Symbol SYM_SPACE = new Symbol(Token.SPACE, null);
+	public static final Symbol SYM_TAB = new Symbol(Token.TAB, null);
+	public static final Symbol SYM_TOKEN_DATA = new Symbol(Token.TOKEN_DATA, null);
+	public static final Symbol SYM_TOKEN_CODE = new Symbol(Token.TOKEN_CODE, null);
 
-	public default List<List<Token>> scan(String file) throws SVMException {
+	public List<List<Symbol>> scan(String file, Charset encoding) throws SVMException;
+
+	public default List<List<Symbol>> scan(String file) throws SVMException {
 		return scan(file, Charset.defaultCharset());
 	}
 
-	public List<List<Token>> scan(char[] text) throws SVMException;
+	public List<List<Symbol>> scan(char[] text) throws SVMException;
 
 }

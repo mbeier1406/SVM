@@ -13,9 +13,9 @@
 	mov $1, %reg(1)          # stdout
 	mov .text2, %reg(2)      # Startadresse
 	mov len(.text2), %reg(3) # Länge der Ausgabe
-	int 1                    # syscall
+	int $1                   # syscall
 	nop
 	mov $1, reg(0)          # exit
 	mov $55, reg(1)         # return code
-	int 1                   # syscall
+	int $1                  # syscall
 	

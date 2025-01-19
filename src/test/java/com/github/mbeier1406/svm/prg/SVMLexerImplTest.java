@@ -53,11 +53,11 @@ public class SVMLexerImplTest {
 	public static Stream<Arguments> getTestdaten() {
 		return Stream.of(
 				Arguments.of("", new ArrayList<Symbol>() {{}}),
-				Arguments.of("	", new ArrayList<Symbol>() {{}}), // Ein TAB ohne nachfolgendes Token wird als Leerzeichen gewertet
+				Arguments.of("	", new ArrayList<Symbol>() {{add(SYM_TAB);}}), // Ein TAB
 				Arguments.of("  ", new ArrayList<Symbol>() {{}}),
-				Arguments.of(" 	 ", new ArrayList<Symbol>() {{}}), // Leerezichen und Tabs alleine überlesen
+				Arguments.of("	 	 ", new ArrayList<Symbol>() {{add(SYM_TAB);add(SYM_TAB);}}), // Tabs enthalten
 				Arguments.of("# xx", new ArrayList<Symbol>() {{}}),
-				Arguments.of("   # xx", new ArrayList<Symbol>() {{add(SYM_SPACE);}}),
+				Arguments.of("   # xx", new ArrayList<Symbol>() {{}}),
 				Arguments.of("	&data", new ArrayList<Symbol>() {{add(SYM_TAB);add(SYM_TOKEN_DATA);}})
 				);
 	}
@@ -72,7 +72,7 @@ public class SVMLexerImplTest {
 	public static Stream<Arguments> getUngueltigeTestdaten() {
 		return Stream.of(
 				Arguments.of("	&abc", SVMException.class, "muss eine Sektion (data/code) folgen"),
-				Arguments.of("	yy ? xx", SVMException.class, "muss eine Sektion (data/code) folgen"),
+				Arguments.of("	yy ? xx", SVMException.class, "Ungültige(s) Token: '?'"),
 				Arguments.of(null, NullPointerException.class, "line"));
 	}
 
@@ -82,8 +82,8 @@ public class SVMLexerImplTest {
 		Pattern pattern = Pattern.compile(patternString);
 		Scanner scanner = new Scanner("	yy ? xx");
 		while ( scanner.hasNext() ) {
-			LOGGER.trace("token={}", scanner.next());
-//			String token = 
+			String token = scanner.next();
+			LOGGER.trace("token={}", token);
 		}
 		scanner.close();
 	}

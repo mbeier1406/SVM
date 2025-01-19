@@ -15,7 +15,7 @@ public interface SVMLexer {
 
 	public static enum TokenType {
 		DOT("\\."),				// Definiert einen Label
-		TAB("\\\\t"),				// Zu Beginn der Zeile leitet es eine Instruktion oder eine Programmkonfiguration ein
+		TAB("	"),				// Zu Beginn der Zeile leitet es eine Instruktion oder eine Programmkonfiguration ein
 		HASH("#"),				// Definiert eine Programmkonfiguration
 		SPACE(" "),				// Leerzeichen zur Trennung von Token
 		COMMA(","),				// Trennt Parameter von Instruktionen

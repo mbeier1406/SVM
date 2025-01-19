@@ -91,61 +91,66 @@ public class SVMLexerImpl implements SVMLexer {
 
 	public List<Symbol> scanLine(String line) throws SVMException {
 		try ( CloseableThreadContext.Instance ctx = CloseableThreadContext.put("line", line);
-			  var tokenScanner = new Scanner(requireNonNull(line, "line")) ) {
+			  var lineScanner = new Scanner(requireNonNull(line, "line")) ) {
+			lineScanner.useDelimiter(SVMLexer.TokenType.SPACE.getText());
 			List<Symbol> symbols = new ArrayList<>();
 			TokenType lastTokenType = null; // hier merken, ob wie gerade in Token lesen, dass aus mehren TokenTypen besteht
 			TokenType currentTokenType = null;
-			while ( tokenScanner.hasNext() ) {
-				String nextToken = tokenScanner.findInLine(tokenTypePattern);
-				if ( nextToken.equals(TokenType.HASH.getText()) )
-					return symbols; // Kommentare überlesen
-				LOGGER.trace("  nextToken='{}'", nextToken);
-				if ( nextToken != null ) {
-					Matcher matcher = tokenTypePattern.matcher(nextToken);
-					if ( matcher.matches() ) {
-						for ( var type : SVMLexer.TokenType.values() ) {
-							LOGGER.trace("Test type='{}' ('{}'); lastTokenType={}", type, nextToken, lastTokenType);
-							if ( matcher.group(type.toString()) != null ) {
-								currentTokenType = type;
-								LOGGER.trace("Gefunden: " + currentTokenType + " " + nextToken);
-								if ( lastTokenType != null ) {
-									/* Wir lesen ein Token, dass aus mehreren TokenTypen besteht */
-									if ( currentTokenType == TokenType.SPACE ) {
-										if ( lastTokenType != TokenType.SPACE )
-											throw new SVMException("Leerezeichen gefunden während folgendes Sysmbol gelesen wurde: "+lastTokenType);
-									}
-									if ( currentTokenType == TokenType.STRING ) {
-										if ( lastTokenType == TokenType.AMPERSAND ) {
-											if ( nextToken.equals("data") )
-												symbols.add(SYM_TOKEN_DATA);
-											else if ( nextToken.equals("code") )
-												symbols.add(SYM_TOKEN_CODE);
-											else
-												throw new SVMException("Nach '"+TokenType.AMPERSAND+"' muss eine Sektion (data/code) folgen: "+nextToken);
-											lastTokenType = null; // Token fertig
+			while ( lineScanner.hasNext() ) {
+				String nextTokenGroup = lineScanner.next();
+				LOGGER.trace("  nextTokenGroup='{}'", nextTokenGroup);
+				while ( nextTokenGroup.length() > 0 ) {
+					try ( var tokenScanner = new Scanner(nextTokenGroup) ) {
+						var nextToken = tokenScanner.findInLine(tokenTypePattern);
+						if ( nextToken != null ) {
+							Matcher matcher = tokenTypePattern.matcher(nextToken);
+							if ( matcher.matches() ) {
+								if ( nextToken.startsWith(TokenType.HASH.getText()) )
+									return symbols; // Kommentare überlesen
+								for ( var type : SVMLexer.TokenType.values() ) {
+									LOGGER.trace("Test type='{}' ('{}'); lastTokenType={}", type, nextToken, lastTokenType);
+									if ( matcher.group(type.toString()) != null ) {
+										currentTokenType = type;
+										LOGGER.trace("Gefunden: " + currentTokenType + " " + nextToken);
+										if ( lastTokenType != null ) {
+											/* Wir lesen ein Token, dass aus mehreren TokenTypen besteht */
+											if ( currentTokenType == TokenType.SPACE ) {
+												if ( lastTokenType != TokenType.SPACE )
+													throw new SVMException("Leerezeichen gefunden während folgendes Sysmbol gelesen wurde: "+lastTokenType);
+											}
+											if ( currentTokenType == TokenType.STRING ) {
+												if ( lastTokenType == TokenType.AMPERSAND ) {
+													if ( nextToken.equals("data") )
+														symbols.add(SYM_TOKEN_DATA);
+													else if ( nextToken.equals("code") )
+														symbols.add(SYM_TOKEN_CODE);
+													else
+														throw new SVMException("Nach '"+TokenType.AMPERSAND+"' muss eine Sektion (data/code) folgen: "+nextToken);
+													lastTokenType = null; // Token fertig
+												}
+											}
+											
 										}
+										else {
+											/* Neues Token */
+											if ( currentTokenType == TokenType.TAB ) {
+												symbols.add(SYM_TAB);
+											}
+											else if ( currentTokenType == TokenType.SPACE ) {
+												lastTokenType = currentTokenType;
+											}
+											else if ( currentTokenType == TokenType.AMPERSAND ) {
+												lastTokenType = currentTokenType; // es muss nach dem '&' eine Sektion folgen (data, code)
+											}
+										}
+										break; // Token gefunden, weitere müssen nicht mehr gesucht werden.
 									}
 								}
-								else {
-									/* Neues Token */
-									if ( currentTokenType == TokenType.TAB ) {
-										symbols.add(SYM_TAB);
-										lastTokenType = currentTokenType;
-									}
-									else if ( currentTokenType == TokenType.SPACE ) {
-										if ( lastTokenType != TokenType.SPACE )
-											symbols.add(SYM_SPACE);
-										lastTokenType = currentTokenType;
-									}
-									else if ( currentTokenType == TokenType.AMPERSAND ) {
-										lastTokenType = currentTokenType; // es muss nach dem Punkt eine Sektion folgen (data, code)
-									}
-								}
-								break; // Token gefunden, weitere müssen nicht mehr gesucht werden.
 							}
+							nextTokenGroup = nextTokenGroup.substring(nextToken.length());
 						}
-						if ( currentTokenType == null )
-							throw new SVMException("Zeile '"+line+"': Ungültiges Token: '"+nextToken+"'!");
+						else
+							throw new SVMException("Zeile '"+line+"': Ungültige(s) Token: '"+nextTokenGroup+"'!");
 					}
 				}
 			}

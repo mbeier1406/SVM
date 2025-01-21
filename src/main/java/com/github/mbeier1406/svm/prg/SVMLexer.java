@@ -7,44 +7,44 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.regex.Pattern;
 
 import com.github.mbeier1406.svm.SVMException;
+import com.github.mbeier1406.svm.prg.lexer.SpaceLexer;
 
 public interface SVMLexer {
 
 	public static enum TokenType {
-		DOT("\\."),				// Definiert einen Label
-		TAB("	"),				// Zu Beginn der Zeile leitet es eine Instruktion oder eine Programmkonfiguration ein
-		HASH("#"),				// Definiert eine Programmkonfiguration
-		SPACE(" "),				// Leerzeichen zur Trennung von Token
-		COMMA(","),				// Trennt Parameter von Instruktionen
-		DOLLAR("\\$"),			// Markiert eine Zahl
-		PERCENT("%"),			// Definiert ein Register
-		AMPERSAND("&"),			// Leerzeichen zur Trennung von Token
-		NUMBER("\\d+"),			// Definiert eine Zahl
-		STRING("[A-Za-z][A-Za-z0-9]*");	// Definiert eine Bezeichner (zum Beispiel einen Label)
+		DOT("\\.", null),				// Definiert einen Label
+		TAB("	", null),				// Zu Beginn der Zeile leitet es eine Instruktion oder eine Programmkonfiguration ein
+		HASH("#", null),				// Definiert eine Programmkonfiguration
+		SPACE(" ", SpaceLexer.TOKEN_PORCESSOR),	// Leerzeichen zur Trennung von Token
+		COMMA(",", null),				// Trennt Parameter von Instruktionen
+		DOLLAR("\\$", null),			// Markiert eine Zahl
+		PERCENT("%", null),				// Definiert ein Register
+		AMPERSAND("&", null),			// Leerzeichen zur Trennung von Token
+		NUMBER("\\d+", null),			// Definiert eine Zahl
+		STRING("[A-Za-z][A-Za-z0-9]*", null);	// Definiert eine Bezeichner (zum Beispiel einen Label)
 		private String text;
-		private static Map<TokenType, Pattern> regex = null;
-		private TokenType(String text) {
+		private TokenTypeParser tokenTypeParser;
+		private TokenType(String text, TokenTypeParser tokenTypeParser) {
 			this.text = text;
+			this.tokenTypeParser = tokenTypeParser;
 		}
 		public String getText() {
 			return text;
 		}
-		public static TokenType getToken(char ch) {
-			if ( regex == null ) {
-				regex = new HashMap<>();
-				for ( TokenType t : TokenType.values() )
-					regex.put(t, Pattern.compile("["+t.getText().replace(".", "\\.")+"]"));
-			}
-			for ( TokenType t : TokenType.values() ) {
-				if ( regex.get(t).matcher(String.valueOf(ch)).find() )
-					return t;
-			}
-			throw new IllegalArgumentException("Kein Token: '"+ch+"'");
+		public TokenTypeParser getTokenTypeParser() {
+			return tokenTypeParser;
 		}
 	};
+
+	@FunctionalInterface
+	public static interface TokenTypeParser {
+		public TokenType parseTokenType(final List<Symbol> symbols, String currentTokenValue, TokenType lastTokenType) throws SVMException;
+	}
+
 
 	public static String getTokenTypePattern() {
 		final StringBuilder pattern = new StringBuilder("");

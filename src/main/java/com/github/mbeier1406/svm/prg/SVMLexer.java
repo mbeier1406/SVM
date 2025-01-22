@@ -11,21 +11,24 @@ import java.util.function.BiFunction;
 import java.util.regex.Pattern;
 
 import com.github.mbeier1406.svm.SVMException;
+import com.github.mbeier1406.svm.prg.lexer.AmpersandLexer;
 import com.github.mbeier1406.svm.prg.lexer.SpaceLexer;
+import com.github.mbeier1406.svm.prg.lexer.StringLexer;
+import com.github.mbeier1406.svm.prg.lexer.TabLexer;
 
 public interface SVMLexer {
 
 	public static enum TokenType {
 		DOT("\\.", null),				// Definiert einen Label
-		TAB("	", null),				// Zu Beginn der Zeile leitet es eine Instruktion oder eine Programmkonfiguration ein
+		TAB("	", TabLexer.TOKEN_PORCESSOR),				// Zu Beginn der Zeile leitet es eine Instruktion oder eine Programmkonfiguration ein
 		HASH("#", null),				// Definiert eine Programmkonfiguration
 		SPACE(" ", SpaceLexer.TOKEN_PORCESSOR),	// Leerzeichen zur Trennung von Token
 		COMMA(",", null),				// Trennt Parameter von Instruktionen
 		DOLLAR("\\$", null),			// Markiert eine Zahl
 		PERCENT("%", null),				// Definiert ein Register
-		AMPERSAND("&", null),			// Leerzeichen zur Trennung von Token
+		AMPERSAND("&", AmpersandLexer.TOKEN_PORCESSOR),			// Leerzeichen zur Trennung von Token
 		NUMBER("\\d+", null),			// Definiert eine Zahl
-		STRING("[A-Za-z][A-Za-z0-9]*", null);	// Definiert eine Bezeichner (zum Beispiel einen Label)
+		STRING("[A-Za-z][A-Za-z0-9]*", StringLexer.TOKEN_PORCESSOR);	// Definiert eine Bezeichner (zum Beispiel einen Label)
 		private String text;
 		private TokenTypeParser tokenTypeParser;
 		private TokenType(String text, TokenTypeParser tokenTypeParser) {

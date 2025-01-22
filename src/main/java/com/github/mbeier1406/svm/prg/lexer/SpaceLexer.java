@@ -13,7 +13,7 @@ public class SpaceLexer {
 	 * Funktion zur Verarbeitung eines Leerzeichens:
 	 * <ul>
 	 * <li>In die Liste der {@linkplain Symbol}e wird nichts eingefügt</li>
-	 * <li>Wenn gerade ein Symbol gelesen wird (lastTokenType ist nicht <b>null</b> handelt es sich um einen Fehler</li>
+	 * <li>Wenn gerade ein Symbol gelesen wird (lastTokenType ist nicht <b>null</b> bzw. ungleich {@linkplain TokenType#SPACE} handelt es sich um einen Fehler</li>
 	 * <li>Es wird wieder {@linkplain TokenType#SPACE} zurückgegeben, da mehrere Leerzeichen hintereinander erlaubt sind</li>
 	 * </ul>
 	 */

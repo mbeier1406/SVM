@@ -1,8 +1,8 @@
-package com.github.mbeier1406.svm.prg;
+package com.github.mbeier1406.svm.prg.lexer;
 
-import static com.github.mbeier1406.svm.prg.SVMLexer.SYM_SPACE;
-import static com.github.mbeier1406.svm.prg.SVMLexer.SYM_TAB;
-import static com.github.mbeier1406.svm.prg.SVMLexer.SYM_TOKEN_DATA;
+import static com.github.mbeier1406.svm.prg.lexer.SVMLexer.SYM_TAB;
+import static com.github.mbeier1406.svm.prg.lexer.SVMLexer.SYM_TOKEN_DATA;
+import static com.github.mbeier1406.svm.prg.lexer.SVMLexer.SYM_TOKEN_CODE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
@@ -10,45 +10,34 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import com.github.mbeier1406.svm.SVMException;
-import com.github.mbeier1406.svm.prg.SVMLexer.Symbol;
+import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Symbol;
 
 /**
- * Tests für die Klasse {@linkplain SVMLexerImpl}.
+ * Tests für die Klasse {@linkplain LineLexer}.
  */
-public class SVMLexerImplTest {
+public class LineLexerTest {
 
-	public static final Logger LOGGER = LogManager.getLogger(SVMLexerImplTest.class);
+	public static final Logger LOGGER = LogManager.getLogger(LineLexerTest.class);
 
-	/** Die zu scannende Testdatei ist {@value} */
-	public static final String PRG = "src/test/resources/com/github/mbeier1406/svm/prg/example.prg";
-
-	/** Das zu testende Objekt */
-	public SVMLexer svmLexer = new SVMLexerImpl();
-
-	@Test
-	public void testeDateiScannen() throws SVMException {
-		svmLexer.scan(PRG);
-	}
-
+	/** Testet die positiven Fälle aus {@linkplain #getTestdaten()} */
 	@ParameterizedTest
 	@MethodSource("getTestdaten")
 	public void testeLineScan(String line, final List<Symbol> symbols) throws SVMException {
-		var scanedSymbols = ((SVMLexerImpl) svmLexer).scanLine(line);
+		List<Symbol> scanedSymbols = new ArrayList<>();
+		LineLexer.LINE_SCANNER.scanLine(scanedSymbols, line);
 		assertThat(scanedSymbols, equalTo(symbols));
 	}
 
+	/** Liefert die gültigen Testdaten */
 	@SuppressWarnings("serial")
 	public static Stream<Arguments> getTestdaten() {
 		return Stream.of(
@@ -58,34 +47,25 @@ public class SVMLexerImplTest {
 				Arguments.of("	 	 ", new ArrayList<Symbol>() {{add(SYM_TAB);add(SYM_TAB);}}), // Tabs enthalten
 				Arguments.of("# xx", new ArrayList<Symbol>() {{}}),
 				Arguments.of("   # xx", new ArrayList<Symbol>() {{}}),
-				Arguments.of("	&data", new ArrayList<Symbol>() {{add(SYM_TAB);add(SYM_TOKEN_DATA);}})
+				Arguments.of("	&data", new ArrayList<Symbol>() {{add(SYM_TAB);add(SYM_TOKEN_DATA);}}),
+				Arguments.of("	&code", new ArrayList<Symbol>() {{add(SYM_TAB);add(SYM_TOKEN_CODE);}})
 				);
 	}
 
+	/** Testet die negativen Fälle aus {@linkplain #getUngueltigeTestdaten()} */
 	@ParameterizedTest
 	@MethodSource("getUngueltigeTestdaten")
 	public void testeUnguetliteLineScan(String line, Class<?extends Exception> ex, String msg) {
-		Exception e = assertThrows(ex, () -> ((SVMLexerImpl) svmLexer).scanLine(line));
+		Exception e = assertThrows(ex, () -> LineLexer.LINE_SCANNER.scanLine(new ArrayList<>(), line));
 		assertThat(e.getLocalizedMessage(), containsString(msg));
 	}
 
+	/** Liefert die ungültigen Testdaten */
 	public static Stream<Arguments> getUngueltigeTestdaten() {
 		return Stream.of(
 				Arguments.of("	&abc", SVMException.class, "muss eine Sektion (data/code) folgen"),
-				Arguments.of("	yy ? xx", SVMException.class, "Ungültige(s) Token: '?'"),
-				Arguments.of(null, NullPointerException.class, "line"));
+				Arguments.of("	&code ? xx", SVMException.class, "Ungültige(s) Token: '?'"),
+				Arguments.of(null, SVMException.class, "line"));
 	}
 
-	@Test
-	public void testeScanner() {
-		String patternString="(?<DOT>\\\\.)|(?<TAB>\\\\t)|(?<HASH>#)|(?<SPACE> )|(?<COMMA>,)|(?<DOLLAR>\\\\$)|(?<PERCENT>%)|(?<AMPERSAND>&)|(?<NUMBER>\\d+)|(?<STRING>[A-Za-z][A-Za-z0-9]*)";
-		Pattern pattern = Pattern.compile(patternString);
-		Scanner scanner = new Scanner("	yy ? xx");
-		while ( scanner.hasNext() ) {
-			String token = scanner.next();
-			LOGGER.trace("token={}", token);
-		}
-		scanner.close();
-	}
-	
 }

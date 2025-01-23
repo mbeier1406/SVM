@@ -1,4 +1,4 @@
-package com.github.mbeier1406.svm.prg;
+package com.github.mbeier1406.svm.prg.lexer;
 
 import java.nio.charset.Charset;
 import java.util.Arrays;
@@ -11,43 +11,59 @@ import java.util.function.BiFunction;
 import java.util.regex.Pattern;
 
 import com.github.mbeier1406.svm.SVMException;
-import com.github.mbeier1406.svm.prg.lexer.AmpersandLexer;
-import com.github.mbeier1406.svm.prg.lexer.SpaceLexer;
-import com.github.mbeier1406.svm.prg.lexer.StringLexer;
-import com.github.mbeier1406.svm.prg.lexer.TabLexer;
+import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Symbol;
 
 public interface SVMLexer {
 
 	public static enum TokenType {
 		DOT("\\.", null),				// Definiert einen Label
-		TAB("	", TabLexer.TOKEN_PORCESSOR),				// Zu Beginn der Zeile leitet es eine Instruktion oder eine Programmkonfiguration ein
+		TAB("	", TabLexer.TOKEN_SCANNER),				// Zu Beginn der Zeile leitet es eine Instruktion oder eine Programmkonfiguration ein
 		HASH("#", null),				// Definiert eine Programmkonfiguration
-		SPACE(" ", SpaceLexer.TOKEN_PORCESSOR),	// Leerzeichen zur Trennung von Token
+		SPACE(" ", SpaceLexer.TOKEN_SCANNER),	// Leerzeichen zur Trennung von Token
 		COMMA(",", null),				// Trennt Parameter von Instruktionen
 		DOLLAR("\\$", null),			// Markiert eine Zahl
 		PERCENT("%", null),				// Definiert ein Register
-		AMPERSAND("&", AmpersandLexer.TOKEN_PORCESSOR),			// Leerzeichen zur Trennung von Token
+		AMPERSAND("&", AmpersandLexer.TOKEN_SCANNER),			// Leerzeichen zur Trennung von Token
 		NUMBER("\\d+", null),			// Definiert eine Zahl
-		STRING("[A-Za-z][A-Za-z0-9]*", StringLexer.TOKEN_PORCESSOR);	// Definiert eine Bezeichner (zum Beispiel einen Label)
+		STRING("[A-Za-z][A-Za-z0-9]*", StringLexer.TOKEN_SCANNER);	// Definiert eine Bezeichner (zum Beispiel einen Label)
 		private String text;
-		private TokenTypeParser tokenTypeParser;
-		private TokenType(String text, TokenTypeParser tokenTypeParser) {
+		private TokenTypeLexer tokenTypeParser;
+		private TokenType(String text, TokenTypeLexer tokenTypeParser) {
 			this.text = text;
 			this.tokenTypeParser = tokenTypeParser;
 		}
 		public String getText() {
 			return text;
 		}
-		public TokenTypeParser getTokenTypeParser() {
+		public TokenTypeLexer getTokenTypeParser() {
 			return tokenTypeParser;
 		}
 	};
 
 	@FunctionalInterface
-	public static interface TokenTypeParser {
-		public TokenType parseTokenType(final List<Symbol> symbols, String currentTokenValue, TokenType lastTokenType) throws SVMException;
+	public static interface TokenTypeLexer {
+		public TokenType scanTokenType(final List<Symbol> symbols, String currentTokenValue, TokenType lastTokenType) throws SVMException;
 	}
 
+	/**
+	 * 
+	 */
+	@FunctionalInterface
+	public static interface TokenGroupLexer {
+		/**
+		 * 
+		 * @param symbols
+		 * @param tokenGroup
+		 * @return <b>true</b>, wenn das Lesen der Zeile abgebrochen werden soll (Kommentar), sonst <b>false</b>
+		 * @throws SVMException
+		 */
+		public boolean scanTokenType(final List<Symbol> symbols, String tokenGroup) throws SVMException;
+	}
+
+	@FunctionalInterface
+	public static interface LineLexer {
+		public void scanLine(final List<Symbol> symbols, String line) throws SVMException;
+	}
 
 	public static String getTokenTypePattern() {
 		final StringBuilder pattern = new StringBuilder("");

@@ -19,7 +19,7 @@ public class SVMLexerTest {
 
 	public static final Logger LOGGER = LogManager.getLogger(SVMLexerTest.class);
 
-	/** Stellt sicher, dass eine korrekter RegEx zur Erkennung der {@linkplain SVMLexer.TokenType} geliefert wird */
+	/** Stellt sicher, dass eine korrekter RegEx zur Erkennung der {@linkplain SVMLexer.TokenPart} geliefert wird */
 	@Test
 	public void testeTokenTypPattern() {
 		String pattern = SVMLexer.getTokenTypePattern();

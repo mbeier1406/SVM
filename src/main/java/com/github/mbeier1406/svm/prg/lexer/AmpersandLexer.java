@@ -1,11 +1,11 @@
 package com.github.mbeier1406.svm.prg.lexer;
 
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Symbol;
-import com.github.mbeier1406.svm.prg.lexer.SVMLexer.TokenType;
+import com.github.mbeier1406.svm.prg.lexer.SVMLexer.TokenPart;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.TokenTypeLexer;
 
 /**
- * Definiert die Funktion zur lexikalischen Analyse eines {@linkplain TokenType#AMPERSAND}.
+ * Definiert die Funktion zur lexikalischen Analyse eines {@linkplain TokenPart#AMPERSAND}.
  */
 public class AmpersandLexer {
 
@@ -14,7 +14,7 @@ public class AmpersandLexer {
 	 * <ul>
 	 * <li>In die Liste der {@linkplain Symbol}e wird nichts eingefügt</li>
 	 * <li>Wenn gerade ein Symbol gelesen wird (lastTokenType ist nicht <b>null</b> handelt es sich um einen Fehler</li>
-	 * <li>Es wird {@linkplain TokenType#AMPERSAND} zurückgegeben, damit aus dem nachfolgenden String die Sektion
+	 * <li>Es wird {@linkplain TokenPart#AMPERSAND} zurückgegeben, damit aus dem nachfolgenden String die Sektion
 	 * (z. B. {@linkplain SVMLexer#SYM_TOKEN_CODE}) ermittelt werden kann</li>
 	 * </ul>
 	 * Der Ampersand <b>&</b> leitet die Definition einer Programmsektion ({@code &data} bzw. {@code &code}) ein.
@@ -27,7 +27,7 @@ public class AmpersandLexer {
 		else {
 			// Nichts zu tun
 		}
-		return TokenType.AMPERSAND; // Damit im nähsten Schritt die Sektion (&data, &code) ermittelt werdne kann
+		return TokenPart.AMPERSAND; // Damit im nähsten Schritt die Sektion (&data, &code) ermittelt werdne kann
 	};
 
 }

@@ -2,11 +2,11 @@ package com.github.mbeier1406.svm.prg.lexer;
 
 import com.github.mbeier1406.svm.instructions.InstructionDefinition;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Symbol;
-import com.github.mbeier1406.svm.prg.lexer.SVMLexer.TokenType;
+import com.github.mbeier1406.svm.prg.lexer.SVMLexer.TokenPart;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.TokenTypeLexer;
 
 /**
- * Definiert die Funktion zur lexikalischen Analyse eines {@linkplain TokenType#TAB}.
+ * Definiert die Funktion zur lexikalischen Analyse eines {@linkplain TokenPart#TAB}.
  */
 public class TabLexer {
 

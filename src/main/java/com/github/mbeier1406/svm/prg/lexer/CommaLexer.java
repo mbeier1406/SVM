@@ -2,11 +2,11 @@ package com.github.mbeier1406.svm.prg.lexer;
 
 import com.github.mbeier1406.svm.instructions.InstructionInterface;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Symbol;
-import com.github.mbeier1406.svm.prg.lexer.SVMLexer.TokenType;
+import com.github.mbeier1406.svm.prg.lexer.SVMLexer.TokenPart;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.TokenTypeLexer;
 
 /**
- * Definiert die Funktion zur lexikalischen Analyse eines {@linkplain TokenType#COMMA}.
+ * Definiert die Funktion zur lexikalischen Analyse eines {@linkplain TokenPart#COMMA}.
  */
 public class CommaLexer {
 

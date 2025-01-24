@@ -14,7 +14,7 @@ import com.github.mbeier1406.svm.SVMException;
 
 /**
  * Definiert die Funktion zur lexikalischen Analyse einer Zeile {@linkplain SVM}-Code.
- * Hierbei handelt sich es um eine durch Leerzeichen ({@linkplain SVMLexer.TokenType#SPACE})
+ * Hierbei handelt sich es um eine durch Leerzeichen ({@linkplain SVMLexer.TokenPart#SPACE})
  * getrennte Serie von {@linkplain TokenGroupLexer Tokengruppe}.
  */
 public class LineLexer {
@@ -29,7 +29,7 @@ public class LineLexer {
 	public static final SVMLexer.LineLexer LINE_SCANNER = ( symbols, line ) -> {
 		try ( @SuppressWarnings("unused") var ctx = CloseableThreadContext.put("line", Objects.requireNonNull(line, "line"));
 			  var lineScanner = new Scanner(requireNonNull(line, "line")) ) {
-			lineScanner.useDelimiter(SVMLexer.TokenType.SPACE.getText());
+			lineScanner.useDelimiter(SVMLexer.TokenPart.SPACE.getText());
 			while ( lineScanner.hasNext() ) {
 				boolean abbruch = com.github.mbeier1406.svm.prg.lexer.TokenGroupLexer.TOKEN_GROUP_LEXER.scanTokenType(symbols, lineScanner.next());
 				LOGGER.debug("abbruch={}; symbols={}", abbruch, symbols);

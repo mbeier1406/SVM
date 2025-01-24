@@ -10,7 +10,7 @@ import com.github.mbeier1406.svm.SVMException;
 
 public interface SVMLexer {
 
-	public static enum TokenType {
+	public static enum TokenPart {
 		DOT("\\.", DotLexer.TOKEN_SCANNER),				// Definiert einen Label
 		TAB("	", TabLexer.TOKEN_SCANNER),				// Zu Beginn der Zeile leitet es eine Instruktion oder eine Programmkonfiguration ein
 		HASH("#", null),								// Definiert eine Programmkonfiguration
@@ -19,25 +19,25 @@ public interface SVMLexer {
 		DOLLAR("\\$", DollarLexer.TOKEN_SCANNER),		// Markiert eine Zahl
 		PERCENT("%", null),				// Definiert ein Register
 		AMPERSAND("&", AmpersandLexer.TOKEN_SCANNER),			// Leerzeichen zur Trennung von Token
-		NUMBER("\\d+", null),			// Definiert eine Zahl
+		NUMBER("\\d+", NumberLexer.TOKEN_SCANNER),		// Definiert eine Zahl
 		STRING("[A-Za-z][A-Za-z0-9]*", StringLexer.TOKEN_SCANNER);	// Definiert eine Bezeichner (zum Beispiel einen Label)
 		private String text;
-		private TokenTypeLexer tokenTypeParser;
-		private TokenType(String text, TokenTypeLexer tokenTypeParser) {
+		private TokenTypeLexer tokenTypeLexer;
+		private TokenPart(String text, TokenTypeLexer tokenTypeParser) {
 			this.text = text;
-			this.tokenTypeParser = tokenTypeParser;
+			this.tokenTypeLexer = tokenTypeParser;
 		}
 		public String getText() {
 			return text;
 		}
-		public TokenTypeLexer getTokenTypeParser() {
-			return tokenTypeParser;
+		public TokenTypeLexer getTokenTypeLexer() {
+			return tokenTypeLexer;
 		}
 	};
 
 	@FunctionalInterface
 	public static interface TokenTypeLexer {
-		public TokenType scanTokenType(final List<Symbol> symbols, String currentTokenValue, TokenType lastTokenType) throws SVMException;
+		public TokenPart scanTokenType(final List<Symbol> symbols, String currentTokenValue, TokenPart lastTokenType) throws SVMException;
 	}
 
 	/**
@@ -62,7 +62,7 @@ public interface SVMLexer {
 
 	public static String getTokenTypePattern() {
 		final StringBuilder pattern = new StringBuilder("");
-		Arrays.stream(TokenType.values()).forEach(t -> {
+		Arrays.stream(TokenPart.values()).forEach(t -> {
 			if ( !pattern.isEmpty() ) pattern.append("|"); // EInzelne Token durch '|' trennen
 			pattern.append("(?<"); // Neue Gruppe beginnen
 			pattern.append(t.toString()); // Gruppennanme = TokenTyp

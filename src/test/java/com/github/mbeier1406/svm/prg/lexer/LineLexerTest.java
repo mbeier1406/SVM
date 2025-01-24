@@ -69,10 +69,15 @@ public class LineLexerTest {
 	/** Liefert die ungültigen Testdaten */
 	public static Stream<Arguments> getUngueltigeTestdaten() {
 		return Stream.of(
+//				Arguments.of("	% .x", SVMException.class, "Angefangenes Token nicht beendet: PERCENT"),
+				Arguments.of("	& .x", SVMException.class, "Angefangenes Token nicht beendet: AMPERSAND"),
+				Arguments.of("	. .x", SVMException.class, "Angefangenes Token nicht beendet: DOT"),
+				Arguments.of("	$ .x", SVMException.class, "Angefangenes Token nicht beendet: DOLLAR"),
+				Arguments.of("	$x3", SVMException.class, "Nach TokenPart 'DOLLAR' darf kein String folgen"),
 				Arguments.of(".$", SVMException.class, "Dollar ($) gefunden während folgendes Sysmbol gelesen wurde: DOT"),
 				Arguments.of(".,", SVMException.class, "Komma gefunden während folgendes Sysmbol gelesen wurde: DOT"),
 				Arguments.of("	&	abc", SVMException.class, "Tabualtor gefunden während folgendes Sysmbol gelesen wurde: AMPERSAND"),
-				Arguments.of("	& abc", SVMException.class, "Vor einem 'STRING' (abc) muss ein Qualifier (&, .) stehen"),
+				Arguments.of("	abc", SVMException.class, "Vor einem 'STRING' (abc) muss ein Qualifier (&, .) stehen"),
 				Arguments.of("	&.abc", SVMException.class, "Dot (.) gefunden während folgendes Sysmbol gelesen wurde: AMPERSAND"),
 				Arguments.of("	.&abc", SVMException.class, "Ampersand (&) gefunden während folgendes Sysmbol gelesen wurde: DOT"),
 				Arguments.of("	&abc", SVMException.class, "muss eine Sektion (data/code) folgen"),

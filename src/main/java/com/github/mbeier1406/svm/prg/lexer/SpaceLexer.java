@@ -16,6 +16,7 @@ public class SpaceLexer {
 	 * <li>Wenn gerade ein Symbol gelesen wird (lastTokenType ist nicht <b>null</b> bzw. ungleich {@linkplain TokenType#SPACE} handelt es sich um einen Fehler</li>
 	 * <li>Es wird wieder {@linkplain TokenType#SPACE} zurückgegeben, da mehrere Leerzeichen hintereinander erlaubt sind</li>
 	 * </ul>
+	 * Das Leerzeichen trennt {@linkplain TokenGroupLexer Tokengruppen}.
 	 */
 	@SuppressWarnings("unused")
 	public static final TokenTypeLexer TOKEN_SCANNER = (symbolList, tokenValue, lastTokenType) -> {

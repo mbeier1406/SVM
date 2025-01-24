@@ -2,26 +2,21 @@ package com.github.mbeier1406.svm.prg.lexer;
 
 import java.nio.charset.Charset;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.BiFunction;
-import java.util.regex.Pattern;
 
 import com.github.mbeier1406.svm.SVMException;
-import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Symbol;
 
 public interface SVMLexer {
 
 	public static enum TokenType {
-		DOT("\\.", null),				// Definiert einen Label
+		DOT("\\.", DotLexer.TOKEN_SCANNER),				// Definiert einen Label
 		TAB("	", TabLexer.TOKEN_SCANNER),				// Zu Beginn der Zeile leitet es eine Instruktion oder eine Programmkonfiguration ein
-		HASH("#", null),				// Definiert eine Programmkonfiguration
-		SPACE(" ", SpaceLexer.TOKEN_SCANNER),	// Leerzeichen zur Trennung von Token
-		COMMA(",", null),				// Trennt Parameter von Instruktionen
-		DOLLAR("\\$", null),			// Markiert eine Zahl
+		HASH("#", null),								// Definiert eine Programmkonfiguration
+		SPACE(" ", SpaceLexer.TOKEN_SCANNER),			// Leerzeichen zur Trennung von Token
+		COMMA(",", CommaLexer.TOKEN_SCANNER),			// Trennt Parameter von Instruktionen
+		DOLLAR("\\$", DollarLexer.TOKEN_SCANNER),		// Markiert eine Zahl
 		PERCENT("%", null),				// Definiert ein Register
 		AMPERSAND("&", AmpersandLexer.TOKEN_SCANNER),			// Leerzeichen zur Trennung von Token
 		NUMBER("\\d+", null),			// Definiert eine Zahl
@@ -78,7 +73,7 @@ public interface SVMLexer {
 		return pattern.toString();
 	}
 
-	public static enum Token { SPACE, TAB, TOKEN_DATA, DATA, TOKEN_CODE, LABEL, CODE, CONSTANT, REGISTER }
+	public static enum Token { SPACE, TAB, TOKEN_DATA, DATA, TOKEN_CODE, LABEL, CODE, CONSTANT, REGISTER, COMMA }
 
 	public static record Symbol(Token token, String value) {
 		public Symbol {
@@ -96,6 +91,7 @@ public interface SVMLexer {
 	public static final Symbol SYM_TAB = new Symbol(Token.TAB, null);
 	public static final Symbol SYM_TOKEN_DATA = new Symbol(Token.TOKEN_DATA, null);
 	public static final Symbol SYM_TOKEN_CODE = new Symbol(Token.TOKEN_CODE, null);
+	public static final Symbol SYM_COMMA = new Symbol(Token.COMMA, null);
 
 	public List<List<Symbol>> scan(String file, Charset encoding) throws SVMException;
 

@@ -17,17 +17,21 @@ public class StringLexer {
 	 * <li>Ein String ohne Qualifier erzeugt einen Fehler</li>
 	 * <li>Es wird wieder <b>null</b> zurückgegeben, da es ein finales Token ist</li>
 	 * </ul>
+	 * Eine Zeichenkette bildet den Teil einer Sektion (z. B. {@linkplain SVMLexer#SYM_TOKEN_CODE}) oder Labels ({@linkplain SVMLexer.Token#LABEL}).
 	 */
 	@SuppressWarnings("unused")
 	public static final TokenTypeLexer TOKEN_SCANNER = (symbolList, tokenValue, lastTokenType) -> {
 		if ( lastTokenType != null ) {
-			if ( lastTokenType == TokenType.AMPERSAND ) {
+			if ( lastTokenType == TokenType.AMPERSAND ) {	// Sektion (&code oder &data gefunden)
 				if ( tokenValue.equals("data") )
 					symbolList.add(SVMLexer.SYM_TOKEN_DATA);
 				else if ( tokenValue.equals("code") )
 					symbolList.add(SVMLexer.SYM_TOKEN_CODE);
 				else
 					throw new SVMException("Nach '"+TokenType.AMPERSAND+"' muss eine Sektion (data/code) folgen: "+tokenValue);
+			}
+			else if ( lastTokenType == TokenType.DOT ) {	// Label .<NAME> gefunden
+				symbolList.add(new SVMLexer.Symbol(SVMLexer.Token.LABEL, tokenValue));
 			}
 		}
 		else {

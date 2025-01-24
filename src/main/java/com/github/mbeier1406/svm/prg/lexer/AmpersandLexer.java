@@ -17,6 +17,7 @@ public class AmpersandLexer {
 	 * <li>Es wird {@linkplain TokenType#AMPERSAND} zurückgegeben, damit aus dem nachfolgenden String die Sektion
 	 * (z. B. {@linkplain SVMLexer#SYM_TOKEN_CODE}) ermittelt werden kann</li>
 	 * </ul>
+	 * Der Ampersand <b>&</b> leitet die Definition einer Programmsektion ({@code &data} bzw. {@code &code}) ein.
 	 */
 	@SuppressWarnings("unused")
 	public static final TokenTypeLexer TOKEN_SCANNER = (symbolList, tokenValue, lastTokenType) -> {

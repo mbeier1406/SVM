@@ -13,7 +13,7 @@ public class AmpersandLexer {
 	 * Funktion zur Verarbeitung eines Ampersand (<b>&</b>):
 	 * <ul>
 	 * <li>In die Liste der {@linkplain Symbol}e wird nichts eingefügt</li>
-	 * <li>Wenn gerade ein Symbol gelesen wird (lastTokenType ist nicht <b>null</b> handelt es sich um einen Fehler</li>
+	 * <li>Wenn gerade ein Symbol gelesen wird (lastTokenType ist kein tabulator handelt es sich um einen Fehler</li>
 	 * <li>Es wird {@linkplain TokenPart#AMPERSAND} zurückgegeben, damit aus dem nachfolgenden String die Sektion
 	 * (z. B. {@linkplain SVMLexer#SYM_TOKEN_CODE}) ermittelt werden kann</li>
 	 * </ul>
@@ -21,9 +21,11 @@ public class AmpersandLexer {
 	 */
 	@SuppressWarnings("unused")
 	public static final TokenPartLexer TOKEN_SCANNER = (symbolList, tokenValue, lastTokenType) -> {
-		if ( lastTokenType != null ) {
+		if ( lastTokenType != null && lastTokenType != TokenPart.TAB ) {
 			throw new IllegalArgumentException("Ampersand (&) gefunden während folgendes Sysmbol gelesen wurde: "+lastTokenType);
 		}
+		else if ( lastTokenType == null )
+			throw new IllegalArgumentException("Vor einem Ampersand (&) wird ein Tabulator erwartet!");
 		else {
 			// Nichts zu tun
 		}

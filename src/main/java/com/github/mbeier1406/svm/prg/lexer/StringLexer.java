@@ -32,6 +32,9 @@ public class StringLexer {
 			else if ( lastTokenType == TokenPart.DOT ) {	// Label .<NAME> gefunden
 				symbolList.add(new SVMLexer.Symbol(SVMLexer.Token.LABEL, tokenValue));
 			}
+			else if ( lastTokenType == TokenPart.TAB ) {	// Datendefinition
+				symbolList.add(new SVMLexer.Symbol(SVMLexer.Token.DATA, tokenValue));
+			}
 			else
 				throw new SVMException("Nach TokenPart '"+lastTokenType+"' darf kein String folgen: "+tokenValue);
 		}

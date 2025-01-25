@@ -94,11 +94,11 @@ public interface SVMLexer {
 	public static interface LineLexer {
 		/**
 		 * Verarbeitet eine Zeile eines {@linkplain SVM}-Programms.
-		 * @param symbols Die Liste der bisher gelesenen Symbole wird ggf. (bei einem finalen {@linkplain SVMLexer.TokenPart}) erweitert
 		 * @param line die zu scannende Zeile
+		 * @return symbols Die Liste der bisher gelesenen Symbole wird ggf. (bei einem finalen {@linkplain SVMLexer.TokenPart}) erweitert
 		 * @throws SVMException bei ungültiger lexikalischer Struktur (z. B. ungültiger vorangegangener Tokenteil)
 		 */
-		public void scanLine(final List<Symbol> symbols, String line) throws SVMException;
+		public List<Symbol> scanLine(String line) throws SVMException;
 	}
 
 	/**

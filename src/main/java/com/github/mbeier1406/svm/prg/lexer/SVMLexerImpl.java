@@ -45,13 +45,13 @@ public class SVMLexerImpl implements SVMLexer {
 			var symbols = new ArrayList<List<Symbol>>();
 			try ( var lineScanner = new Scanner(new String(text)) ) {
 				lineScanner.useDelimiter("\n");
-				List<Symbol> symbolsInLine = new ArrayList<>();
 				while ( lineScanner.hasNext() ) {
 					String nextLine = lineScanner.next();
 					LOGGER.trace("nextLine={}", nextLine);
 					if ( nextLine.length() == 0 ) continue;
-					com.github.mbeier1406.svm.prg.lexer.LineLexer.LINE_SCANNER.scanLine(symbolsInLine, nextLine);
-					symbols.add(symbolsInLine);
+					var symbolsInLine = com.github.mbeier1406.svm.prg.lexer.LineLexer.LINE_SCANNER.scanLine(nextLine);
+					if ( symbolsInLine.size() > 0 )
+						symbols.add(symbolsInLine);
 					zeile++;
 				}
 			}

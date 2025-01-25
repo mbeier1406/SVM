@@ -15,10 +15,10 @@ public class TabLexer {
 	 * <ul>
 	 * <li>In die Liste der {@linkplain Symbol}e wird {@linkplain SYM_TAB} eingefügt</li>
 	 * <li>Wenn gerade ein Symbol gelesen wird (lastTokenType ist nicht <b>null</b> handelt es sich um einen Fehler</li>
-	 * <li>Es wird wieder <b>null</b> zurückgegeben, da es sich um ein finales Token handelt</li>
+	 * <li>Es wird wieder {@linkplain TokenPart#TAB} zurückgegeben, da es sich um ein einleitendes Token handelt</li>
 	 * </ul>
 	 * Ein Tabulator leitet die Definition einer Sektion (z. B. {@linkplain SVMLexer#SYM_TOKEN_DATA}) oder einer
-	 * {@linkplain InstructionDefinition Instruktion} ein.
+	 * {@linkplain InstructionDefinition Instruktion}, oder Daten, ... ein.
 	 */
 	@SuppressWarnings("unused")
 	public static final TokenPartLexer TOKEN_SCANNER = (symbolList, tokenValue, lastTokenType) -> {
@@ -26,9 +26,9 @@ public class TabLexer {
 			throw new IllegalArgumentException("Tabualtor gefunden während folgendes Sysmbol gelesen wurde: "+lastTokenType);
 		}
 		else {
-			symbolList.add(SVMLexer.SYM_TAB);
+			// nichts zu tun
 		}
-		return null; // Finales Token
+		return TokenPart.TAB; // Beginn eines Labels, einer Sektion, einer Instruktion, Daten usw.
 	};
 
 }

@@ -1,6 +1,10 @@
 package com.github.mbeier1406.svm.prg.lexer;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 import com.github.mbeier1406.svm.SVMException;
+import com.github.mbeier1406.svm.instructions.InstructionInterface;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Symbol;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.TokenPart;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.TokenPartLexer;
@@ -32,8 +36,13 @@ public class StringLexer {
 			else if ( lastTokenType == TokenPart.DOT ) {	// Label .<NAME> gefunden
 				symbolList.add(new SVMLexer.Symbol(SVMLexer.Token.LABEL, tokenValue));
 			}
-			else if ( lastTokenType == TokenPart.TAB ) {	// Datendefinition
-				symbolList.add(new SVMLexer.Symbol(SVMLexer.Token.DATA, tokenValue));
+			else if ( lastTokenType == TokenPart.TAB ) {	// Instruktions- oder Datendefinition
+				Optional<String> cmd = Arrays.stream(InstructionInterface.Codes.values())
+						.map(i -> i.toString().toLowerCase())
+						.peek(System.out::println)
+						.filter(name -> name.equals(tokenValue))
+						.findAny();
+				symbolList.add(new SVMLexer.Symbol(cmd.isPresent()?SVMLexer.Token.CODE:SVMLexer.Token.DATA, tokenValue));
 			}
 			else
 				throw new SVMException("Nach TokenPart '"+lastTokenType+"' darf kein String folgen: "+tokenValue);

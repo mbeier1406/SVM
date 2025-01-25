@@ -59,7 +59,8 @@ public class SVMLexerImplTest {
 						),
 				Arguments.of(
 						"""
-\t&data
+# Test
+	&data
 						""",
 						List.of(new ArrayList<Symbol>() {{add(SYM_TOKEN_DATA);}})
 						),

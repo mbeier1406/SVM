@@ -14,7 +14,7 @@ public class DollarLexer {
 	 * <ul>
 	 * <li>In die Liste der {@linkplain Symbol}e wird nichts eingefügt</li>
 	 * <li>Wenn gerade ein Symbol gelesen wird (lastTokenType ist nicht <b>null</b> handelt es sich um einen Fehler</li>
-	 * <li>Es wird {@linkplain TokenPart#DOT} zurückgegeben, damit aus dem nachfolgenden String der Label
+	 * <li>Es wird {@linkplain TokenPart#DOLLAR} zurückgegeben, damit aus dem nachfolgenden String der Label
 	 * {@linkplain SVMLexer.Symbol} mit Token {@linkplain SVMLexer.Token#LABEL} gebildet werden kann</li>
 	 * </ul>
 	 * Das <b>$</b>-Zeichen leitet die Definition einer (ganzen) Zahl ein.
@@ -27,7 +27,7 @@ public class DollarLexer {
 		else {
 			// Nichts zu tun
 		}
-		return TokenPart.DOLLAR; // Damit im nähsten Schritt der Label (.label) ermittelt werden kann
+		return TokenPart.DOLLAR; // Damit im nähsten Schritt die Zahlenkonstante ermittelt werden kann
 	};
 
 }

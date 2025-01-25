@@ -49,9 +49,11 @@ public class LineLexerTest {
 				Arguments.of("	 	 ", new ArrayList<Symbol>() {{add(SYM_TAB);add(SYM_TAB);}}), // Tabs enthalten
 				Arguments.of("# xx", new ArrayList<Symbol>() {{}}),
 				Arguments.of("   # xx", new ArrayList<Symbol>() {{}}),
-				Arguments.of("	&data", new ArrayList<Symbol>() {{add(SYM_TAB);add(SYM_TOKEN_DATA);}}),
+				Arguments.of("	&data# xx", new ArrayList<Symbol>() {{add(SYM_TAB);add(SYM_TOKEN_DATA);}}),
 				Arguments.of("	&code", new ArrayList<Symbol>() {{add(SYM_TAB);add(SYM_TOKEN_CODE);}}),
 				Arguments.of("	.label1", new ArrayList<Symbol>() {{add(SYM_TAB);add(new Symbol(Token.LABEL, "label1"));}}),
+				Arguments.of("	%3", new ArrayList<Symbol>() {{add(SYM_TAB);add(new Symbol(Token.REGISTER, "3"));}}),
+				Arguments.of("	$123", new ArrayList<Symbol>() {{add(SYM_TAB);add(new Symbol(Token.CONSTANT, "123"));}}),
 				Arguments.of("	.label1,.label2", new ArrayList<Symbol>() {{add(SYM_TAB);add(new Symbol(Token.LABEL, "label1"));add(SYM_COMMA);add(new Symbol(Token.LABEL, "label2"));}}),
 				Arguments.of("	.label1 ,.label2", new ArrayList<Symbol>() {{add(SYM_TAB);add(new Symbol(Token.LABEL, "label1"));add(SYM_COMMA);add(new Symbol(Token.LABEL, "label2"));}}),
 				Arguments.of("	.label1 , .label2", new ArrayList<Symbol>() {{add(SYM_TAB);add(new Symbol(Token.LABEL, "label1"));add(SYM_COMMA);add(new Symbol(Token.LABEL, "label2"));}}),
@@ -69,7 +71,7 @@ public class LineLexerTest {
 	/** Liefert die ungültigen Testdaten */
 	public static Stream<Arguments> getUngueltigeTestdaten() {
 		return Stream.of(
-//				Arguments.of("	% .x", SVMException.class, "Angefangenes Token nicht beendet: PERCENT"),
+				Arguments.of("	% .x", SVMException.class, "Angefangenes Token nicht beendet: PERCENT"),
 				Arguments.of("	& .x", SVMException.class, "Angefangenes Token nicht beendet: AMPERSAND"),
 				Arguments.of("	. .x", SVMException.class, "Angefangenes Token nicht beendet: DOT"),
 				Arguments.of("	$ .x", SVMException.class, "Angefangenes Token nicht beendet: DOLLAR"),

@@ -17,8 +17,8 @@ public interface SVMLexer {
 		SPACE(" ", SpaceLexer.TOKEN_SCANNER),			// Leerzeichen zur Trennung von Token
 		COMMA(",", CommaLexer.TOKEN_SCANNER),			// Trennt Parameter von Instruktionen
 		DOLLAR("\\$", DollarLexer.TOKEN_SCANNER),		// Markiert eine Zahl
-		PERCENT("%", null),				// Definiert ein Register
-		AMPERSAND("&", AmpersandLexer.TOKEN_SCANNER),			// Leerzeichen zur Trennung von Token
+		PERCENT("%", PercentLexer.TOKEN_SCANNER),		// Definiert ein Register
+		AMPERSAND("&", AmpersandLexer.TOKEN_SCANNER),	// Leerzeichen zur Trennung von Token
 		NUMBER("\\d+", NumberLexer.TOKEN_SCANNER),		// Definiert eine Zahl
 		STRING("[A-Za-z][A-Za-z0-9]*", StringLexer.TOKEN_SCANNER);	// Definiert eine Bezeichner (zum Beispiel einen Label)
 		private String text;

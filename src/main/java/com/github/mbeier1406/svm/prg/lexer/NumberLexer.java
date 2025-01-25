@@ -24,6 +24,9 @@ public class NumberLexer {
 		if ( lastTokenType != null && lastTokenType == TokenPart.DOLLAR ) {
 			symbolList.add(new SVMLexer.Symbol(SVMLexer.Token.CONSTANT, tokenValue));
 		}
+		else if ( lastTokenType != null && lastTokenType == TokenPart.PERCENT ) {
+			symbolList.add(new SVMLexer.Symbol(SVMLexer.Token.REGISTER, tokenValue));
+		}
 		else {
 			throw new SVMException("Vor einem '"+TokenPart.NUMBER+"' ("+tokenValue+") muss ein Dollar-Zeichen ($) stehen!");
 		}

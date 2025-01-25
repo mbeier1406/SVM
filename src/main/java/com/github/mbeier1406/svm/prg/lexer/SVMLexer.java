@@ -6,10 +6,23 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.github.mbeier1406.svm.SVM;
 import com.github.mbeier1406.svm.SVMException;
 
+/**
+ * Dieses Interface definiert alle Methoden, Datenstrukturen und Funktionsdefinitionen
+ * für die lexikalische Analyse eine {@linkplain SVM}-Programms.
+ * Das Ergebnis der lexiaklischen Analyse ist eine Liste von {@linkplain SVMLexer.Symbol Symbolen}.
+ */
 public interface SVMLexer {
 
+	/**
+	 * Alle bekannten lexikalische Einheiten (Token-Teile) eines {@linkplain SVM}-Programms.
+	 * Ein {@linkplain Token} kann aus mehreren Teilen bestehen, wie zum Beispiel das
+	 * Token {@linkplain SVMLexer#SYM_TOKEN_CODE}, das aus den Teilen {@linkplain TokenPart#AMPERSAND}
+	 * und {@linkplain TokenPart#STRING} besteht. Es wird jeweils der reguläre Ausdruck zur Erkennung
+	 * des Tokenteils sowie die Methode, wie er zu bearbeiten ist, definiert.
+	 */
 	public static enum TokenPart {
 		DOT("\\.", DotLexer.TOKEN_SCANNER),				// Definiert einen Label
 		TAB("	", TabLexer.TOKEN_SCANNER),				// Zu Beginn der Zeile leitet es eine Instruktion oder eine Programmkonfiguration ein
@@ -21,36 +34,52 @@ public interface SVMLexer {
 		AMPERSAND("&", AmpersandLexer.TOKEN_SCANNER),	// Leerzeichen zur Trennung von Token
 		NUMBER("\\d+", NumberLexer.TOKEN_SCANNER),		// Definiert eine Zahl
 		STRING("[A-Za-z][A-Za-z0-9]*", StringLexer.TOKEN_SCANNER);	// Definiert eine Bezeichner (zum Beispiel einen Label)
-		private String text;
-		private TokenTypeLexer tokenTypeLexer;
-		private TokenPart(String text, TokenTypeLexer tokenTypeParser) {
-			this.text = text;
-			this.tokenTypeLexer = tokenTypeParser;
+		private String regEx;
+		private TokenPartLexer tokenPartLexer;
+		private TokenPart(String text, TokenPartLexer tokenTypeParser) {
+			this.regEx = text;
+			this.tokenPartLexer = tokenTypeParser;
 		}
-		public String getText() {
-			return text;
+		/** Der reuläre Ausdruck zur Erkennung dieses {@linkplain TokenPart} */
+		public String getRegEx() {
+			return regEx;
 		}
-		public TokenTypeLexer getTokenTypeLexer() {
-			return tokenTypeLexer;
+		/** Die Methode, die zur Verarbeitung des {@linkplain TokenPart} aufgerufen wird */
+		public TokenPartLexer getTokenPartLexer() {
+			return tokenPartLexer;
 		}
 	};
 
+	/**
+	 * Definiert die Signatur der Methode zur Bearbeitung/zum Scannen eines {@linkplain SVMLexer.TokenPart}.
+	 * @see {@linkplain SVMLexer.TokenPart#getTokenPartLexer()}.
+	 */
 	@FunctionalInterface
-	public static interface TokenTypeLexer {
+	public static interface TokenPartLexer {
+		/**
+		 * Verarbeitet einen Teil eines {@linkplain SVMLexer.Token}.
+		 * @param symbols Die Liste der bisher gelesenen Symbole wird ggf. (bei einem finalen {@linkplain SVMLexer.TokenPart}) erweitert
+		 * @param currentTokenValue Der gerade gelesene {@linkplain SVMLexer.TokenPart} als Text
+		 * @param lastTokenType Das zuletzt gelesene {@linkplain SVMLexer.TokenPart}, kann <b>null</b> sein, bei zusammengesetzten {@linkplain SVMLexer.Token}
+		 * @return den gerade lesenen {@linkplain SVMLexer.TokenPart} für zusammengesetzte Token bzw. <b>null</b> bei finalen Tokenteilen
+		 * @throws SVMException bei ungültiger lexikalischer Struktur (z. B. ungültiger vorangegangener Tokenteil)
+		 */
 		public TokenPart scanTokenType(final List<Symbol> symbols, String currentTokenValue, TokenPart lastTokenType) throws SVMException;
 	}
 
 	/**
-	 * 
+	 * Definiert die Signatur zum Scannen einer Gruppe von {@linkplain SVMLexer.TokenPart}, die durch den Trenner {@linkplain Token#SPACE}
+	 * getrennt sind (z. B. {@code &code}.
 	 */
 	@FunctionalInterface
 	public static interface TokenGroupLexer {
 		/**
-		 * 
-		 * @param symbols
-		 * @param tokenGroup
+		 * Verarbeitet eine Gruppe von Tokenteilen.
+		 * @param symbols Die Liste der bisher gelesenen Symbole wird ggf. (bei einem finalen {@linkplain SVMLexer.TokenPart}) erweitert
+		 * @param tokenGroup Die Gruppe der Tokenteil getrennt durch {@linkplain SVMLexer.TokenPart}
 		 * @return <b>true</b>, wenn das Lesen der Zeile abgebrochen werden soll (Kommentar), sonst <b>false</b>
-		 * @throws SVMException
+		 * @throws SVMException bei ungültiger lexikalischer Struktur (z. B. ungültiger vorangegangener Tokenteil)
+		 * @see {@link TokenPartLexer}
 		 */
 		public boolean scanTokenType(final List<Symbol> symbols, String tokenGroup) throws SVMException;
 	}
@@ -67,7 +96,7 @@ public interface SVMLexer {
 			pattern.append("(?<"); // Neue Gruppe beginnen
 			pattern.append(t.toString()); // Gruppennanme = TokenTyp
 			pattern.append(">"); // Gruppenname schließen
-			pattern.append(t.getText()); // Regulären Ausdruck zum Erkennen des Tokens
+			pattern.append(t.getRegEx()); // Regulären Ausdruck zum Erkennen des Tokens
 			pattern.append(")"); // Gruppefür den Tokentyp schließen
 		});
 		return pattern.toString();

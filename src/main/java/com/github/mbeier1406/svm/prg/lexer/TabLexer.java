@@ -3,7 +3,7 @@ package com.github.mbeier1406.svm.prg.lexer;
 import com.github.mbeier1406.svm.instructions.InstructionDefinition;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Symbol;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.TokenPart;
-import com.github.mbeier1406.svm.prg.lexer.SVMLexer.TokenTypeLexer;
+import com.github.mbeier1406.svm.prg.lexer.SVMLexer.TokenPartLexer;
 
 /**
  * Definiert die Funktion zur lexikalischen Analyse eines {@linkplain TokenPart#TAB}.
@@ -21,7 +21,7 @@ public class TabLexer {
 	 * {@linkplain InstructionDefinition Instruktion} ein.
 	 */
 	@SuppressWarnings("unused")
-	public static final TokenTypeLexer TOKEN_SCANNER = (symbolList, tokenValue, lastTokenType) -> {
+	public static final TokenPartLexer TOKEN_SCANNER = (symbolList, tokenValue, lastTokenType) -> {
 		if ( lastTokenType != null ) {
 			throw new IllegalArgumentException("Tabualtor gefunden während folgendes Sysmbol gelesen wurde: "+lastTokenType);
 		}

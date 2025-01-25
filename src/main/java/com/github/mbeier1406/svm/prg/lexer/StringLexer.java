@@ -3,7 +3,7 @@ package com.github.mbeier1406.svm.prg.lexer;
 import com.github.mbeier1406.svm.SVMException;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Symbol;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.TokenPart;
-import com.github.mbeier1406.svm.prg.lexer.SVMLexer.TokenTypeLexer;
+import com.github.mbeier1406.svm.prg.lexer.SVMLexer.TokenPartLexer;
 
 /**
  * Definiert die Funktion zur lexikalischen Analyse eines {@linkplain TokenPart#STRING}.
@@ -19,7 +19,7 @@ public class StringLexer {
 	 * </ul>
 	 * Eine Zeichenkette bildet den Teil einer Sektion (z. B. {@linkplain SVMLexer#SYM_TOKEN_CODE}) oder Labels ({@linkplain SVMLexer.Token#LABEL}).
 	 */
-	public static final TokenTypeLexer TOKEN_SCANNER = (symbolList, tokenValue, lastTokenType) -> {
+	public static final TokenPartLexer TOKEN_SCANNER = (symbolList, tokenValue, lastTokenType) -> {
 		if ( lastTokenType != null ) {
 			if ( lastTokenType == TokenPart.AMPERSAND ) {	// Sektion (&code oder &data gefunden)
 				if ( tokenValue.equals("data") )

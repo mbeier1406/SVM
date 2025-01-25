@@ -29,7 +29,7 @@ public class LineLexer {
 	public static final SVMLexer.LineLexer LINE_SCANNER = ( symbols, line ) -> {
 		try ( @SuppressWarnings("unused") var ctx = CloseableThreadContext.put("line", Objects.requireNonNull(line, "line"));
 			  var lineScanner = new Scanner(requireNonNull(line, "line")) ) {
-			lineScanner.useDelimiter(SVMLexer.TokenPart.SPACE.getText());
+			lineScanner.useDelimiter(SVMLexer.TokenPart.SPACE.getRegEx());
 			while ( lineScanner.hasNext() ) {
 				boolean abbruch = com.github.mbeier1406.svm.prg.lexer.TokenGroupLexer.TOKEN_GROUP_LEXER.scanTokenType(symbols, lineScanner.next());
 				LOGGER.debug("abbruch={}; symbols={}", abbruch, symbols);

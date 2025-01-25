@@ -2,7 +2,7 @@ package com.github.mbeier1406.svm.prg.lexer;
 
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Symbol;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.TokenPart;
-import com.github.mbeier1406.svm.prg.lexer.SVMLexer.TokenTypeLexer;
+import com.github.mbeier1406.svm.prg.lexer.SVMLexer.TokenPartLexer;
 
 /**
  * Definiert die Funktion zur lexikalischen Analyse eines {@linkplain TokenPart#DOLLAR}.
@@ -20,7 +20,7 @@ public class DollarLexer {
 	 * Das <b>$</b>-Zeichen leitet die Definition einer (ganzen) Zahl ein.
 	 */
 	@SuppressWarnings("unused")
-	public static final TokenTypeLexer TOKEN_SCANNER = (symbolList, tokenValue, lastTokenType) -> {
+	public static final TokenPartLexer TOKEN_SCANNER = (symbolList, tokenValue, lastTokenType) -> {
 		if ( lastTokenType != null ) {
 			throw new IllegalArgumentException("Dollar ($) gefunden während folgendes Sysmbol gelesen wurde: "+lastTokenType);
 		}

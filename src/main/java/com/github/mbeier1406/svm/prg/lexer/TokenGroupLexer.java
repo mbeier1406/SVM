@@ -41,13 +41,13 @@ public class TokenGroupLexer {
 				if ( nextToken != null ) {
 					Matcher matcher = tokenTypePattern.matcher(nextToken);
 					if ( matcher.matches() ) {
-						if ( nextToken.startsWith(TokenPart.HASH.getText()) )
+						if ( nextToken.startsWith(TokenPart.HASH.getRegEx()) )
 							return true; // Kommentar: Lesen der Zeile abbrechen
 						for ( var type : SVMLexer.TokenPart.values() ) {
 							LOGGER.trace("      Test type='{}' ('{}'); lastTokenType={}", type, nextToken, lastTokenType);
 							if ( matcher.group(type.toString()) != null ) {
 								LOGGER.trace("        Gefunden: '{}'; parse...", type);
-								lastTokenType = type.getTokenTypeLexer().scanTokenType(symbols, nextToken, lastTokenType);
+								lastTokenType = type.getTokenPartLexer().scanTokenType(symbols, nextToken, lastTokenType);
 								LOGGER.trace("        lastTokenType'{}'; symbols={}", lastTokenType, symbols);
 								break; // nächstes Token lesen
 							}

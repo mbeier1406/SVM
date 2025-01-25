@@ -4,7 +4,7 @@ import com.github.mbeier1406.svm.SVMException;
 import com.github.mbeier1406.svm.instructions.InstructionDefinition;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Symbol;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.TokenPart;
-import com.github.mbeier1406.svm.prg.lexer.SVMLexer.TokenTypeLexer;
+import com.github.mbeier1406.svm.prg.lexer.SVMLexer.TokenPartLexer;
 
 /**
  * Definiert die Funktion zur lexikalischen Analyse eines {@linkplain TokenPart#NUMBER}.
@@ -20,7 +20,7 @@ public class NumberLexer {
 	 * </ul>
 	 * Eine Zahl bildet einen Parameter einer {@linkplain InstructionDefinition Instruktion}.
 	 */
-	public static final TokenTypeLexer TOKEN_SCANNER = (symbolList, tokenValue, lastTokenType) -> {
+	public static final TokenPartLexer TOKEN_SCANNER = (symbolList, tokenValue, lastTokenType) -> {
 		if ( lastTokenType != null && lastTokenType == TokenPart.DOLLAR ) {
 			symbolList.add(new SVMLexer.Symbol(SVMLexer.Token.CONSTANT, tokenValue));
 		}

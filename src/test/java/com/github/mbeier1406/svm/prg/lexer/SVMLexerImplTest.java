@@ -9,12 +9,12 @@ import com.github.mbeier1406.svm.SVMException;
 /**
  * Tests für die Klasse {@linkplain SVMLexerImpl}.
  */
-public class FileLexerTest {
+public class SVMLexerImplTest {
 
-	public static final Logger LOGGER = LogManager.getLogger(FileLexerTest.class);
+	public static final Logger LOGGER = LogManager.getLogger(SVMLexerImplTest.class);
 
 	/** Die zu scannende Testdatei ist {@value} */
-	public static final String PRG = "src/test/resources/com/github/mbeier1406/svm/prg/example.prg";
+	public static final String PRG = "src/test/resources/com/github/mbeier1406/svm/prg/example.svm";
 
 	/** Das zu testende Objekt */
 	public SVMLexer svmLexer = new SVMLexerImpl();

@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer;
+import com.github.mbeier1406.svm.prg.lexer.TokenGroupLexer;
 
 /**
  * Tests für die Klasse {@linkplain SVMLexer}.
@@ -22,7 +23,7 @@ public class SVMLexerTest {
 	/** Stellt sicher, dass eine korrekter RegEx zur Erkennung der {@linkplain SVMLexer.TokenPart} geliefert wird */
 	@Test
 	public void testeTokenTypPattern() {
-		String pattern = SVMLexer.getTokenTypePattern();
+		String pattern = TokenGroupLexer.getTokenTypePattern();
 		LOGGER.trace("pattern={}", pattern);
 		assertThat(pattern, not(equalTo(null)));
 		Pattern.compile(pattern); // soll keine Exception werfen

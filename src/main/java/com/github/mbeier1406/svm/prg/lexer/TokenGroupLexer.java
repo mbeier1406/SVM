@@ -1,5 +1,6 @@
 package com.github.mbeier1406.svm.prg.lexer;
 
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,7 +25,21 @@ public class TokenGroupLexer {
 	public static final Logger LOGGER = LogManager.getLogger(TokenGroupLexer.class);
 
 	/** Die regex-Pattern zur Erkennung aller {@linkplain SVMLexer.TokenPart}s */
-	public static final Pattern tokenTypePattern = Pattern.compile(SVMLexer.getTokenTypePattern());
+	public static final Pattern TOKEN_TYPE_PATTERN = Pattern.compile(getTokenTypePattern());
+
+	/** Erstellt den Regex um {@linkplain SVMLexer.TokenPart} zu scannen */
+	public static String getTokenTypePattern() {
+		final StringBuilder pattern = new StringBuilder("");
+		Arrays.stream(TokenPart.values()).forEach(t -> {
+			if ( !pattern.isEmpty() ) pattern.append("|"); // EInzelne Token durch '|' trennen
+			pattern.append("(?<"); // Neue Gruppe beginnen
+			pattern.append(t.toString()); // Gruppennanme = TokenTyp
+			pattern.append(">"); // Gruppenname schließen
+			pattern.append(t.getRegEx()); // Regulären Ausdruck zum Erkennen des Tokens
+			pattern.append(")"); // Gruppefür den Tokentyp schließen
+		});
+		return pattern.toString();
+	}
 
 	/**
 	 * Liefert zu einer als String repräsentierten Tokengruppe das/die zugehörige/n Symbol/e in
@@ -35,11 +50,11 @@ public class TokenGroupLexer {
 		LOGGER.trace("  tokenGroup='{}'", tokenGroup);
 		TokenPart lastTokenType = null; // hier merken, ob wie gerade in Token lesen, dass aus mehren TokenTypen besteht
 		while ( tokenGroup.length() > 0 ) {
-			try ( var tokenScanner = new Scanner(tokenGroup) ) {
-				var nextToken = tokenScanner.findInLine(tokenTypePattern);
+			try ( var tokenGroupScanner = new Scanner(tokenGroup) ) {
+				var nextToken = tokenGroupScanner.findInLine(TOKEN_TYPE_PATTERN);
 				LOGGER.trace("    nextToken='{}'", nextToken);
 				if ( nextToken != null ) {
-					Matcher matcher = tokenTypePattern.matcher(nextToken);
+					Matcher matcher = TOKEN_TYPE_PATTERN.matcher(nextToken);
 					if ( matcher.matches() ) {
 						if ( nextToken.startsWith(TokenPart.HASH.getRegEx()) )
 							return true; // Kommentar: Lesen der Zeile abbrechen

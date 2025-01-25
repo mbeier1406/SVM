@@ -1,13 +1,15 @@
 package com.github.mbeier1406.svm.prg.lexer;
 
+import java.io.File;
 import java.nio.charset.Charset;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.github.mbeier1406.svm.ALU;
 import com.github.mbeier1406.svm.SVM;
 import com.github.mbeier1406.svm.SVMException;
+import com.github.mbeier1406.svm.instructions.InstructionDefinition;
 
 /**
  * Dieses Interface definiert alle Methoden, Datenstrukturen und Funktionsdefinitionen
@@ -84,50 +86,90 @@ public interface SVMLexer {
 		public boolean scanTokenType(final List<Symbol> symbols, String tokenGroup) throws SVMException;
 	}
 
+	/**
+	 * Definiert die Signatur zum Scannen einer einer Zeile eines {@linkplain SVM}-Programms, die aus durch den Trenner {@linkplain Token#SPACE}
+	 * getrennte {@linkplain SVMLexer.TokenGroupLexer Tokengruppen} besteht.
+	 */
 	@FunctionalInterface
 	public static interface LineLexer {
+		/**
+		 * Verarbeitet eine Zeile eines {@linkplain SVM}-Programms.
+		 * @param symbols Die Liste der bisher gelesenen Symbole wird ggf. (bei einem finalen {@linkplain SVMLexer.TokenPart}) erweitert
+		 * @param line die zu scannende Zeile
+		 * @throws SVMException bei ungültiger lexikalischer Struktur (z. B. ungültiger vorangegangener Tokenteil)
+		 */
 		public void scanLine(final List<Symbol> symbols, String line) throws SVMException;
 	}
 
-	public static String getTokenTypePattern() {
-		final StringBuilder pattern = new StringBuilder("");
-		Arrays.stream(TokenPart.values()).forEach(t -> {
-			if ( !pattern.isEmpty() ) pattern.append("|"); // EInzelne Token durch '|' trennen
-			pattern.append("(?<"); // Neue Gruppe beginnen
-			pattern.append(t.toString()); // Gruppennanme = TokenTyp
-			pattern.append(">"); // Gruppenname schließen
-			pattern.append(t.getRegEx()); // Regulären Ausdruck zum Erkennen des Tokens
-			pattern.append(")"); // Gruppefür den Tokentyp schließen
-		});
-		return pattern.toString();
-	}
-
+	/**
+	 * Definiert alle bekannten lexikalischen Typen, aus denen {@linkplain SVM}-programm besteht.
+	 * Jedes dieser Token besteht aus einem oder mehreren {@linkplain SVMLexer.TokenPart Tokenteilen}.
+	 * <ul>
+	 * <li>{@linkplain Token#SPACE}: Das Leerzeichen als Token-Trenner ({@linkplain TokenPart#SPACE})</li>
+	 * <li>{@linkplain Token#TAB}: Leitet eine Sektion oder {@linkplain InstructionDefinition Instruktion ein} ({@linkplain TokenPart#TAB})</li>
+	 * <li>{@linkplain Token#TOKEN_DATA}: Start der Datensektion ({@linkplain TokenPart#AMPERSAND} und {@linkplain TokenPart#STRING} {@code data})</li>
+	 * <li>{@linkplain Token#TOKEN_CODE}: Start der Codesektion ({@linkplain TokenPart#AMPERSAND} und {@linkplain TokenPart#STRING} {@code code})</li>
+	 * <li>{@linkplain Token#LABEL}: Definiert einen Bezeichner ({@linkplain TokenPart#DOT} und {@linkplain TokenPart#STRING} Name des Labels)</li>
+	 * <li>{@linkplain Token#DATA}: Definiert Zahlen oder Strings in der Datensektion</li>
+	 * <li>{@linkplain Token#CODE}: Gibt eine {@linkplain InstructionDefinition Instruktion} an</li>
+	 * <li>{@linkplain Token#CONSTANT}: Gibt eine {@linkplain TokenPart#NUMBER} Zahl als Parameter einer Instruktion an</li>
+	 * <li>{@linkplain Token#REGISTER}: Gibt ein Register der {@linkplain ALU.Instruction} an</li>
+	 * <li>{@linkplain Token#COMMA}: Trennt zwei Parameter einer {@linkplain InstructionDefinition Instruktion}</li>
+	 * </ul>
+	 */
 	public static enum Token { SPACE, TAB, TOKEN_DATA, DATA, TOKEN_CODE, LABEL, CODE, CONSTANT, REGISTER, COMMA }
 
+	/** Definiert alle bekannten lexikalischen Einheiten ({@linkplain Token} ggf. mit Wert) aus denen {@linkplain SVM}-Programm besteht */
 	public static record Symbol(Token token, String value) {
 		public Symbol {
 			Objects.requireNonNull(token, "token");
 		}
+		/** Liefert den Wert für String-Token wie {@linkplain Token#LABEL} */
 		public Optional<String> getStringValue() {
 			return Optional.ofNullable(value);
 		}
+		/** Liefert den Wert für Zahl-Token wie {@linkplain Token#REGISTER} (hier: die Nummer des Registers) */
 		public Optional<Integer> getIntValue() {
 			return Optional.ofNullable(Integer.parseInt(value));
 		}
 	}
 
+	/** Definiert das statische Symbol für ein Leerzeichen */
 	public static final Symbol SYM_SPACE = new Symbol(Token.SPACE, null);
+
+	/** Definiert das statische Symbol für ein Tabulator */
 	public static final Symbol SYM_TAB = new Symbol(Token.TAB, null);
+
+	/** Definiert das statische Symbol für die Datensektion */
 	public static final Symbol SYM_TOKEN_DATA = new Symbol(Token.TOKEN_DATA, null);
+
+	/** Definiert das statische Symbol für die Codesektion */
 	public static final Symbol SYM_TOKEN_CODE = new Symbol(Token.TOKEN_CODE, null);
+
+	/** Definiert das statische Symbol für ein Komma */
 	public static final Symbol SYM_COMMA = new Symbol(Token.COMMA, null);
 
-	public List<List<Symbol>> scan(String file, Charset encoding) throws SVMException;
+	/**
+	 * Methode zur lexikalischen Analyse eines {@linkplain SVM}-Programms.
+	 * @param file das zu scannende Programm (Pfad zur Datei)
+	 * @param encoding Kodierung der Datei
+	 * @return Liste von Listen (jeweils eine Programmzeile) von Symbolen
+	 * @throws SVMException bei lexikalischen Fehlern
+	 */
+	public List<List<Symbol>> scan(File file, Charset encoding) throws SVMException;
 
-	public default List<List<Symbol>> scan(String file) throws SVMException {
+	/**
+	 * Methode zur lexikalischen Analyse eines {@linkplain SVM}-Programms mit Standardkodierung.
+	 * @see #scan(String, Charset)
+	 */
+	public default List<List<Symbol>> scan(File file) throws SVMException {
 		return scan(file, Charset.defaultCharset());
 	}
 
-	public List<List<Symbol>> scan(char[] text) throws SVMException;
+	/**
+	 * Methode zur lexikalischen Analyse eines {@linkplain SVM}-Programms.
+	 * @see #scan(String, Charset)
+	 */
+	public List<List<Symbol>> scan(String text) throws SVMException;
 
 }

@@ -179,7 +179,7 @@ public interface SVMLexer {
 
 	/**
 	 * Methode zur lexikalischen Analyse eines {@linkplain SVM}-Programms mit Standardkodierung.
-	 * @see #scan(String, Charset)
+	 * @see #scan(File, Charset)
 	 */
 	public default List<List<Symbol>> scan(File file) throws SVMException {
 		return scan(file, Charset.defaultCharset());
@@ -187,7 +187,7 @@ public interface SVMLexer {
 
 	/**
 	 * Methode zur lexikalischen Analyse eines {@linkplain SVM}-Programms.
-	 * @see #scan(String, Charset)
+	 * @see #scan(File, Charset)
 	 */
 	public List<List<Symbol>> scan(String text) throws SVMException;
 

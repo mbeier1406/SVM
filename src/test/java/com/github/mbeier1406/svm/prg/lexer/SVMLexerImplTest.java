@@ -6,6 +6,7 @@ import static com.github.mbeier1406.svm.prg.lexer.SVMLexer.Token.LABEL;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,10 +81,11 @@ public class SVMLexerImplTest {
 				);
 	}
 
-
-	@Test
+	/** Lexer auf {@value #PRG} */
+//	@Test
 	public void testeDateiScannen() throws SVMException {
-//		svmLexer.scan(PRG);
+		List<List<Symbol>> symbols = svmLexer.scan(new File(PRG));
+		LOGGER.trace("symbols={}", symbols);
 	}
 	
 }

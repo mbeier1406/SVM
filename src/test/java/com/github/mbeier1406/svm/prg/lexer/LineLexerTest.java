@@ -1,6 +1,8 @@
 package com.github.mbeier1406.svm.prg.lexer;
 
 import static com.github.mbeier1406.svm.prg.lexer.SVMLexer.SYM_COMMA;
+import static com.github.mbeier1406.svm.prg.lexer.SVMLexer.SYM_LEFTPAR;
+import static com.github.mbeier1406.svm.prg.lexer.SVMLexer.SYM_RIGHTPAR;
 import static com.github.mbeier1406.svm.prg.lexer.SVMLexer.SYM_TOKEN_CODE;
 import static com.github.mbeier1406.svm.prg.lexer.SVMLexer.SYM_TOKEN_DATA;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -54,6 +56,7 @@ public class LineLexerTest {
 				Arguments.of("	nop", new ArrayList<Symbol>() {{add(new Symbol(Token.CODE, "nop"));}}),
 				Arguments.of("	mov", new ArrayList<Symbol>() {{add(new Symbol(Token.CODE, "mov"));}}),
 				Arguments.of("	int", new ArrayList<Symbol>() {{add(new Symbol(Token.CODE, "int"));}}),
+				Arguments.of("	mov len(abc)", new ArrayList<Symbol>() {{add(new Symbol(Token.CODE, "mov"));add(new Symbol(Token.FUNCTION, "len"));add(SYM_LEFTPAR);add(new Symbol(Token.LABEL_REF, "abc"));add(SYM_RIGHTPAR);}}),
 				Arguments.of(".label1,.label2", new ArrayList<Symbol>() {{add(new Symbol(Token.LABEL, "label1"));add(SYM_COMMA);add(new Symbol(Token.LABEL, "label2"));}}),
 				Arguments.of(".label1 ,.label2", new ArrayList<Symbol>() {{add(new Symbol(Token.LABEL, "label1"));add(SYM_COMMA);add(new Symbol(Token.LABEL, "label2"));}}),
 				Arguments.of(".label1 , .label2", new ArrayList<Symbol>() {{add(new Symbol(Token.LABEL, "label1"));add(SYM_COMMA);add(new Symbol(Token.LABEL, "label2"));}}),
@@ -82,7 +85,6 @@ public class LineLexerTest {
 				Arguments.of(" $x3", SVMException.class, "Nach TokenPart 'DOLLAR' darf kein String folgen"),
 				Arguments.of(".$", SVMException.class, "Dollar ($) gefunden während folgendes Sysmbol gelesen wurde: DOT"),
 				Arguments.of(".,", SVMException.class, "Komma gefunden während folgendes Sysmbol gelesen wurde: DOT"),
-				Arguments.of("abc", SVMException.class, "Vor einem 'STRING' (abc) muss ein Qualifier (&, .) stehen"),
 				Arguments.of("	&$abc", SVMException.class, "Dollar ($) gefunden während folgendes Sysmbol gelesen wurde: AMPERSAND"),
 				Arguments.of("	.&abc", SVMException.class, "Dot (.) gefunden während folgendes Sysmbol gelesen wurde: TAB"),
 				Arguments.of("	&abc", SVMException.class, "muss eine Sektion (data/code) folgen"),

@@ -28,14 +28,16 @@ public interface SVMLexer {
 	public static enum TokenPart {
 		DOT("\\.", DotLexer.TOKEN_SCANNER),				// Definiert einen Label
 		TAB("	", TabLexer.TOKEN_SCANNER),				// Zu Beginn der Zeile leitet es eine Instruktion oder eine Programmkonfiguration ein
-		HASH("#", null),								// Definiert eine Programmkonfiguration
+		HASH("#", null),								// Definiert den Beginn eines Programmkommentars
 		SPACE(" ", SpaceLexer.TOKEN_SCANNER),			// Leerzeichen zur Trennung von Token
 		COMMA(",", CommaLexer.TOKEN_SCANNER),			// Trennt Parameter von Instruktionen
+		LEFTPAR("\\(", LeftparLexer.TOKEN_SCANNER),		// Öffnende Klammer nach einem Funktionsaufruf
+		RIGHTPAR("\\)", RightparLexer.TOKEN_SCANNER),		// Schließende Klammer nach einem Funktionsaufruf
 		DOLLAR("\\$", DollarLexer.TOKEN_SCANNER),		// Markiert eine Zahl
 		PERCENT("%", PercentLexer.TOKEN_SCANNER),		// Definiert ein Register
 		AMPERSAND("&", AmpersandLexer.TOKEN_SCANNER),	// Leerzeichen zur Trennung von Token
 		NUMBER("\\d+", NumberLexer.TOKEN_SCANNER),		// Definiert eine Zahl
-		STRING("[A-Za-z][A-Za-z0-9]*", StringLexer.TOKEN_SCANNER);	// Definiert eine Bezeichner (zum Beispiel einen Label)
+		STRING("[A-Za-z][A-Za-z0-9\\\\]*", StringLexer.TOKEN_SCANNER);	// Definiert eine Bezeichner (zum Beispiel einen Label)
 		private String regEx;
 		private TokenPartLexer tokenPartLexer;
 		private TokenPart(String text, TokenPartLexer tokenTypeParser) {
@@ -66,7 +68,7 @@ public interface SVMLexer {
 		 * @return den gerade lesenen {@linkplain SVMLexer.TokenPart} für zusammengesetzte Token bzw. <b>null</b> bei finalen Tokenteilen
 		 * @throws SVMException bei ungültiger lexikalischer Struktur (z. B. ungültiger vorangegangener Tokenteil)
 		 */
-		public TokenPart scanTokenType(final List<Symbol> symbols, String currentTokenValue, TokenPart lastTokenType) throws SVMException;
+		public TokenPart scanTokenPart(final List<Symbol> symbols, String currentTokenValue, TokenPart lastTokenType) throws SVMException;
 	}
 
 	/**
@@ -83,7 +85,7 @@ public interface SVMLexer {
 		 * @throws SVMException bei ungültiger lexikalischer Struktur (z. B. ungültiger vorangegangener Tokenteil)
 		 * @see {@link TokenPartLexer}
 		 */
-		public boolean scanTokenType(final List<Symbol> symbols, String tokenGroup) throws SVMException;
+		public boolean scanTokenGroup(final List<Symbol> symbols, String tokenGroup) throws SVMException;
 	}
 
 	/**
@@ -106,18 +108,29 @@ public interface SVMLexer {
 	 * Jedes dieser Token besteht aus einem oder mehreren {@linkplain SVMLexer.TokenPart Tokenteilen}.
 	 * <ul>
 	 * <li>{@linkplain Token#SPACE}: Das Leerzeichen als Token-Trenner ({@linkplain TokenPart#SPACE})</li>
+	 * <li>{@linkplain Token#LEFTPAR}: Die öffnende Klammer ({@linkplain TokenPart#LEFTPAR})</li>
+	 * <li>{@linkplain Token#RIGHTPAR}: Die schließende Klammer ({@linkplain TokenPart#RIGHTPAR})</li>
 	 * <li>{@linkplain Token#TAB}: Leitet eine Sektion oder {@linkplain InstructionDefinition Instruktion ein} ({@linkplain TokenPart#TAB})</li>
 	 * <li>{@linkplain Token#TOKEN_DATA}: Start der Datensektion ({@linkplain TokenPart#AMPERSAND} und {@linkplain TokenPart#STRING} {@code data})</li>
 	 * <li>{@linkplain Token#TOKEN_CODE}: Start der Codesektion ({@linkplain TokenPart#AMPERSAND} und {@linkplain TokenPart#STRING} {@code code})</li>
 	 * <li>{@linkplain Token#LABEL}: Definiert einen Bezeichner ({@linkplain TokenPart#DOT} und {@linkplain TokenPart#STRING} Name des Labels)</li>
+	 * <li>{@linkplain Token#LABEL_REF}:Verwendung/Referenz eines Bezeichner ({@linkplain Token#LABEL})</li>
 	 * <li>{@linkplain Token#DATA}: Definiert Zahlen oder Strings in der Datensektion</li>
 	 * <li>{@linkplain Token#CODE}: Gibt eine {@linkplain InstructionDefinition Instruktion} an</li>
 	 * <li>{@linkplain Token#CONSTANT}: Gibt eine {@linkplain TokenPart#NUMBER} Zahl als Parameter einer Instruktion an</li>
 	 * <li>{@linkplain Token#REGISTER}: Gibt ein Register der {@linkplain ALU.Instruction} an</li>
 	 * <li>{@linkplain Token#COMMA}: Trennt zwei Parameter einer {@linkplain InstructionDefinition Instruktion}</li>
+	 * <li>{@linkplain Token#FUNCTION}: Parserfunktion wie {@code len}, die die Länge eines Strings ermittelt etc.</li>
 	 * </ul>
 	 */
-	public static enum Token { SPACE, TAB, TOKEN_DATA, DATA, TOKEN_CODE, LABEL, CODE, CONSTANT, REGISTER, COMMA }
+	public static enum Token {
+		SPACE, TAB, COMMA, LEFTPAR, RIGHTPAR,
+		TOKEN_DATA, DATA,
+		TOKEN_CODE, CODE,
+		LABEL, LABEL_REF,
+		CONSTANT, REGISTER,
+		FUNCTION
+	}
 
 	/** Definiert alle bekannten lexikalischen Einheiten ({@linkplain Token} ggf. mit Wert) aus denen {@linkplain SVM}-Programm besteht */
 	public static record Symbol(Token token, String value) {
@@ -136,6 +149,12 @@ public interface SVMLexer {
 
 	/** Definiert das statische Symbol für ein Leerzeichen */
 	public static final Symbol SYM_SPACE = new Symbol(Token.SPACE, null);
+
+	/** Definiert das statische Symbol für eine öffnende Klammer */
+	public static final Symbol SYM_LEFTPAR = new Symbol(Token.LEFTPAR, null);
+
+	/** Definiert das statische Symbol für eine schließende Klammer */
+	public static final Symbol SYM_RIGHTPAR = new Symbol(Token.RIGHTPAR, null);
 
 	/** Definiert das statische Symbol für ein Tabulator */
 	public static final Symbol SYM_TAB = new Symbol(Token.TAB, null);

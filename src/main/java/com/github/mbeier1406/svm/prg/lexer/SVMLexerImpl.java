@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.StringTokenizer;
 
 import org.apache.logging.log4j.CloseableThreadContext;
 import org.apache.logging.log4j.LogManager;
@@ -43,17 +44,16 @@ public class SVMLexerImpl implements SVMLexer {
 		try {
 			LOGGER.info("Start Scan...");
 			var symbols = new ArrayList<List<Symbol>>();
-			try ( var lineScanner = new Scanner(new String(text)) ) {
-				lineScanner.useDelimiter("\n");
-				while ( lineScanner.hasNext() ) {
-					String nextLine = lineScanner.next();
-					LOGGER.trace("nextLine={}", nextLine);
-					if ( nextLine.length() == 0 ) continue;
+			var lineScanner = new StringTokenizer(text, "\n");
+			while ( lineScanner.hasMoreTokens() ) {
+				String nextLine = lineScanner.nextToken();
+				LOGGER.trace("nextLine={}", nextLine);
+				if ( nextLine.length() > 0 ) {
 					var symbolsInLine = com.github.mbeier1406.svm.prg.lexer.LineLexer.LINE_SCANNER.scanLine(nextLine);
 					if ( symbolsInLine.size() > 0 )
 						symbols.add(symbolsInLine);
-					zeile++;
 				}
+				zeile++;
 			}
 			LOGGER.info("Ende Scan.");
 			return symbols;

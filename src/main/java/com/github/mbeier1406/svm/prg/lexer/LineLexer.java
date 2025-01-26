@@ -35,7 +35,7 @@ public class LineLexer {
 			final List<Symbol> symbols = new ArrayList<>();
 			lineScanner.useDelimiter(SVMLexer.TokenPart.SPACE.getRegEx());
 			while ( lineScanner.hasNext() ) {
-				boolean abbruch = com.github.mbeier1406.svm.prg.lexer.TokenGroupLexer.TOKEN_GROUP_LEXER.scanTokenType(symbols, lineScanner.next());
+				boolean abbruch = com.github.mbeier1406.svm.prg.lexer.TokenGroupLexer.TOKEN_GROUP_LEXER.scanTokenGroup(symbols, lineScanner.next());
 				LOGGER.debug("abbruch={}; symbols={}", abbruch, symbols);
 				if ( abbruch ) break; // Ein Kommentar wurde gelesen, alles danch in der Zeile ignorieren
 			}

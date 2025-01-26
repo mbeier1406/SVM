@@ -36,10 +36,12 @@ public class StringLexer {
 			else if ( lastTokenType == TokenPart.DOT ) {	// Label .<NAME> gefunden
 				symbolList.add(new SVMLexer.Symbol(SVMLexer.Token.LABEL, tokenValue));
 			}
+			else if ( lastTokenType == TokenPart.LEFTPAR ) {	// Labelreferenz <NAME> gefunden
+				symbolList.add(new SVMLexer.Symbol(SVMLexer.Token.LABEL_REF, tokenValue));
+			}
 			else if ( lastTokenType == TokenPart.TAB ) {	// Instruktions- oder Datendefinition
 				Optional<String> cmd = Arrays.stream(InstructionInterface.Codes.values())
 						.map(i -> i.toString().toLowerCase())
-						.peek(System.out::println)
 						.filter(name -> name.equals(tokenValue))
 						.findAny();
 				symbolList.add(new SVMLexer.Symbol(cmd.isPresent()?SVMLexer.Token.CODE:SVMLexer.Token.DATA, tokenValue));
@@ -48,7 +50,8 @@ public class StringLexer {
 				throw new SVMException("Nach TokenPart '"+lastTokenType+"' darf kein String folgen: "+tokenValue);
 		}
 		else {
-			throw new SVMException("Vor einem '"+TokenPart.STRING+"' ("+tokenValue+") muss ein Qualifier (&, .) stehen!");
+			// Bei einem kontextlosen String handelt es sich um einen Funktionsaufruf
+			symbolList.add(new SVMLexer.Symbol(SVMLexer.Token.FUNCTION, tokenValue));
 		}
 		return null; // Token fertig
 	};

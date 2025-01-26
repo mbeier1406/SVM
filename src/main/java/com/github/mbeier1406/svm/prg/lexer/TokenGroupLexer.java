@@ -62,7 +62,7 @@ public class TokenGroupLexer {
 							LOGGER.trace("      Test type='{}' ('{}'); lastTokenType={}", type, nextToken, lastTokenType);
 							if ( matcher.group(type.toString()) != null ) {
 								LOGGER.trace("        Gefunden: '{}'; parse...", type);
-								lastTokenType = type.getTokenPartLexer().scanTokenType(symbols, nextToken, lastTokenType);
+								lastTokenType = type.getTokenPartLexer().scanTokenPart(symbols, nextToken, lastTokenType);
 								LOGGER.trace("        lastTokenType'{}'; symbols={}", lastTokenType, symbols);
 								break; // nächstes Token lesen
 							}

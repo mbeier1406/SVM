@@ -1,4 +1,4 @@
-#
+
 # Beispiel SVM-Prgramm
 
 	&data
@@ -11,11 +11,11 @@
 	nop
 	mov $2, %0         # Funktion IO
 	mov $1, %1         # stdout
-	mov .text2, %2     # Startadresse
+	mov (text2), %2    # Startadresse
 	mov len(text2), %3 # Länge der Ausgabe
 	int $1             # syscall
 	nop
 	mov $1, %0         # exit
 	mov $55, %1        # return code
 	int $1             # syscall
-	
+

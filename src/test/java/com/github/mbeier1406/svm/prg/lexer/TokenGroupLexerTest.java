@@ -1,4 +1,4 @@
-package com.github.mbeier1406.svm.prg;
+package com.github.mbeier1406.svm.prg.lexer;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -10,15 +10,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 
-import com.github.mbeier1406.svm.prg.lexer.SVMLexer;
-import com.github.mbeier1406.svm.prg.lexer.TokenGroupLexer;
-
 /**
- * Tests für die Klasse {@linkplain SVMLexer}.
+ * Tests für die Klasse {@linkplain TokenGroupLexer}.
  */
-public class SVMLexerTest {
+public class TokenGroupLexerTest {
 
-	public static final Logger LOGGER = LogManager.getLogger(SVMLexerTest.class);
+	public static final Logger LOGGER = LogManager.getLogger(TokenGroupLexerTest.class);
 
 	/** Stellt sicher, dass eine korrekter RegEx zur Erkennung der {@linkplain SVMLexer.TokenPart} geliefert wird */
 	@Test
@@ -28,4 +25,5 @@ public class SVMLexerTest {
 		assertThat(pattern, not(equalTo(null)));
 		Pattern.compile(pattern); // soll keine Exception werfen
 	}
+
 }

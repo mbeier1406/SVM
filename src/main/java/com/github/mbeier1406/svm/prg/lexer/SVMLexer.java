@@ -1,9 +1,10 @@
 package com.github.mbeier1406.svm.prg.lexer;
 
+import static java.util.Objects.requireNonNull;
+
 import java.io.File;
 import java.nio.charset.Charset;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import com.github.mbeier1406.svm.ALU;
@@ -135,7 +136,7 @@ public interface SVMLexer {
 	/** Definiert alle bekannten lexikalischen Einheiten ({@linkplain Token} ggf. mit Wert) aus denen {@linkplain SVM}-Programm besteht */
 	public static record Symbol(Token token, String value) {
 		public Symbol {
-			Objects.requireNonNull(token, "token");
+			requireNonNull(token, "token");
 		}
 		/** Liefert den Wert für String-Token wie {@linkplain Token#LABEL} */
 		public Optional<String> getStringValue() {
@@ -143,7 +144,7 @@ public interface SVMLexer {
 		}
 		/** Liefert den Wert für Zahl-Token wie {@linkplain Token#REGISTER} (hier: die Nummer des Registers) */
 		public Optional<Integer> getIntValue() {
-			return Optional.ofNullable(Integer.parseInt(value));
+			return Optional.ofNullable(value == null ? null : Integer.parseInt(value));
 		}
 	}
 
@@ -168,6 +169,24 @@ public interface SVMLexer {
 	/** Definiert das statische Symbol für ein Komma */
 	public static final Symbol SYM_COMMA = new Symbol(Token.COMMA, null);
 
+
+	/**
+	 * Speichert die Ergebnisse der lexikalischen Analyse einer Programmzeile:
+	 * <ul>
+	 * <li>Die Nummer der Zeile (als Debugging Information)</li>
+	 * <li>Die Zeile selbst (als Debugging Information)</li>
+	 * <li>Die Liste der {@linkplain Symbol Symbole} als Ergebnis von {@linkplain SVMLexer#scan(File)}</li>
+	 * </ul>
+	 */
+	public static record LineInfo(int lineNumber, String line, List<Symbol> symbols) {
+		public LineInfo {
+			requireNonNull(symbols, "symbols");
+			requireNonNull(line, "line");
+			if ( lineNumber <= 0 ) throw new IllegalArgumentException("Ungültige Zeilennummer: "+lineNumber);
+		}
+	}
+
+
 	/**
 	 * Methode zur lexikalischen Analyse eines {@linkplain SVM}-Programms.
 	 * @param file das zu scannende Programm (Pfad zur Datei)
@@ -175,13 +194,13 @@ public interface SVMLexer {
 	 * @return Liste von Listen (jeweils eine Programmzeile) von Symbolen
 	 * @throws SVMException bei lexikalischen Fehlern
 	 */
-	public List<List<Symbol>> scan(File file, Charset encoding) throws SVMException;
+	public List<LineInfo> scan(File file, Charset encoding) throws SVMException;
 
 	/**
 	 * Methode zur lexikalischen Analyse eines {@linkplain SVM}-Programms mit Standardkodierung.
 	 * @see #scan(File, Charset)
 	 */
-	public default List<List<Symbol>> scan(File file) throws SVMException {
+	public default List<LineInfo> scan(File file) throws SVMException {
 		return scan(file, Charset.defaultCharset());
 	}
 
@@ -189,6 +208,6 @@ public interface SVMLexer {
 	 * Methode zur lexikalischen Analyse eines {@linkplain SVM}-Programms.
 	 * @see #scan(File, Charset)
 	 */
-	public List<List<Symbol>> scan(String text) throws SVMException;
+	public List<LineInfo> scan(String text) throws SVMException;
 
 }

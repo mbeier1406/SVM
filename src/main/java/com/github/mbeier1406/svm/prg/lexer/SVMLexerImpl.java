@@ -26,7 +26,7 @@ public class SVMLexerImpl implements SVMLexer {
 
 	/** {@inheritDoc} */
 	@Override
-	public List<List<Symbol>> scan(final File file, Charset encoding) throws SVMException {
+	public List<LineInfo> scan(final File file, Charset encoding) throws SVMException {
 		try ( @SuppressWarnings("unused") CloseableThreadContext.Instance ctx = put("file", requireNonNull(file.getAbsolutePath(), "file")).put("encoding", encoding.toString()) ) {
 			return scan(new String (Files.readAllBytes(Paths.get(file.getAbsolutePath())), requireNonNull(encoding,"encoding")));
 		} catch (IOException e) {
@@ -37,23 +37,23 @@ public class SVMLexerImpl implements SVMLexer {
 
 	/** {@inheritDoc} */
 	@Override
-	public List<List<Symbol>> scan(String text) throws SVMException {
+	public List<LineInfo> scan(String text) throws SVMException {
 		int zeile = 1;
 		try {
 			LOGGER.info("Start Scan...");
-			var symbols = new ArrayList<List<Symbol>>();
+			var lineInfo = new ArrayList<LineInfo>();
 			var lines = text.split("\n", -1);
 			for ( String nextLine : lines ) {
 				LOGGER.trace("nextLine={}", nextLine);
 				if ( nextLine.length() > 0 ) {
 					var symbolsInLine = com.github.mbeier1406.svm.prg.lexer.LineLexer.LINE_SCANNER.scanLine(nextLine);
 					if ( symbolsInLine.size() > 0 )
-						symbols.add(symbolsInLine);
+						lineInfo.add(new LineInfo(zeile, nextLine, symbolsInLine));
 				}
 				zeile++;
 			}
 			LOGGER.info("Ende Scan.");
-			return symbols;
+			return lineInfo;
 		}
 		catch ( Exception e ) {
 			throw new SVMException("zeile="+zeile, e);

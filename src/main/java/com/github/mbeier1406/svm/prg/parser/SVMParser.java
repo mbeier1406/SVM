@@ -41,6 +41,14 @@ public interface SVMParser<T> {
 	}
 
 	/**
+	 * Methode zum Parsen eines {@linkplain SVM}-Programms (externe Darstellung) mit Standardkodierung.
+	 * @see #parse(File, Charset)
+	 */
+	public default SVMProgram<T> parse(String file) throws SVMException {
+		return parse(new File(file), Charset.defaultCharset());
+	}
+
+	/**
 	 * Methode zum Parsen eines {@linkplain SVM}-Programms als Ergebnis der lexikalischen Analyse.
 	 * @see #parse(File, Charset)
 	 */

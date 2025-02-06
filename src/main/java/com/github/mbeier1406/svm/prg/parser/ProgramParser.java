@@ -13,7 +13,7 @@ public class ProgramParser {
 
 	public static final Logger LOGGER = LogManager.getLogger(ProgramParser.class);
 
-	private SectionDataParser sectionDataParser = new SectionDataParser();
+	private SectionDataParserImpl sectionDataParser = new SectionDataParserImpl();
 
 	private SectionCodeParser sectionCodeParser = new SectionCodeParser();
 

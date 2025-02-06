@@ -41,9 +41,9 @@ public class SVMParserShort implements SVMParser<Short> {
 	public SVMProgram<Short> parse(File file, Charset encoding) throws SVMException {
 		try ( @SuppressWarnings("unused") CloseableThreadContext.Instance ctx = put("file", file.toString()) ) {
 			LOGGER.trace("Start parsen...");
-			var symbols = svmLexer.scan(file, encoding);
-			LOGGER.debug("Abzahl Symbole: {}", symbols.size());
-			parse(symbols);
+			var lineInfoList = svmLexer.scan(file, encoding);
+			LOGGER.debug("Abzahl Lines: {}", lineInfoList.size());
+			parse(lineInfoList);
 			LOGGER.trace("Ende parsen.");
 			return svmProgram;
 		}
@@ -51,7 +51,7 @@ public class SVMParserShort implements SVMParser<Short> {
 
 	/** {@inheritDoc} */
 	@Override
-	public SVMProgram<Short> parse(final List<LineInfo> symbols) throws SVMException {
+	public SVMProgram<Short> parse(final List<LineInfo> lineInfoList) throws SVMException {
 
 		return svmProgram;
 	}

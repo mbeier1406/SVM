@@ -9,7 +9,7 @@ import com.github.mbeier1406.svm.SVMException;
 import com.github.mbeier1406.svm.prg.SVMLoader;
 import com.github.mbeier1406.svm.prg.SVMProgram;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer;
-import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Symbol;
+import com.github.mbeier1406.svm.prg.lexer.SVMLexer.LineInfo;
 
 /**
  * Dieses Interface definiert die Methoden und Datenstrukturen zur Erstellung
@@ -44,6 +44,6 @@ public interface SVMParser<T> {
 	 * Methode zum Parsen eines {@linkplain SVM}-Programms als Ergebnis der lexikalischen Analyse.
 	 * @see #parse(File, Charset)
 	 */
-	public SVMProgram<T> parse(final List<List<Symbol>> symbols) throws SVMException;
+	public SVMProgram<T> parse(final List<LineInfo> symbols) throws SVMException;
 
 }

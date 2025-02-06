@@ -14,7 +14,7 @@ import com.github.mbeier1406.svm.SVMException;
 import com.github.mbeier1406.svm.prg.SVMProgram;
 import com.github.mbeier1406.svm.prg.SVMProgramShort;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer;
-import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Symbol;
+import com.github.mbeier1406.svm.prg.lexer.SVMLexer.LineInfo;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexerImpl;
 
 /**
@@ -51,7 +51,7 @@ public class SVMParserShort implements SVMParser<Short> {
 
 	/** {@inheritDoc} */
 	@Override
-	public SVMProgram<Short> parse(final List<List<Symbol>> symbols) throws SVMException {
+	public SVMProgram<Short> parse(final List<LineInfo> symbols) throws SVMException {
 
 		return svmProgram;
 	}

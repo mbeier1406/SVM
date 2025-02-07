@@ -105,7 +105,7 @@ public interface SVMProgram<T> extends Serializable {
 	public List<VirtualInstruction<T>> getInstructionList();
 
 	/**
-	 * Daten, die im {@linkplain MEM Speicher} abgelegt werden, können über einen Labe adressiert werden.
+	 * Daten, die im {@linkplain MEM Speicher} abgelegt werden, können über einen Label adressiert werden.
 	 * @implNote Standard hashCode()/equals()-Methoden funktionieren nicht!
 	 * @param <T> Wortlänge der {@linkplain SVM}
 	 */

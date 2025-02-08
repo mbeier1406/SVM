@@ -107,6 +107,8 @@ public interface SVMLexer {
 	/**
 	 * Definiert alle bekannten lexikalischen Typen, aus denen {@linkplain SVM}-programm besteht.
 	 * Jedes dieser Token besteht aus einem oder mehreren {@linkplain SVMLexer.TokenPart Tokenteilen}.
+	 * Der Parameter gibt an, ob, wenn das Token in einem {@linkplain Symbol} verwendet wird, es einen
+	 * Parameter benötigt.
 	 * <ul>
 	 * <li>{@linkplain Token#SPACE}: Das Leerzeichen als Token-Trenner ({@linkplain TokenPart#SPACE})</li>
 	 * <li>{@linkplain Token#LEFTPAR}: Die öffnende Klammer ({@linkplain TokenPart#LEFTPAR})</li>
@@ -125,18 +127,29 @@ public interface SVMLexer {
 	 * </ul>
 	 */
 	public static enum Token {
-		SPACE, TAB, COMMA, LEFTPAR, RIGHTPAR,
-		TOKEN_DATA, DATA,
-		TOKEN_CODE, CODE,
-		LABEL, LABEL_REF,
-		CONSTANT, REGISTER,
-		FUNCTION
+		SPACE(false), TAB(false), COMMA(false), LEFTPAR(false), RIGHTPAR(false),
+		TOKEN_DATA(false), DATA(true),
+		TOKEN_CODE(false), CODE(true),
+		LABEL(true), LABEL_REF(true),
+		CONSTANT(true), REGISTER(true),
+		FUNCTION(true);
+		private boolean needsParameter;
+		private Token(boolean needsParameter) {
+			this.needsParameter = needsParameter;
+		}
+		public boolean needsParameter() {
+			return this.needsParameter;
+		}
 	}
 
 	/** Definiert alle bekannten lexikalischen Einheiten ({@linkplain Token} ggf. mit Wert) aus denen {@linkplain SVM}-Programm besteht */
 	public static record Symbol(Token token, String value) {
 		public Symbol {
 			requireNonNull(token, "token");
+			if ( token.needsParameter )
+				requireNonNull(value, "value");
+			else if ( value != null )
+				throw new IllegalArgumentException("Token '"+token+"' erwartet keinen Parameter!");
 		}
 		/** Liefert den Wert für String-Token wie {@linkplain Token#LABEL} */
 		public Optional<String> getStringValue() {

@@ -7,11 +7,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
+
+import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Token;
 
 /**
  * Tests für die Klasse {@linkplain SVMLexer}.
@@ -64,6 +67,48 @@ public class SVMLexerTest {
 				() -> assertEquals(symbol.getStringValue(), Optional.of("1234")),
 				() -> assertEquals(symbol.value(), "1234"),
 				() -> assertEquals(symbol.token(), SVMLexer.Token.CONSTANT));
+	}
+
+	/** Wenn der {@linkplain Token} keinen Parameter erfordert: kein Fehler bei <b>null</b>-Value */
+	@Test
+	public void testeSymbolParameterValueNullOk() {
+		Arrays.stream(SVMLexer.Token.values())
+			.filter(t -> !t.needsParameter())
+			.map(t -> new SVMLexer.Symbol(t, null))
+			.peek(LOGGER::info)
+			.count(); // Damit der Stream ausgeführt wird
+	}
+
+	/** Wenn der {@linkplain Token} einen Parameter erfordert: kein Fehler bei Value */
+	@Test
+	public void testeSymbolParameterValueNotNullOk() {
+		Arrays.stream(SVMLexer.Token.values())
+			.filter(t -> t.needsParameter())
+			.map(t -> new SVMLexer.Symbol(t, "123"))
+			.peek(LOGGER::info)
+			.count(); // Damit der Stream ausgeführt wird
+	}
+
+	/** Wenn der {@linkplain Token} einen Parameter erfordert: Fehler bei <b>null</b>-Value */
+	@Test
+	public void testeSymbolParameterValueNullNotOk() {
+		Arrays.stream(SVMLexer.Token.values())
+			.filter(t -> t.needsParameter())
+			.forEach(t -> {
+				var ex = assertThrows(NullPointerException.class, () -> new SVMLexer.Symbol(t, null));
+				assertThat(ex.getLocalizedMessage(), containsString("value"));
+			});
+	}
+
+	/** Wenn der {@linkplain Token} keinen Parameter erfordert: Fehler bei Value */
+	@Test
+	public void testeSymbolParameterValueNotNullNotOk() {
+		Arrays.stream(SVMLexer.Token.values())
+			.filter(t -> !t.needsParameter())
+			.forEach(t -> {
+				var ex = assertThrows(IllegalArgumentException.class, () -> new SVMLexer.Symbol(t, "123"));
+				assertThat(ex.getLocalizedMessage(), containsString("erwartet keinen Parameter"));
+			});
 	}
 
 	/** Stellt sicher, dass eine fehlende Zeile in {@linkplain SVMLexer.LineInfo} einen definierten Fehler liefert */

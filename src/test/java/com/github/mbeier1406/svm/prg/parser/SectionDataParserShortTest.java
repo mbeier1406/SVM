@@ -15,25 +15,48 @@ import org.junit.jupiter.api.Test;
 
 import com.github.mbeier1406.svm.SVMException;
 import com.github.mbeier1406.svm.prg.SVMProgram;
+import com.github.mbeier1406.svm.prg.SVMProgram.Data;
+import com.github.mbeier1406.svm.prg.SVMProgram.Label;
 import com.github.mbeier1406.svm.prg.SVMProgram.LabelType;
 import com.github.mbeier1406.svm.prg.SVMProgramShort;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Symbol;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Token;
+import com.github.mbeier1406.svm.prg.lexer.SVMLexer;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.LineInfo;
 
 /**
- * Tests für die Klasse {@linkplain SectionDataParserImpl}.
+ * Tests für die Klasse {@linkplain SectionDataParserShort}.
  */
-public class SectionDataParserImplTest {
+public class SectionDataParserShortTest {
 
-	public static final Logger LOGGER = LogManager.getLogger(SectionDataParserImplTest.class);
+	public static final Logger LOGGER = LogManager.getLogger(SectionDataParserShortTest.class);
 
 	/** Das zu testende Objekt */
-	public final SectionDataParser sectionDataParser = new SectionDataParserImpl();
+	public final SectionDataParser<Short> sectionDataParser = new SectionDataParserShort();
 
 	/** Das zu erstellende Programm */
 	public final SVMProgram<Short> svmProgramm = new SVMProgramShort();
 
+
+	/** Stellt sicher, dass bei <b>null</b>-Werten beim Umwandeln von Datendefinitionen extern -> intern ein definierter Fehler erzeugt wird */
+	@Test
+	public void testeDatenVonExternNachInternUmwandelnNull() {
+		var ex = assertThrows(NullPointerException.class, () -> sectionDataParser.getSvmData(null));
+		assertThat(ex.getLocalizedMessage(), containsString("data"));
+	}
+
+	/** Stellt sicher, dass bei falschen Symbolen beim Umwandeln von Datendefinitionen extern -> intern ein definierter Fehler erzeugt wird */
+	@Test
+	public void testeDatenVonExternNachInternUmwandelnFalschesSymbol() {
+		var ex = assertThrows(IllegalArgumentException.class, () -> sectionDataParser.getSvmData(SVMLexer.SYM_COMMA));
+		assertThat(ex.getLocalizedMessage(), containsString("Symbol vom Typ 'DATA' erwartet"));
+	}
+
+	/** Stellt sicher, dass das Umwandeln von Datendefinitionen extern -> intern funktioniert */
+	@Test
+	public void testeDatenVonExternNachInternUmwandeln() {
+		assertThat(sectionDataParser.getSvmData(new Symbol(Token.DATA, "abc")), equalTo(new Short[] { (short) 'a', (short) 'b', (short) 'c' }));
+	}
 
 	/** Stellt sicher, dass ein fehlende {@linkplain SVMProgram} einen definierten Fehler liefert */
 	@Test
@@ -108,7 +131,25 @@ public class SectionDataParserImplTest {
 			add(new LineInfo(2, ".xyz", new ArrayList<Symbol>() {{ add(new Symbol(Token.LABEL, "xyz")); }}));
 			add(new LineInfo(3, "	&code", new ArrayList<Symbol>() {{ add(SYM_TOKEN_CODE); }}));
 		}}));
-		assertThat(ex.getLocalizedMessage(), containsString("Nach einer Labeldefinition wird eine Konstante erwartet"));
+		assertThat(ex.getLocalizedMessage(), containsString("Nach einer Labeldefinition wird eine Datendefinition erwartet"));
+	}
+
+	/** Stellt sicher, dass Datendefinitionen korrekt in die SVM übernommen werden */
+	@Test
+	@SuppressWarnings("serial")
+	public void testeDataCorrect() throws SVMException {
+		int index = sectionDataParser.parse(svmProgramm, new ArrayList<LineInfo>() {{
+			add(new LineInfo(1, "	&data", new ArrayList<Symbol>() {{ add(SYM_TOKEN_DATA); }}));
+			add(new LineInfo(2, ".label1", new ArrayList<Symbol>() {{ add(new Symbol(Token.LABEL, "label1")); }}));
+			add(new LineInfo(3, "	abc", new ArrayList<Symbol>() {{ add(new Symbol(Token.DATA, "abc")); }}));
+			add(new LineInfo(4, ".label2", new ArrayList<Symbol>() {{ add(new Symbol(Token.LABEL, "label2")); }}));
+			add(new LineInfo(5, "	123", new ArrayList<Symbol>() {{ add(new Symbol(Token.DATA, "123")); }}));
+			add(new LineInfo(6, "	&code", new ArrayList<Symbol>() {{ add(SYM_TOKEN_CODE); }}));
+		}});
+		assertThat(index, equalTo(5));
+		assertThat(svmProgramm.getDataList().size(), equalTo(2));
+		assertThat(svmProgramm.getDataList().get(0), equalTo(new Data<Short>(new Label(LabelType.DATA, "label1"), new Short[] { (short) 'a', (short) 'b', (short) 'c' })));
+		assertThat(svmProgramm.getDataList().get(1), equalTo(new Data<Short>(new Label(LabelType.DATA, "label2"), new Short[] { (short) '1', (short) '2', (short) '3' })));
 	}
 
 }

@@ -17,13 +17,17 @@ import com.github.mbeier1406.svm.prg.SVMProgram.Data;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.LineInfo;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Symbol;
+import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Token;
 
 /**
  * Standardimplementierung für das Parsen einer Datensektion eines SVM-Programms.
+ * Die im SVM-Programm (externe Darstellung) enthaltenen Zeichen der Datensektion
+ * werden in den Datentyp {@linkplain Short} umgewandelt.
+ * @see Die Externe Darstellung: <code>/SVM/src/test/resources/com/github/mbeier1406/svm/prg/example.svm</code>
  */
-public class SectionDataParserImpl implements SectionDataParser {
+public class SectionDataParserShort implements SectionDataParser<Short> {
 
-	public static final Logger LOGGER = LogManager.getLogger(SectionDataParserImpl.class);
+	public static final Logger LOGGER = LogManager.getLogger(SectionDataParserShort.class);
 
 	/** Angabe, an welchem Index der Liste {@linkplain LineInfo} gerade geparsed wird */
 	private static final String INDEX = "Index %d: ";
@@ -35,10 +39,10 @@ public class SectionDataParserImpl implements SectionDataParser {
 	private static final String ERR_DATA_SECTION_EXPECTED = INDEX+"Es wird die Datensektion erwartet: '"+SYM_TOKEN_DATA+"': %s";
 
 	/** Fehlermeldung wenn nach Label das Programm endet */
-	private static final String ERR_CONSTANT_EXPECTED1 = INDEX+"Nach einer Labeldefinition darf das Programm nicht enden (%s)!";
+	private static final String ERR_DATA_EXPECTED1 = INDEX+"Nach einer Labeldefinition darf das Programm nicht enden (%s)!";
 
 	/** Fehlermeldung wenn nicht mit der Datensektion begonnen wird */
-	private static final String ERR_CONSTANT_EXPECTED2 = INDEX+"Nach einer Labeldefinition wird eine Konstante erwartet (%s): : %s";
+	private static final String ERR_DATA_EXPECTED2 = INDEX+"Nach einer Labeldefinition wird eine Datendefinition erwartet (%s): : %s";
 
 
 	/** {@inheritDoc} */
@@ -55,13 +59,13 @@ public class SectionDataParserImpl implements SectionDataParser {
 		for ( var lineInfo : lineInfoList.subList(index, lineInfoList.size()) ) {
 			LOGGER.trace("lineInfo={}", lineInfo);
 			if ( label != null ) {
-				// Wir haben zuvor einen Label gelesen, jetzt wird die zugehörige Konstante erwartet
-				if ( lineInfo.symbols().size() != 1 || lineInfo.symbols().get(0).token() != SVMLexer.Token.CONSTANT )
-					throw new SVMException(format(ERR_CONSTANT_EXPECTED2, index, label, lineInfoList.get(index).line()));
+				// Wir haben zuvor einen Label gelesen, jetzt wird die zugehörige Datendefinition erwartet
+				if ( lineInfo.symbols().size() != 1 || lineInfo.symbols().get(0).token() != SVMLexer.Token.DATA )
+					throw new SVMException(format(ERR_DATA_EXPECTED2, index, label, lineInfoList.get(index).line()));
 				// Konstante in das SVMProgramm eintragen
-				Symbol constant = lineInfo.symbols().get(0);
-				LOGGER.trace("Konstante={}", constant);
-				svmProgram.addData(new Data<Short>(new Label(LabelType.DATA, label.value()), null)); // FIXME hier die Daten in Short überführen
+				var data = lineInfo.symbols().get(0);
+				LOGGER.trace("Data={}", data);
+				svmProgram.addData(new Data<Short>(new Label(LabelType.DATA, label.value()), getSvmData(data)));
 				label = null; // nächste Datendefinition
 				index++; // nächste Zeile
 			}
@@ -75,8 +79,20 @@ public class SectionDataParserImpl implements SectionDataParser {
 				break; // Keine Datendefinition, mit der Codesektion weitermachen...
 		}
 		if ( label != null )
-			throw new SVMException(format(ERR_CONSTANT_EXPECTED1, index, label));
+			throw new SVMException(format(ERR_DATA_EXPECTED1, index, label));
 		return index;
+	}
+
+
+	/** {@inheritDoc} */
+	@Override
+	public Short[] getSvmData(final Symbol data) {
+		if ( requireNonNull(data, "data").token() != Token.DATA )
+			throw new IllegalArgumentException("Symbol vom Typ 'DATA' erwartet: "+data);
+		final Short[] daten = new Short[data.getStringValue().get().length()];
+		for ( int i=0; i < daten.length; i++ )
+			daten[i] = (short) data.getStringValue().get().charAt(i);
+		return daten;
 	}
 
 }

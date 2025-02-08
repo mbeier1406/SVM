@@ -2,17 +2,20 @@ package com.github.mbeier1406.svm.prg.parser;
 
 import java.util.List;
 
+import com.github.mbeier1406.svm.SVM;
 import com.github.mbeier1406.svm.SVMException;
 import com.github.mbeier1406.svm.prg.SVMProgram;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.LineInfo;
+import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Symbol;
 
 /**
  * Definiert die Methode zum parsen eine Datensektion.
  * Das zu erstellende {@linkplain SVMProgram} wird entsprechend
  * mit den Daten befüllt.
+ * @param <T> Die Wortlänge der {@linkplain SVM}
  */
-public interface SectionDataParser {
+public interface SectionDataParser<T> {
 
 	/**
 	 * Übernimmt das Ergebnis der lexikalischen Analyse eines {@linkplain SVMLexer} und
@@ -25,5 +28,20 @@ public interface SectionDataParser {
 	 * @throws SVMException Bei Parsingfehlern oder wenn das {@linkplain SVMProgram} bereits Daten enthält
 	 */
 	public int parse(final SVMProgram<Short> svmProgram, final List<LineInfo> lineInfoList) throws SVMException;
+
+	/**
+	 * Überführt eine Datendefinition aus der externen SVM-Programm Darstellung
+	 * in die interne Repräsentation der {@linkplain SVM}. Beispiel SVM vom Typ {@linkplain Short}
+	 * (externe Repräsentation):
+	 * <pre><code>
+	 * 	&data
+	 * .label1
+	 * 	abc
+	 * </code></pre>
+	 * liefert ein Short-Array {@code [ 'a', 'b', 'c' ]}
+	 * @param data die Datendefinition (extern)
+	 * @return die Datendefinition (intern)
+	 */
+	public T[] getSvmData(final Symbol data);
 
 }

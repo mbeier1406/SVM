@@ -32,6 +32,12 @@ public class SVMParserShort implements SVMParser<Short> {
 	/** Das Programm zur lexikalischen Analyse, dessen Ergebnis zum Parsen verwendet wird */
 	private final SVMLexer svmLexer = new SVMLexerImpl();
 
+	/** Liest die Datensektion ein und schreibt die Werte in {@linkplain #svmProgram} */
+	private SectionDataParser<Short> sectionDataParser = new SectionDataParserShort();
+
+	private SectionCodeParser<Short> sectionCodeParser = new SectionCodeParserShort();
+
+
 	public SVMParserShort() {
 	}
 
@@ -52,7 +58,11 @@ public class SVMParserShort implements SVMParser<Short> {
 	/** {@inheritDoc} */
 	@Override
 	public SVMProgram<Short> parse(final List<LineInfo> lineInfoList) throws SVMException {
-
+		LOGGER.trace("Parse die Datensektion...");
+		int index = sectionDataParser.parse(svmProgram, lineInfoList);
+		LOGGER.trace("Ende parsen Datensektion (index={}).\nParse die Codesektion...", index);
+		sectionCodeParser.parse(svmProgram, lineInfoList.subList(index, lineInfoList.size()));
+		LOGGER.trace("Ende parsen Datensektion.");
 		return svmProgram;
 	}
 

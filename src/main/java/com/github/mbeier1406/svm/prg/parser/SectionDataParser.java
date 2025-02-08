@@ -10,16 +10,17 @@ import com.github.mbeier1406.svm.prg.lexer.SVMLexer.LineInfo;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Symbol;
 
 /**
- * Definiert die Methode zum parsen eine Datensektion.
+ * Definiert die Methode zum parsen der Datensektion eines SVM-Programms (externe Darstelllung).
  * Das zu erstellende {@linkplain SVMProgram} wird entsprechend
  * mit den Daten befüllt.
  * @param <T> Die Wortlänge der {@linkplain SVM}
+ * @see Ein Beispiel SVM-Programm (externe Repräsentation) /SVM/src/test/resources/com/github/mbeier1406/svm/prg/example.svm
  */
 public interface SectionDataParser<T> {
 
 	/**
 	 * Übernimmt das Ergebnis der lexikalischen Analyse eines {@linkplain SVMLexer} und
-	 * überträgt die Datensektion in das zu erstellende SVM-Programm. Es wird erwartet,
+	 * überträgt die Datensektion in das zu erstellende {@linkplain SVMProgram} (interne Darstellung). Es wird erwartet,
 	 * dass die erste Zeile die Datensektion kennzeichnet ({@linkplain SVMLexer#SYM_TOKEN_DATA}.
 	 * Es wird gelesen, bis die Codesektion erreicht wird (das Symbol {@linkplain SVMLexer#SYM_TOKEN_CODE}).
 	 * @param svmProgram Das zu erstellende Progamm (interne Darstellung)

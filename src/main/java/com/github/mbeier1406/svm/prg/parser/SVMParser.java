@@ -19,6 +19,7 @@ import com.github.mbeier1406.svm.prg.lexer.SVMLexer.LineInfo;
  * @param <T> die Wortlänge der {@linkplain SVM}
  * @see SVMLexer
  * @see SVMLoader
+ * @see Ein Beispiel SVM-Programm (externe Repräsentation) /SVM/src/test/resources/com/github/mbeier1406/svm/prg/example.svm
  */
 public interface SVMParser<T> {
 

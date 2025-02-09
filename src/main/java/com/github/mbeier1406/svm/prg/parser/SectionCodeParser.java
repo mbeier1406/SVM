@@ -24,9 +24,15 @@ public interface SectionCodeParser<T> {
 	 * Es wird bis zum Ende der {@linkplain LineInfo}-Liste gelesen.
 	 * @param svmProgram Das zu erstellende Progamm (interne Darstellung)
 	 * @param lineInfoList Das Ergebnis der lexikalischen Analyse {@linkplain SVMLexer#scan(String)}
+	 * @param startIndex Index (nach {@linkplain SectionDataParser#parse(SVMProgram, List, int)} in der <u>lineInfoList</u>, ab der geparsed wird
 	 * @return Den Index (Letzter Eintrag) in der Liste {@linkplain SVMLexer.LineInfo}
 	 * @throws SVMException Bei Parsingfehlern oder wenn das {@linkplain SVMProgram} bereits Code enthält
 	 */
-	public int parse(final SVMProgram<Short> svmProgram, final List<LineInfo> lineInfoList) throws SVMException;
+	public int parse(final SVMProgram<Short> svmProgram, final List<LineInfo> lineInfoList, int startIndex) throws SVMException;
+
+	/** @see #parse(SVMProgram, List, int) */
+	public default int parse(final SVMProgram<Short> svmProgram, final List<LineInfo> lineInfoList) throws SVMException {
+		return parse(svmProgram, lineInfoList, 0);
+	}
 
 }

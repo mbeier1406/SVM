@@ -25,10 +25,16 @@ public interface SectionDataParser<T> {
 	 * Es wird gelesen, bis die Codesektion erreicht wird (das Symbol {@linkplain SVMLexer#SYM_TOKEN_CODE}).
 	 * @param svmProgram Das zu erstellende Progamm (interne Darstellung)
 	 * @param lineInfoList Das Ergebnis der lexikalischen Analyse {@linkplain SVMLexer#scan(String)}
-	 * @return Den Index (beginnend ab 0) in der Liste {@linkplain SVMLexer.LineInfo}, an der mit der nächsten Sektion weitergemacht werden muss
+	 * @param startIndex (standardmäßig beginnend ab 0) Index in der <u>lineInfoList</u>, ab der geparsed wird
+	 * @return Den Index (beginnend ab 0 wenn keine Daten) in der Liste {@linkplain SVMLexer.LineInfo}, an der mit der nächsten Sektion weitergemacht werden muss
 	 * @throws SVMException Bei Parsingfehlern oder wenn das {@linkplain SVMProgram} bereits Daten enthält
 	 */
-	public int parse(final SVMProgram<Short> svmProgram, final List<LineInfo> lineInfoList) throws SVMException;
+	public int parse(final SVMProgram<Short> svmProgram, final List<LineInfo> lineInfoList, int startIndex) throws SVMException;
+
+	/** @see #parse(SVMProgram, List, int) */
+	public default int parse(final SVMProgram<Short> svmProgram, final List<LineInfo> lineInfoList) throws SVMException{
+		return parse(svmProgram, lineInfoList, 0);
+	}
 
 	/**
 	 * Überführt eine Datendefinition aus der externen SVM-Programm Darstellung

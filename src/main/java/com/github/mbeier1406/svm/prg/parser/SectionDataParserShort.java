@@ -32,12 +32,6 @@ public class SectionDataParserShort implements SectionDataParser<Short> {
 	/** Angabe, an welchem Index der Liste {@linkplain LineInfo} gerade geparsed wird */
 	private static final String INDEX = "Index %d: ";
 
-	/** Fehlermeldung wenn das SVM-programm bereits Daten enthält */
-	private static final String ERR_PRG_DATA_SECTION_NOT_EMPTY = "SVM-Programm enthält bereits Daten!";
-
-	/** Fehlermeldung wenn nicht mit der Datensektion begonnen wird */
-	private static final String ERR_DATA_SECTION_EXPECTED = INDEX+"Es wird die Datensektion erwartet: '"+SYM_TOKEN_DATA+"': %s";
-
 	/** Fehlermeldung wenn nach Label das Programm endet */
 	private static final String ERR_DATA_EXPECTED1 = INDEX+"Nach einer Labeldefinition darf das Programm nicht enden (%s)!";
 
@@ -47,14 +41,9 @@ public class SectionDataParserShort implements SectionDataParser<Short> {
 
 	/** {@inheritDoc} */
 	@Override
-	public int parse(final SVMProgram<Short> svmProgram, final List<LineInfo> lineInfoList) throws SVMException {
-		int index = 0; // Die Datensektion wird als erstes erwartet, wir starten an Index 0
-		if ( requireNonNull(svmProgram, "svmProgram").getDataList().size() > 0 )
-			throw new SVMException(ERR_PRG_DATA_SECTION_NOT_EMPTY);
-		var symbols = requireNonNull(lineInfoList, "lineInfoList").get(index).symbols();
-		if ( symbols.size() != 1 || !symbols.get(index).equals(SYM_TOKEN_DATA) )
-			throw new SVMException(format(ERR_DATA_SECTION_EXPECTED, index, lineInfoList.get(index).line()));
-		index++; // nächste Zeile
+	public int parse(final SVMProgram<Short> svmProgram, final List<LineInfo> lineInfoList, int startIndex) throws SVMException {
+		int index = SVMParser.checkSection(svmProgram, lineInfoList, startIndex, SYM_TOKEN_DATA);
+		LOGGER.trace("startIndex={}; Anzahl lineInfoList={}", startIndex, lineInfoList.size());
 		Symbol label = null;
 		for ( var lineInfo : lineInfoList.subList(index, lineInfoList.size()) ) {
 			LOGGER.trace("lineInfo={}", lineInfo);

@@ -16,7 +16,7 @@ public class SectionCodeParserShort implements SectionCodeParser<Short> {
 
 	/** {@inheritDoc} */
 	@Override
-	public int parse(final SVMProgram<Short> svmProgram, final List<LineInfo> lineInfoList) throws SVMException {
+	public int parse(final SVMProgram<Short> svmProgram, final List<LineInfo> lineInfoList, int startIndex) throws SVMException {
 		return 0;
 	}
 

@@ -40,7 +40,6 @@ public class SVMParserShort implements SVMParser<Short> {
 
 	public SVMParserShort() {
 	}
-
 	
 	/** {@inheritDoc} */
 	@Override
@@ -59,10 +58,10 @@ public class SVMParserShort implements SVMParser<Short> {
 	@Override
 	public SVMProgram<Short> parse(final List<LineInfo> lineInfoList) throws SVMException {
 		LOGGER.trace("Parse die Datensektion...");
-		int index = sectionDataParser.parse(svmProgram, lineInfoList);
-		LOGGER.trace("Ende parsen Datensektion (index={}).\nParse die Codesektion...", index);
-		sectionCodeParser.parse(svmProgram, lineInfoList.subList(index, lineInfoList.size()));
-		LOGGER.trace("Ende parsen Datensektion.");
+		int indexNextSection = sectionDataParser.parse(svmProgram, lineInfoList);
+		LOGGER.trace("Ende parsen Datensektion (indexNextSection={}).\nParse die Codesektion...", indexNextSection);
+		indexNextSection = sectionCodeParser.parse(svmProgram, lineInfoList.subList(indexNextSection, lineInfoList.size()));
+		LOGGER.trace("Ende parsen Datensektion (indexNextSection={}).", indexNextSection);
 		return svmProgram;
 	}
 

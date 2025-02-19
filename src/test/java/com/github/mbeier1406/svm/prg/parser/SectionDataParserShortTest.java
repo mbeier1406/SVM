@@ -39,7 +39,7 @@ public class SectionDataParserShortTest {
 
 	/** Ein SVM-Programm mit einer Zeile */
 	@SuppressWarnings("serial")
-	public final ArrayList<LineInfo> STD_LINE_INFO = new ArrayList<>() {{
+	public static final ArrayList<LineInfo> STD_LINE_INFO = new ArrayList<>() {{
 		add(new LineInfo(1, "	&code", new ArrayList<Symbol>() {{ add(SYM_TOKEN_CODE); }}));
 	}};
 

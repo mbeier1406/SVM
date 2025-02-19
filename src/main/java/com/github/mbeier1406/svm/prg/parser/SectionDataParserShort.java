@@ -43,7 +43,7 @@ public class SectionDataParserShort implements SectionDataParser<Short> {
 	@Override
 	public int parse(final SVMProgram<Short> svmProgram, final List<LineInfo> lineInfoList, int startIndex) throws SVMException {
 		int index = SVMParser.checkSection(svmProgram, lineInfoList, startIndex, SYM_TOKEN_DATA);
-		LOGGER.trace("startIndex={}; Anzahl lineInfoList={}", startIndex, lineInfoList.size());
+		LOGGER.trace("startIndex={}; index={}; Anzahl lineInfoList={}", startIndex, index, lineInfoList.size());
 		Symbol label = null;
 		for ( var lineInfo : lineInfoList.subList(index, lineInfoList.size()) ) {
 			LOGGER.trace("lineInfo={}", lineInfo);

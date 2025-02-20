@@ -36,7 +36,7 @@ public class SectionDataParserShort implements SectionDataParser<Short> {
 	private static final String ERR_DATA_EXPECTED1 = INDEX+"Nach einer Labeldefinition darf das Programm nicht enden (%s)!";
 
 	/** Fehlermeldung wenn nicht mit der Datensektion begonnen wird */
-	private static final String ERR_DATA_EXPECTED2 = INDEX+"Nach einer Labeldefinition wird eine Datendefinition erwartet (%s): : %s";
+	private static final String ERR_DATA_EXPECTED2 = INDEX+"Nach einer Labeldefinition wird eine Datendefinition erwartet (%s): %s";
 
 
 	/** {@inheritDoc} */

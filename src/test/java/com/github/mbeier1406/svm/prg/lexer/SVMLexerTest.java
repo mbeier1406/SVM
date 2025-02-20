@@ -114,7 +114,10 @@ public class SVMLexerTest {
 	/** Stellt sicher, dass eine fehlende Zeile in {@linkplain SVMLexer.LineInfo} einen definierten Fehler liefert */
 	@Test
 	public void testeLineInfoStringNull() {
-		var ex = assertThrows(NullPointerException.class, () -> new SVMLexer.LineInfo(1, null, new ArrayList<>()));
+		@SuppressWarnings("serial")
+		var ex = assertThrows(NullPointerException.class, () -> new SVMLexer.LineInfo(1, null, new ArrayList<>() {{
+			add(new SVMLexer.Symbol(SVMLexer.Token.COMMA, null));
+		}}));
 		assertThat(ex.getLocalizedMessage(), containsString("line"));
 	}
 
@@ -125,10 +128,20 @@ public class SVMLexerTest {
 		assertThat(ex.getLocalizedMessage(), containsString("symbols"));
 	}
 
+	/** Stellt sicher, dass die Symbolliste in {@linkplain SVMLexer.LineInfo} mindestens einen Wert hat */
+	@Test
+	public void testeLineInfoSymbolsEmpty() {
+		var ex = assertThrows(IllegalArgumentException.class, () -> new SVMLexer.LineInfo(1, "line", new ArrayList<SVMLexer.Symbol>()));
+		assertThat(ex.getLocalizedMessage(), containsString("Leere Symbolliste"));
+	}
+
 	/** Stellt sicher, dass eine ungültige Zeilennummer in {@linkplain SVMLexer.LineInfo} einen definierten Fehler liefert */
 	@Test
 	public void testeLineInfoLineNumber() {
-		var ex = assertThrows(IllegalArgumentException.class, () -> new SVMLexer.LineInfo(-1, "line", new ArrayList<>()));
+		@SuppressWarnings("serial")
+		var ex = assertThrows(IllegalArgumentException.class, () -> new SVMLexer.LineInfo(-1, "line", new ArrayList<>() {{
+			add(new SVMLexer.Symbol(SVMLexer.Token.COMMA, null));
+		}}));
 		assertThat(ex.getLocalizedMessage(), containsString("-1"));
 	}
 

@@ -194,6 +194,7 @@ public interface SVMLexer {
 	public static record LineInfo(int lineNumber, String line, List<Symbol> symbols) {
 		public LineInfo {
 			requireNonNull(symbols, "symbols");
+			if ( symbols.size() == 0 ) throw new IllegalArgumentException("Leere Symbolliste!");
 			requireNonNull(line, "line");
 			if ( lineNumber <= 0 ) throw new IllegalArgumentException("Ungültige Zeilennummer: "+lineNumber);
 		}

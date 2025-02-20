@@ -1,14 +1,15 @@
 package com.github.mbeier1406.svm.prg.parser;
 
-import static com.github.mbeier1406.svm.prg.lexer.SVMLexer.SYM_TOKEN_CODE;
-import static com.github.mbeier1406.svm.prg.lexer.SVMLexer.SYM_TOKEN_DATA;
+import static com.github.mbeier1406.svm.prg.lexer.SVMLexer.SYM_COMMA;
+import static com.github.mbeier1406.svm.prg.lexer.SVMLexer.SYM_LEFTPAR;
 import static com.github.mbeier1406.svm.prg.parser.SectionDataParserShortTest.STD_LINE_INFO;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,14 +17,9 @@ import org.junit.jupiter.api.Test;
 
 import com.github.mbeier1406.svm.SVMException;
 import com.github.mbeier1406.svm.prg.SVMProgram;
-import com.github.mbeier1406.svm.prg.SVMProgram.Data;
-import com.github.mbeier1406.svm.prg.SVMProgram.Label;
-import com.github.mbeier1406.svm.prg.SVMProgram.LabelType;
 import com.github.mbeier1406.svm.prg.SVMProgramShort;
-import com.github.mbeier1406.svm.prg.lexer.SVMLexer;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.LineInfo;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Symbol;
-import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Token;
 
 /**
  * Tests für die Klasse {@linkplain SectionCodeParserShort}.
@@ -53,5 +49,17 @@ public class SectionCodeParserShortTest {
 		assertThat(ex.getLocalizedMessage(), containsString("Der Startindex muss zwischen 0 und 0 liegen"));
 	}
 
+
+	/** Stellt sicher, dass ein definierter Fehler erzeugt wird, wenn eine Code-zeile nicht mit einer Instruktion beginnt */
+	@Test
+	public void testeCodezeileBeginntNichtMitInstruktion() {
+		@SuppressWarnings("serial")
+		final ArrayList<LineInfo> lineInfoList = new ArrayList<>() {{
+			add(new LineInfo(1, "	, (", new ArrayList<Symbol>() {{ add(SYM_COMMA); add(SYM_LEFTPAR); }}));
+		}};
+		List<LineInfo> code = Stream.concat(STD_LINE_INFO.stream(), lineInfoList.stream()).toList();
+		var ex = assertThrows(SVMException.class, () -> sectionCodeParser.parse(svmProgramm, code, 0));
+		assertThat(ex.getLocalizedMessage(), containsString("Eine Codezeile muss mit einer Instruktion beginnen"));
+	}
 
 }

@@ -11,6 +11,9 @@ import com.github.mbeier1406.svm.ALU;
 import com.github.mbeier1406.svm.SVM;
 import com.github.mbeier1406.svm.SVMException;
 import com.github.mbeier1406.svm.instructions.InstructionDefinition;
+import com.github.mbeier1406.svm.instructions.Int;
+import com.github.mbeier1406.svm.instructions.Mov;
+import com.github.mbeier1406.svm.instructions.Nop;
 
 /**
  * Dieses Interface definiert alle Methoden, Datenstrukturen und Funktionsdefinitionen
@@ -181,6 +184,15 @@ public interface SVMLexer {
 
 	/** Definiert das statische Symbol für ein Komma */
 	public static final Symbol SYM_COMMA = new Symbol(Token.COMMA, null);
+
+	/** Definiert das statische Symbol für die Instruktion {@linkplain Nop} */
+	public static final Symbol SYM_NOP = new Symbol(Token.CODE, "nop");
+
+	/** Definiert das statische Symbol für die Instruktion {@linkplain Mov} */
+	public static final Symbol SYM_MOV = new Symbol(Token.CODE, "mov");
+
+	/** Definiert das statische Symbol für die Instruktion {@linkplain Int} */
+	public static final Symbol SYM_INT = new Symbol(Token.CODE, "int");
 
 
 	/**

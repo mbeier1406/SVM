@@ -23,7 +23,20 @@ public class InstructionFactory {
 	/** Lädt die definierten {@linkplain InstructionInterface Maschinenbefehle} */
 	static {
 		INSTRUCTIONS = getInstructions();
+		NOP = INSTRUCTIONS.get(Nop.CODE);
+		MOV = INSTRUCTIONS.get(Mov.CODE);
+		INT = INSTRUCTIONS.get(Int.CODE);
 	}
+
+	/** Die Instruktion {@linkplain Nop} */
+	public static final InstructionInterface<Short> NOP;
+
+	/** Die Instruktion {@linkplain Mov} */
+	public static final InstructionInterface<Short> MOV;
+
+	/** Die Instruktion {@linkplain Int} */
+	public static final InstructionInterface<Short> INT;
+
 
 	/** Lädt alle Maschinenbefehle/Insructions, die die {@linkplain ALU} ausführen kann */
 	public static Map<Byte, InstructionInterface<Short>> getInstructions() {

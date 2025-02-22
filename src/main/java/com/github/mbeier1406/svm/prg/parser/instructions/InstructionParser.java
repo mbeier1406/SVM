@@ -31,6 +31,8 @@ public interface InstructionParser<T> {
 	 * .start1
 	 * 	mov $1, %1
 	 * </code></pre>
+	 * <u>Hinweis</u>: das erste Symbol in {@linkplain LineInfo#symbols()} ist immer die Instruktion, für die
+	 * die {@linkplain VirtualInstruction} gerade erzeugt werden soll.
 	 * @param label Falls im Programmtext zuvor ein Label definiert wurde, muss er als Ziel für einen Sprungbefehl mitgegeben werden
 	 * @param lineInfo die vom Lexer eingelesene Programmzeile als Liste von {@linkplain SVMLexer.Symbol Symbolen} mitgegeben wird
 	 * @throws SVMException falls die Liste der Symbole in {@linkplain LineInfo} nicht zur Instruktion passt

@@ -57,9 +57,8 @@ public class SectionCodeParserShortTest {
 		final ArrayList<LineInfo> lineInfoList = new ArrayList<>() {{
 			add(new LineInfo(1, "	, (", new ArrayList<Symbol>() {{ add(SYM_COMMA); add(SYM_LEFTPAR); }}));
 		}};
-		List<LineInfo> code = Stream.concat(STD_LINE_INFO.stream(), lineInfoList.stream()).toList();
-		var ex = assertThrows(SVMException.class, () -> sectionCodeParser.parse(svmProgramm, code, 0));
-		assertThat(ex.getLocalizedMessage(), containsString("Eine Codezeile muss mit einer Instruktion beginnen"));
+		var ex = assertThrows(SVMException.class, () -> sectionCodeParser.parse(svmProgramm, lineInfoList, 0));
+		assertThat(ex.getLocalizedMessage(), containsString("Es wird die Datensektion erwartet"));
 	}
 
 }

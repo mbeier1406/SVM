@@ -18,7 +18,8 @@ import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Symbol;
  * <pre><code>
  * .label1	# Optional
  * 	nop
- * </code></pre>
+ * </code></pre><p/>
+ * Syntax: {@code nop}
  * @see {@linkplain InstructionFactory#INSTRUCTIONS}
  */
 public class Nop implements InstructionParser<Short> {

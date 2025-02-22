@@ -194,7 +194,6 @@ public interface SVMLexer {
 	/** Definiert das statische Symbol für die Instruktion {@linkplain Int} */
 	public static final Symbol SYM_INT = new Symbol(Token.CODE, "int");
 
-
 	/**
 	 * Speichert die Ergebnisse der lexikalischen Analyse einer Programmzeile:
 	 * <ul>

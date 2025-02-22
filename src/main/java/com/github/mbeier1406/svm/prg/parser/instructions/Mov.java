@@ -15,24 +15,24 @@ import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Token;
 
 /**
  * Erzeugt aus einer vom {@linkplain SVMLexer} eingelesenen Codezeile
- * mit einer Instruktion {@linkplain com.github.mbeier1406.svm.instructions.Int}.
+ * mit einer Instruktion {@linkplain com.github.mbeier1406.svm.instructions.Mov}
  * die zugehörige virtuelle Instruktion. Beispiel:
  * <pre><code>
  * .label1	# Optional
- * 	int $1
+ * 	mov $1, %1
  * </code></pre><p/>
- * Syntax: {@code int <Number>}
+ * Syntax: {@code mov (<Number>|<Register>|<Reference>|<Function>) , (<Register>|<Reference>)}
  * @see {@linkplain InstructionFactory#INSTRUCTIONS}
  */
-public class Int implements InstructionParser<Short> {
+public class Mov implements InstructionParser<Short> {
 
 	/** {@inheritDoc} */
 	@Override
 	public VirtualInstruction<Short> getVirtualInstruction(final Symbol label, final LineInfo lineInfo) throws SVMException {
-		if ( Objects.requireNonNull(lineInfo, "lineInfo").symbols().size() != 2 ) // Syntax "int <Number>"
-			throw new SVMException("INT erwartet einen Parameter: "+lineInfo.symbols());
-		if ( !lineInfo.symbols().get(0).equals(SVMLexer.SYM_INT) )
-			throw new SVMException("INT erwartet Symbol "+SVMLexer.SYM_INT);
+		if ( Objects.requireNonNull(lineInfo, "lineInfo").symbols().size() != 4 ) // Syntax siehe oben
+			throw new SVMException("MOV erwartet drei Parameter: "+lineInfo.symbols());
+		if ( !lineInfo.symbols().get(0).equals(SVMLexer.SYM_MOV) )
+			throw new SVMException("MOV erwartet Symbol "+SVMLexer.SYM_MOV);
 		if ( !lineInfo.symbols().get(1).token().equals(Token.CONSTANT) )
 			throw new SVMException("INT erwartet Number-Parameter "+lineInfo.symbols().get(1));
 		if ( lineInfo.symbols().get(1).getIntValue().equals(Optional.empty()) )

@@ -6,12 +6,14 @@ import java.util.Optional;
 import com.github.mbeier1406.svm.SVMException;
 import com.github.mbeier1406.svm.instructions.InstructionDefinition;
 import com.github.mbeier1406.svm.instructions.InstructionFactory;
+import com.github.mbeier1406.svm.prg.SVMProgram;
 import com.github.mbeier1406.svm.prg.SVMProgram.Label;
 import com.github.mbeier1406.svm.prg.SVMProgram.VirtualInstruction;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.LineInfo;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Symbol;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Token;
+import com.github.mbeier1406.svm.prg.parser.Helper;
 
 /**
  * Erzeugt aus einer vom {@linkplain SVMLexer} eingelesenen Codezeile
@@ -23,12 +25,13 @@ import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Token;
  * </code></pre><p/>
  * Syntax: {@code int <Number>}
  * @see {@linkplain InstructionFactory#INSTRUCTIONS}
+ * @see com.github.mbeier1406.svm.instructions.Int
  */
 public class Int implements InstructionParser<Short> {
 
 	/** {@inheritDoc} */
 	@Override
-	public VirtualInstruction<Short> getVirtualInstruction(final Symbol label, final LineInfo lineInfo) throws SVMException {
+	public VirtualInstruction<Short> getVirtualInstruction(final Symbol label, final LineInfo lineInfo, final SVMProgram<Short> svmProgram) throws SVMException {
 		if ( Objects.requireNonNull(lineInfo, "lineInfo").symbols().size() != 2 ) // Syntax "int <Number>"
 			throw new SVMException("INT erwartet einen Parameter: "+lineInfo.symbols());
 		if ( !lineInfo.symbols().get(0).equals(SVMLexer.SYM_INT) )

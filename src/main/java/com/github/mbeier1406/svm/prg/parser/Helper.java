@@ -1,4 +1,4 @@
-package com.github.mbeier1406.svm.prg.parser.instructions;
+package com.github.mbeier1406.svm.prg.parser;
 
 import static java.util.Objects.requireNonNull;
 
@@ -27,15 +27,16 @@ public class Helper {
 	}
 
 	/**
-	 * 
-	 * @param index
-	 * @param given
-	 * @param expected
-	 * @throws SVMException
+	 * Prüft, ob ein Prameter einer Instruktion typenteschnisch in Ordnung ist, d. h.
+	 * ob der Token zulässig ist (zum Beispiel {@linkplain Token#CONSTANT} als {@linkplain Symbol}-Parameter
+	 * für das {@linkplain Symbol} mit Token {@linkplain Token#CODE} mit Value <b>int</b> für Interrupt.
+	 * @param given das im Programmtext gefunden Token
+	 * @param expected Liste der für die Instruktion möglichen Parameter
+	 * @throws SVMException wenn das Tone nicht gültig ist
 	 */
-	public static void checkParameterSymbol(int index, final Token given, final Token[] expected) throws SVMException {
+	public static void checkParameterToken(int index, final Token given, final Token[] expected) throws SVMException {
 		if ( !Arrays.asList(requireNonNull(expected, "expected")).contains(requireNonNull(given, "given")) )
-			throw new SVMException("Index "+index+": erhaltenes Token: "+given+"; erwartet: "+Arrays.toString(expected));
+			throw new SVMException("Index "+index+": Erhaltenes Token: "+given+"; erwartet: "+Arrays.toString(expected));
 	}
 
 }

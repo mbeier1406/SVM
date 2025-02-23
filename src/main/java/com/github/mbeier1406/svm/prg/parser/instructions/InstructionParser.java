@@ -3,6 +3,8 @@ package com.github.mbeier1406.svm.prg.parser.instructions;
 import com.github.mbeier1406.svm.SVM;
 import com.github.mbeier1406.svm.SVMException;
 import com.github.mbeier1406.svm.prg.SVMLoader;
+import com.github.mbeier1406.svm.prg.SVMProgram;
+import com.github.mbeier1406.svm.prg.SVMProgram.Label;
 import com.github.mbeier1406.svm.prg.SVMProgram.VirtualInstruction;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.LineInfo;
@@ -35,9 +37,10 @@ public interface InstructionParser<T> {
 	 * die {@linkplain VirtualInstruction} gerade erzeugt werden soll.
 	 * @param label Falls im Programmtext zuvor ein Label definiert wurde, muss er als Ziel für einen Sprungbefehl mitgegeben werden
 	 * @param lineInfo die vom Lexer eingelesene Programmzeile als Liste von {@linkplain SVMLexer.Symbol Symbolen} mitgegeben wird
+	 * @param svmProgram das bisher erzeugte Programm, wird für die Berechnung von Referenzen (Zugriff auf {@linkplain Label} benötigt
 	 * @throws SVMException falls die Liste der Symbole in {@linkplain LineInfo} nicht zur Instruktion passt
 	 * @return die virtuelle Instruktion
 	 */
-	public VirtualInstruction<T> getVirtualInstruction(final Symbol label, final LineInfo lineInfo) throws SVMException;
+	public VirtualInstruction<T> getVirtualInstruction(final Symbol label, final LineInfo lineInfo, final SVMProgram<T> svmProgram) throws SVMException;
 
 }

@@ -1,4 +1,4 @@
-package com.github.mbeier1406.svm.prg.parser.instructions;
+package com.github.mbeier1406.svm.prg.parser;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -11,6 +11,7 @@ import com.github.mbeier1406.svm.prg.SVMProgram.Label;
 import com.github.mbeier1406.svm.prg.SVMProgram.LabelType;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Symbol;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Token;
+import com.github.mbeier1406.svm.prg.parser.Helper;
 
 /**
  * Tests für die Klasse {@linkplain Helper}.
@@ -35,8 +36,8 @@ public class HelperTest {
 	/** Soll eine definierte Exception werfen, wenn ein übergebener Parameter nicht erwartet wird */
 	@Test
 	public void testeCheckParameterSymbol() {
-		var ex = assertThrows(SVMException.class, () -> Helper.checkParameterSymbol(1, Token.COMMA, new Token[] {Token.CONSTANT, Token.REGISTER, Token.LABEL_REF, Token.FUNCTION}));
-		assertEquals("Index 1: erhaltenes Token: COMMA; erwartet: [Lcom.github.mbeier1406.svm.prg.lexer.SVMLexer$Token;@2145433b", ex.getLocalizedMessage());
+		var ex = assertThrows(SVMException.class, () -> Helper.checkParameterToken(1, Token.COMMA, new Token[] {Token.CONSTANT, Token.REGISTER, Token.LABEL_REF, Token.FUNCTION}));
+		assertEquals("Index 1:Erhaltenes Token: COMMA; erwartet: [CONSTANT, REGISTER, LABEL_REF, FUNCTION]", ex.getLocalizedMessage());
 	}
 
 }

@@ -72,14 +72,14 @@ public class FunctionFactory {
 		 * Liefert 2 ale Länge für "XY".
 		 */
 		put("len", ( symbol, svmProgram ) -> {
-			if ( requireNonNull(symbol, "symbol").token().equals(Token.LABEL_REF) )
+			if ( ! requireNonNull(symbol, "symbol").token().equals(Token.LABEL_REF) )
 				throw new SVMException("len(): symbol "+symbol+": es wird ein Symbol mit folgendem Token erwartet: "+Token.LABEL_REF);
 			return requireNonNull(svmProgram, "svmProgram")
 				.getDataList()
 				.stream()
 				.filter(dat -> dat.label().label().equals(symbol.getStringValue().get()))
 				.findAny()
-				.orElseThrow(() -> new SVMException("len(): symbol "+symbol+" den Label gibt es nicht in svmProgram="+svmProgram))
+				.orElseThrow(() -> new SVMException("[len()] symbol="+symbol+": den Label gibt es nicht in svmProgram="+svmProgram))
 				.dataList()
 				.length;
 		});

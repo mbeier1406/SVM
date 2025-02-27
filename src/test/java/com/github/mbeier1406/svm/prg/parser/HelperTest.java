@@ -37,7 +37,7 @@ public class HelperTest {
 	@Test
 	public void testeCheckParameterSymbol() {
 		var ex = assertThrows(SVMException.class, () -> Helper.checkParameterToken(1, Token.COMMA, new Token[] {Token.CONSTANT, Token.REGISTER, Token.LABEL_REF, Token.FUNCTION}));
-		assertEquals("Index 1:Erhaltenes Token: COMMA; erwartet: [CONSTANT, REGISTER, LABEL_REF, FUNCTION]", ex.getLocalizedMessage());
+		assertEquals("Index 1: Erhaltenes Token: COMMA; erwartet: [CONSTANT, REGISTER, LABEL_REF, FUNCTION]", ex.getLocalizedMessage());
 	}
 
 }

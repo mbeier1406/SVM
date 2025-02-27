@@ -11,7 +11,6 @@ import com.github.mbeier1406.svm.prg.SVMProgram.Label;
 import com.github.mbeier1406.svm.prg.SVMProgram.LabelType;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Symbol;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Token;
-import com.github.mbeier1406.svm.prg.parser.Helper;
 
 /**
  * Tests für die Klasse {@linkplain Helper}.

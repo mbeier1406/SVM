@@ -43,7 +43,7 @@ public class Int implements InstructionParser<Short> {
 		return new VirtualInstruction<>(
 				Helper.getLabel(label),
 				new InstructionDefinition<>(InstructionFactory.INT, new byte[] {lineInfo.symbols().get(1).getIntValue().get().byteValue()}, null),
-				new Label[]{ null } /* Eine Parameter, keine Referenz, muss eine Konstante sein */);
+				new Label[]{ null } /* Ein Parameter, keine Referenz, muss eine Konstante sein */);
 	}
 
 }

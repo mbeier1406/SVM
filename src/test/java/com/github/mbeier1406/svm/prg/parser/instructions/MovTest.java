@@ -2,6 +2,7 @@ package com.github.mbeier1406.svm.prg.parser.instructions;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
@@ -44,11 +45,14 @@ public class MovTest {
 	/** Die Konstante "1" als Ergebnis der lexikalischen Analyse */
 	public SVMLexer.Symbol const1 = new SVMLexer.Symbol(Token.CONSTANT, "1");
 
+	/** Die Konstante "500" als Ergebnis der lexikalischen Analyse */
+	public SVMLexer.Symbol const500 = new SVMLexer.Symbol(Token.CONSTANT, "500");
+
 	/** Das Register "2" als Ergebnis der lexikalischen Analyse */
 	public SVMLexer.Symbol reg2 = new SVMLexer.Symbol(Token.REGISTER, "2");
 
-	/** Die Labelreferenz "label1" als Ergebnis der lexikalischen Analyse */
-	public SVMLexer.Symbol label2Ref = new SVMLexer.Symbol(Token.LABEL_REF, label1.label());
+	/** Die Labelreferenz "label2" als Ergebnis der lexikalischen Analyse */
+	public SVMLexer.Symbol label2Ref = new SVMLexer.Symbol(Token.LABEL_REF, label2.label());
 
 	/** Instruktion muss {@linkplain Mov} sein! */
 	@SuppressWarnings("serial")
@@ -67,6 +71,49 @@ public class MovTest {
 	public List<Symbol> mvLenLabel1Reg2 = new ArrayList<Symbol>() {{
 		add(SVMLexer.SYM_MOV); add(SVMLexer.SYM_FUNCTION_LEN); add(SVMLexer.SYM_LEFTPAR); add(label2Ref); add(SVMLexer.SYM_RIGHTPAR); add(SVMLexer.SYM_COMMA); add(reg2);
 	}};
+
+	/** Ungültige Typen für die Instruktion {@code mov} */
+	@SuppressWarnings("serial")
+	public List<List<Symbol>> invalidInstructionList = new ArrayList<List<Symbol>>() {{
+		/** {@code mov (, %2} */
+		add(new ArrayList<Symbol>() {{ add(SVMLexer.SYM_MOV); add(SVMLexer.SYM_LEFTPAR); add(SVMLexer.SYM_COMMA); add(reg2); }});
+		/** {@code mov $1 ( %2} */
+		add(new ArrayList<Symbol>() {{ add(SVMLexer.SYM_MOV); add(const1); add(SVMLexer.SYM_LEFTPAR); add(reg2); }});
+		/** {@code mov $1, (} */
+		add(new ArrayList<Symbol>() {{ add(SVMLexer.SYM_MOV); add(const1); add(SVMLexer.SYM_COMMA); add(SVMLexer.SYM_LEFTPAR); }});
+		/** {@code mov ,(label2), %2} */
+		add(new ArrayList<Symbol>() {{
+			add(SVMLexer.SYM_MOV); add(SVMLexer.SYM_COMMA); add(SVMLexer.SYM_LEFTPAR); add(label2Ref); add(SVMLexer.SYM_RIGHTPAR); add(SVMLexer.SYM_COMMA); add(reg2);
+		}});
+		/** {@code mov len)label2), %2} */
+		add(new ArrayList<Symbol>() {{
+			add(SVMLexer.SYM_MOV); add(SVMLexer.SYM_FUNCTION_LEN); add(SVMLexer.SYM_RIGHTPAR); add(label2Ref); add(SVMLexer.SYM_RIGHTPAR); add(SVMLexer.SYM_COMMA); add(reg2);
+		}});
+		/** {@code mov len((), %2} */
+		add(new ArrayList<Symbol>() {{
+			add(SVMLexer.SYM_MOV); add(SVMLexer.SYM_FUNCTION_LEN); add(SVMLexer.SYM_LEFTPAR); add(SVMLexer.SYM_LEFTPAR); add(SVMLexer.SYM_RIGHTPAR); add(SVMLexer.SYM_COMMA); add(reg2);
+		}});
+		/** {@code mov len(label2(, %2} */
+		add(new ArrayList<Symbol>() {{
+			add(SVMLexer.SYM_MOV); add(SVMLexer.SYM_FUNCTION_LEN); add(SVMLexer.SYM_LEFTPAR); add(label2Ref); add(SVMLexer.SYM_LEFTPAR); add(SVMLexer.SYM_COMMA); add(reg2);
+		}});
+		/** {@code mov len(label2)( %2} */
+		add(new ArrayList<Symbol>() {{
+			add(SVMLexer.SYM_MOV); add(SVMLexer.SYM_FUNCTION_LEN); add(SVMLexer.SYM_LEFTPAR); add(label2Ref); add(SVMLexer.SYM_RIGHTPAR); add(SVMLexer.SYM_LEFTPAR); add(reg2);
+		}});
+		/** {@code mov len(label2), (} */
+		add(new ArrayList<Symbol>() {{
+			add(SVMLexer.SYM_MOV); add(SVMLexer.SYM_FUNCTION_LEN); add(SVMLexer.SYM_LEFTPAR); add(label2Ref); add(SVMLexer.SYM_RIGHTPAR); add(SVMLexer.SYM_COMMA); add(SVMLexer.SYM_LEFTPAR);
+		}});
+	}};
+
+	/** Instruktion {@code mov $1, %2} */
+	@SuppressWarnings("serial")
+	public List<Symbol> movConst1Reg2 = new ArrayList<Symbol>() {{ add(SVMLexer.SYM_MOV); add(const1); add(SVMLexer.SYM_COMMA); add(reg2); }};
+
+	/** Instruktion {@code mov $500, %2} */
+	@SuppressWarnings("serial")
+	public List<Symbol> movConst500Reg2 = new ArrayList<Symbol>() {{ add(SVMLexer.SYM_MOV); add(const500); add(SVMLexer.SYM_COMMA); add(reg2); }};
 
 
 	/** SVM-Programm Datenbereich initialisieren */
@@ -96,14 +143,42 @@ public class MovTest {
 	@Test
 	public void testeFalscheZahlParameter() {
 		var ex = assertThrows(SVMException.class, () -> mov.getVirtualInstruction(null, new LineInfo(1, "", invalidInstruction), null));
-			assertThat(ex.getLocalizedMessage(), containsString("MOV erwartet drei bzw. sechs Parameter"));
+		assertThat(ex.getLocalizedMessage(), containsString("MOV erwartet drei bzw. sechs Parameter"));
 	}
 
 	/** Die Instruktion Mov wird erwartet */
 	@Test
 	public void testeFalscheInstruktion() {
 		var ex = assertThrows(SVMException.class, () -> mov.getVirtualInstruction(null, new LineInfo(1, "", notMovInstruction), null));
-			assertThat(ex.getLocalizedMessage(), containsString("MOV erwartet Symbol Symbol[token=CODE, value=mov]"));
+		assertThat(ex.getLocalizedMessage(), containsString("MOV erwartet Symbol Symbol[token=CODE, value=mov]"));
+	}
+
+	/** Ungültige Typen in der Parameterliste für die Instruktion Mov */
+	@Test
+	public void testeFalscheParameterFuerInstruktion() {
+		invalidInstructionList.stream().forEach(symbols -> {
+			var ex = assertThrows(SVMException.class, () -> mov.getVirtualInstruction(null, new LineInfo(1, "", symbols), null));
+			assertThat(ex.getLocalizedMessage(), containsString("Erhaltenes Token:"));
+		});
+	}
+
+	/** Prüft die Instruktion {@linkplain #movConst1Reg2} mit Label {@code abc} */
+	@Test
+	public void testeMovConst1Reg2() throws SVMException {
+		var i = mov.getVirtualInstruction(new Symbol(Token.LABEL, "abc"), new LineInfo(1, "", movConst1Reg2), svmProgram);
+		assertThat(i.label().label(), equalTo("abc"));
+		assertThat(i.labelList(), equalTo(new Label[] { null, null, null, null, null }));
+		assertThat(i.instruction().lenInWords(), equalTo(null));
+		assertThat(i.instruction().instruction(), equalTo(InstructionFactory.MOV));
+		assertThat(i.instruction().params(), equalTo(new byte[] { 0x21, 0, 0x1, 0, 0x2}));
+	}
+
+	/** Prüft die Instruktion {@linkplain #movConst500Reg2} ohne Label */
+	@Test
+	public void testeMovConst500Reg2() throws SVMException {
+		var i = mov.getVirtualInstruction(null, new LineInfo(1, "", movConst500Reg2), svmProgram);
+		assertThat(i.label(), equalTo(null));
+		assertThat(i.instruction().params(), equalTo(new byte[] { (byte) 0x21, (byte) 1, (byte) 0xf4, (byte) 0, (byte) 0x2}));
 	}
 
 

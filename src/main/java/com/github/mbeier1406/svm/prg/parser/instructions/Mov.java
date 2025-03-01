@@ -117,18 +117,18 @@ public class Mov implements InstructionParser<Short> {
 		int i=0; // Index in der Paramterliste des Maschinebefehls Mov
 		for ( Symbol s : new Symbol[] {symbols.get(1), symbols.get(3)} ) { // Index 1 = Quelle, 3 = Ziel
 			short wert = switch ( s.token() ) {
-				case Token.REGISTER, Token.CONSTANT -> s.getIntValue().get().byteValue();
+				case Token.REGISTER, Token.CONSTANT -> s.getIntValue().get().shortValue();
 				default -> throw new SVMException("Param ungültig Index "+i+": "+s);
 			};
-			params[i+1] = (byte) (wert >> 8);
-			params[i+2] = (byte) (wert % 8);
+			params[i+1] = (byte) ((wert >> 8) & 0xff);
+			params[i+2] = (byte) (wert & 0xff);
 			i += 2;
 		}
 
 		return new VirtualInstruction<>(
 				Helper.getLabel(label),
 				new InstructionDefinition<>(InstructionFactory.MOV, params, null),
-				new Label[]{ null } /* Eine Parameter, keine Referenz, muss eine Konstante sein */);
+				new Label[]{ null, null, null, null, null } /* Fünf Parameter, keine Referenzen, müssen Register oder Konstanten sein */);
 	}
 
 }

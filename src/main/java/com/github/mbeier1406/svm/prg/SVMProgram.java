@@ -139,7 +139,7 @@ public interface SVMProgram<T> extends Serializable {
 		}
 	}
 
-	/** Fügt ein Datenobjekt in die Liste der Objekte ein */
+	/** Fügt ein Datenobjekt in die Liste der Objekte ein; doppelte Label werdne in {@linkplain #validate()} erkannt! */
 	public void addData(final Data<T> data);
 
 	/** Liefert die Liste der Datenobjekte, diese hat keine Ordnung, da die Objekte selber Adressen über den Label erhalten */

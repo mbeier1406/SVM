@@ -48,8 +48,14 @@ public class MovTest {
 	/** Die Konstante "500" als Ergebnis der lexikalischen Analyse */
 	public SVMLexer.Symbol const500 = new SVMLexer.Symbol(Token.CONSTANT, "500");
 
+	/** Das Register "1" als Ergebnis der lexikalischen Analyse */
+	public SVMLexer.Symbol reg1 = new SVMLexer.Symbol(Token.REGISTER, "1");
+
 	/** Das Register "2" als Ergebnis der lexikalischen Analyse */
 	public SVMLexer.Symbol reg2 = new SVMLexer.Symbol(Token.REGISTER, "2");
+
+	/** Die Labelreferenz "label1" als Ergebnis der lexikalischen Analyse */
+	public SVMLexer.Symbol label1Ref = new SVMLexer.Symbol(Token.LABEL_REF, label1.label());
 
 	/** Die Labelreferenz "label2" als Ergebnis der lexikalischen Analyse */
 	public SVMLexer.Symbol label2Ref = new SVMLexer.Symbol(Token.LABEL_REF, label2.label());
@@ -114,6 +120,22 @@ public class MovTest {
 	/** Instruktion {@code mov $500, %2} */
 	@SuppressWarnings("serial")
 	public List<Symbol> movConst500Reg2 = new ArrayList<Symbol>() {{ add(SVMLexer.SYM_MOV); add(const500); add(SVMLexer.SYM_COMMA); add(reg2); }};
+
+	/** Instruktion {@code mov %1, %2} */
+	@SuppressWarnings("serial")
+	public List<Symbol> movReg1Reg2 = new ArrayList<Symbol>() {{ add(SVMLexer.SYM_MOV); add(reg1); add(SVMLexer.SYM_COMMA); add(reg2); }};
+
+	/** Instruktion {@code mov len(label1), %2} */
+	@SuppressWarnings("serial")
+	public List<Symbol> movLenLabel1Reg2 = new ArrayList<Symbol>() {{
+		add(SVMLexer.SYM_MOV); add(SVMLexer.SYM_FUNCTION_LEN); add(SVMLexer.SYM_LEFTPAR); add(label1Ref); add(SVMLexer.SYM_RIGHTPAR); add(SVMLexer.SYM_COMMA); add(reg2);
+	}};
+
+	/** Instruktion {@code mov len(label2), %1} */
+	@SuppressWarnings("serial")
+	public List<Symbol> movLenLabel2Reg1 = new ArrayList<Symbol>() {{
+		add(SVMLexer.SYM_MOV); add(SVMLexer.SYM_FUNCTION_LEN); add(SVMLexer.SYM_LEFTPAR); add(label2Ref); add(SVMLexer.SYM_RIGHTPAR); add(SVMLexer.SYM_COMMA); add(reg1);
+	}};
 
 
 	/** SVM-Programm Datenbereich initialisieren */
@@ -181,6 +203,25 @@ public class MovTest {
 		assertThat(i.instruction().params(), equalTo(new byte[] { (byte) 0x21, (byte) 1, (byte) 0xf4, (byte) 0, (byte) 0x2}));
 	}
 
+	/** Prüft die Instruktion {@linkplain #movReg1Reg2} ohne Label */
+	@Test
+	public void testeMovRegReg2() throws SVMException {
+		var i = mov.getVirtualInstruction(null, new LineInfo(1, "", movReg1Reg2), svmProgram);
+		assertThat(i.instruction().params(), equalTo(new byte[] { 0x11, 0, 0x1, 0, 0x2}));
+	}
 
+	/** Prüft die Instruktion {@linkplain #movReg1Reg2} Länge 3 (a, b, c) */
+	@Test
+	public void testeMovLenLabel1Reg2() throws SVMException {
+		var i = mov.getVirtualInstruction(null, new LineInfo(1, "", movLenLabel1Reg2), svmProgram);
+		assertThat(i.instruction().params(), equalTo(new byte[] { 0x21, 0, 0x3, 0, 0x2}));
+	}
+
+	/** Prüft die Instruktion {@linkplain #movReg2Reg1} Länge 2 (1, 2) */
+	@Test
+	public void testeMovLenLabel2Reg1() throws SVMException {
+		var i = mov.getVirtualInstruction(null, new LineInfo(1, "", movLenLabel2Reg1), svmProgram);
+		assertThat(i.instruction().params(), equalTo(new byte[] { 0x21, 0, 0x2, 0, 0x1}));
+	}
 
 }

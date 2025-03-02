@@ -97,7 +97,7 @@ public class SectionDataParserShortTest {
 	public void testeSVMProgramDataSectionNotEmpty() {
 		svmProgramm.addData(new SVMProgram.Data<Short>(new SVMProgram.Label(LabelType.DATA, "xyz"), new Short[] {1}));
 		var ex = assertThrows(SVMException.class, () -> sectionDataParser.parse(svmProgramm, STD_LINE_INFO));
-		assertThat(ex.getLocalizedMessage(), containsString("enthält bereits Daten"));
+		assertThat(ex.getLocalizedMessage(), containsString("Sektion im SVM-Programm ist nicht leer"));
 	}
 
 	/** Stellt sicher, dass das SVM-Programm mit der Datensektion beginnt */

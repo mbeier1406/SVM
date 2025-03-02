@@ -6,6 +6,7 @@ import static java.util.Objects.requireNonNull;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.function.Supplier;
 
 import com.github.mbeier1406.svm.SVM;
 import com.github.mbeier1406.svm.SVMException;
@@ -31,7 +32,7 @@ public interface SVMParser<T> {
 	public static final String ERR_INVALID_START_INDEX = "Der Startindex muss zwischen 0 und %s liegen: %d";
 
 	/** Fehlermeldung wenn das SVM-Programm bereits Daten enthält */
-	public static final String ERR_PRG_DATA_SECTION_NOT_EMPTY = "SVM-Programm enthält bereits Daten!";
+	public static final String ERR_SECTION_NOT_EMPTY = "Sektion im SVM-Programm ist nicht leer: %s";
 
 	/** Fehlermeldung wenn nicht mit der Datensektion begonnen wird */
 	public static final String ERR_DATA_SECTION_EXPECTED = "Index %d: Es wird die Datensektion erwartet: '%s': %s";
@@ -49,13 +50,18 @@ public interface SVMParser<T> {
 	 * @return Der Index ab dem nach erfolgreicher Prüfung weiter geparsed wird
 	 * @throws SVMException
 	 */
-	public static int checkSection(final SVMProgram<Short> svmProgram, final List<LineInfo> lineInfoList, int startIndex, final Symbol symbol) throws SVMException {
+	public static int checkSection(
+			// final SVMProgram<Short> svmProgram,
+			final List<LineInfo> lineInfoList,
+			int startIndex,
+			final Symbol symbol,
+			final Supplier<List<?>> sectionListGetter) throws SVMException {
 		int anzahlLines = requireNonNull(lineInfoList, "lineInfoList").size();
 		if ( anzahlLines == 0 ) return 0; // keine Daten
 		if ( startIndex < 0 || startIndex >= anzahlLines )
 			throw new SVMException(format(ERR_INVALID_START_INDEX, lineInfoList==null?"?":lineInfoList.size()-1, startIndex));
-		if ( requireNonNull(svmProgram, "svmProgram").getDataList().size() > 0 )
-			throw new SVMException(ERR_PRG_DATA_SECTION_NOT_EMPTY);
+		if ( sectionListGetter.get().size() > 0 )
+			throw new SVMException(String.format(ERR_SECTION_NOT_EMPTY, sectionListGetter));
 		var symbols = lineInfoList.get(startIndex).symbols();
 		if ( symbols.size() != 1 || !symbols.get(startIndex).equals(symbol) )
 			throw new SVMException(format(ERR_DATA_SECTION_EXPECTED, startIndex, symbol, lineInfoList.get(startIndex).line()));

@@ -43,4 +43,21 @@ public interface InstructionParser<T> {
 	 */
 	public VirtualInstruction<T> getVirtualInstruction(final Symbol label, final LineInfo lineInfo, final SVMProgram<T> svmProgram) throws SVMException;
 
+	public default InstructionParser<T> getInstructionParser(final Symbol symbol) throws SVMException {
+		if ( symbol.token() != SVMLexer.Token.CODE )
+			throw new SVMException("[getInstructionParser()] symbol="+symbol+": Token '"+SVMLexer.Token.CODE+"' erwartet!");
+		try {
+			final Class<?> instrParserClass = Class.forName(
+					"com.github.mbeier1406.svm.prg.parser.instructions." +
+					symbol.value().substring(0, 1).toUpperCase() +
+					symbol.value().substring(1).toLowerCase());
+			@SuppressWarnings("unchecked")
+			final InstructionParser<T> instrParser = (InstructionParser<T>) instrParserClass.getDeclaredConstructor().newInstance();
+			return instrParser;
+		}
+		catch ( Exception e ) {
+			throw new SVMException("[getInstructionParser()] symbol="+symbol, e);
+		}
+	}
+
 }

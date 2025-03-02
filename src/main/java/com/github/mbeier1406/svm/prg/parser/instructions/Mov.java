@@ -69,7 +69,7 @@ public class Mov implements InstructionParser<Short> {
 	 * @see com.github.mbeier1406.svm.instructions.Mov
 	 */
 	@SuppressWarnings({ "unused", "serial" })
-	private static final  Map<Token, Byte> PARAM1_MAP = new HashMap<Token, Byte>() {{
+	private static final Map<Token, Byte> PARAM1_MAP = new HashMap<Token, Byte>() {{
 		put(Token.REGISTER, (byte) 1);
 		put(Token.FUNCTION, (byte) 2); // Funktionen müssen eine Konstante Zahl als Ergebnis liefern
 		put(Token.CONSTANT, (byte) 2);

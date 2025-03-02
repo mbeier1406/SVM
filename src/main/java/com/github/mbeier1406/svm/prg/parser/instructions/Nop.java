@@ -25,7 +25,7 @@ import com.github.mbeier1406.svm.prg.parser.Helper;
  * @see {@linkplain InstructionFactory#INSTRUCTIONS}
  * @see com.github.mbeier1406.svm.instructions.Nop
  */
-public class Nop implements InstructionParser<Short> {
+public class Nop extends InstructionParserBase<Short> implements InstructionParser<Short> {
 
 	/** {@inheritDoc} */
 	@Override

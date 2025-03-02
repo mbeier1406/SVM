@@ -27,7 +27,7 @@ import com.github.mbeier1406.svm.prg.parser.Helper;
  * @see {@linkplain InstructionFactory#INSTRUCTIONS}
  * @see com.github.mbeier1406.svm.instructions.Int
  */
-public class Int implements InstructionParser<Short> {
+public class Int extends InstructionParserBase<Short> implements InstructionParser<Short> {
 
 	/** {@inheritDoc} */
 	@Override

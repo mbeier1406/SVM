@@ -42,7 +42,7 @@ import com.github.mbeier1406.svm.prg.parser.functions.FunctionFactory;
  * @see {@linkplain InstructionFactory#INSTRUCTIONS}
  * @see com.github.mbeier1406.svm.instructions.Mov
  */
-public class Mov implements InstructionParser<Short> {
+public class Mov extends InstructionParserBase<Short> implements InstructionParser<Short> {
 
 	/** Liste der <u>drei</u> Token/Typen, die als jeweiliger Parameter zulässig sind bei Syntax 1 (ohne Funktion) */
 	public static final Token[][] PARAMS4 = new Token[][] {

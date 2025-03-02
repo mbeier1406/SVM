@@ -56,7 +56,7 @@ public interface InstructionParser<T> {
 			return instrParser;
 		}
 		catch ( Exception e ) {
-			throw new SVMException("[getInstructionParser()] symbol="+symbol, e);
+			throw new SVMException("[getInstructionParser()] Keine SVM-Instruktion: symbol="+symbol, e);
 		}
 	}
 

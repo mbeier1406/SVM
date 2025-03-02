@@ -1,10 +1,13 @@
 package com.github.mbeier1406.svm.prg.parser;
 
 import static com.github.mbeier1406.svm.prg.lexer.SVMLexer.SYM_COMMA;
+import static com.github.mbeier1406.svm.prg.lexer.SVMLexer.SYM_INT;
 import static com.github.mbeier1406.svm.prg.lexer.SVMLexer.SYM_LEFTPAR;
+import static com.github.mbeier1406.svm.prg.lexer.SVMLexer.SYM_TOKEN_CODE;
 import static com.github.mbeier1406.svm.prg.parser.SectionDataParserShortTest.STD_LINE_INFO;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
@@ -14,10 +17,13 @@ import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 
 import com.github.mbeier1406.svm.SVMException;
+import com.github.mbeier1406.svm.instructions.InstructionFactory;
 import com.github.mbeier1406.svm.prg.SVMProgram;
+import com.github.mbeier1406.svm.prg.SVMProgram.Label;
 import com.github.mbeier1406.svm.prg.SVMProgramShort;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.LineInfo;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Symbol;
+import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Token;
 
 /**
  * Tests für die Klasse {@linkplain SectionCodeParserShort}.
@@ -57,6 +63,25 @@ public class SectionCodeParserShortTest {
 		}};
 		var ex = assertThrows(SVMException.class, () -> sectionCodeParser.parse(svmProgramm, lineInfoList, 0));
 		assertThat(ex.getLocalizedMessage(), containsString("Es wird die Datensektion erwartet"));
+	}
+
+	/** Erzeugt und überprüft den generierten Code für ein einzeiliges Programm {@code int $1} */
+	@Test
+	public void testeProgramm() throws SVMException {
+		@SuppressWarnings("serial")
+		final ArrayList<LineInfo> lineInfoList = new ArrayList<>() {{
+			add(new LineInfo(1, "	&code", new ArrayList<Symbol>() {{ add(SYM_TOKEN_CODE); }}));
+			add(new LineInfo(2, "	int $1", new ArrayList<Symbol>() {{ add(SYM_INT); add(new Symbol(Token.CONSTANT, "1")); }}));
+		}};
+		sectionCodeParser.parse(svmProgramm, lineInfoList, 0);
+		assertThat(svmProgramm.getInstructionList().size(), equalTo(1));
+		var virtualInstruction = svmProgramm.getInstructionList().get(0);
+		assertThat(virtualInstruction.label(), equalTo(null));
+		assertThat(virtualInstruction.labelList(), equalTo(new Label[] {null}));
+		var instruction = virtualInstruction.instruction();
+		assertThat(instruction.lenInWords(), equalTo(null));
+		assertThat(instruction.instruction(), equalTo(InstructionFactory.INT));
+		assertThat(instruction.params(), equalTo(new byte[] { 0x1 }));
 	}
 
 }

@@ -137,6 +137,12 @@ public class MovTest {
 		add(SVMLexer.SYM_MOV); add(SVMLexer.SYM_FUNCTION_LEN); add(SVMLexer.SYM_LEFTPAR); add(label2Ref); add(SVMLexer.SYM_RIGHTPAR); add(SVMLexer.SYM_COMMA); add(reg1);
 	}};
 
+	/** Instruktion {@code mov (label2), %2} */
+	@SuppressWarnings("serial")
+	public List<Symbol> mvRefLabel2Reg2 = new ArrayList<Symbol>() {{
+		add(SVMLexer.SYM_MOV); add(SVMLexer.SYM_LEFTPAR); add(label2Ref); add(SVMLexer.SYM_RIGHTPAR); add(SVMLexer.SYM_COMMA); add(reg2);
+	}};
+
 
 	/** SVM-Programm Datenbereich initialisieren */
 	@BeforeAll
@@ -165,7 +171,7 @@ public class MovTest {
 	@Test
 	public void testeFalscheZahlParameter() {
 		var ex = assertThrows(SVMException.class, () -> mov.getVirtualInstruction(null, new LineInfo(1, "", invalidInstruction), null));
-		assertThat(ex.getLocalizedMessage(), containsString("MOV erwartet drei bzw. sechs Parameter"));
+		assertThat(ex.getLocalizedMessage(), containsString("MOV erwartet drei, fünf bzw. sechs Parameter"));
 	}
 
 	/** Die Instruktion Mov wird erwartet */
@@ -222,6 +228,17 @@ public class MovTest {
 	public void testeMovLenLabel2Reg1() throws SVMException {
 		var i = mov.getVirtualInstruction(null, new LineInfo(1, "", movLenLabel2Reg1), svmProgram);
 		assertThat(i.instruction().params(), equalTo(new byte[] { 0x21, 0, 0x2, 0, 0x1}));
+	}
+
+	/** Prüft die Instruktion {@linkplain #mvRefLabel2Reg2} Labelref "label2" */
+	@Test
+	public void testeMvLenLabel1Reg2() throws SVMException {
+		var i = mov.getVirtualInstruction(new Symbol(Token.LABEL, "abc"), new LineInfo(1, "", mvRefLabel2Reg2), svmProgram);
+		assertThat(i.label().label(), equalTo("abc"));
+		assertThat(i.labelList(), equalTo(new Label[] { null, new Label(LabelType.DATA, label2.label()), null, null, null }));
+		assertThat(i.instruction().lenInWords(), equalTo(null));
+		assertThat(i.instruction().instruction(), equalTo(InstructionFactory.MOV));
+		assertThat(i.instruction().params(), equalTo(new byte[] { 0x21, 0, 0, 0, 0x2})); // mv $0 (wird ersetzt duech Labelref) , %2
 	}
 
 }

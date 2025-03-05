@@ -59,7 +59,7 @@ public class SVMProgramShort implements SVMProgram<Short> {
 
 	/** {@inheritDoc} */
 	@Override
-	public void validate() throws SVMException {
+	public SVMProgram<Short> validate() throws SVMException {
 		try {
 			LOGGER.debug("SVMProgramm={}", this);
 			final List<Label> labelListDaten = new ArrayList<>();
@@ -126,6 +126,7 @@ public class SVMProgramShort implements SVMProgram<Short> {
 			if ( !lastInstr.instruction().instruction().equals(INSTRUCTIONS.get(Int.CODE)) )
 				throw new SVMException("[Instr] INT(1) wird als letzte Instruktion erwartet: "+lastInstr.instruction().instruction());
 
+			return this;
 		}
 		catch ( Exception e ) {
 			LOGGER.error("{}", this, e);

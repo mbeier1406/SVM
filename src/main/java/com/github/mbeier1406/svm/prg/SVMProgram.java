@@ -147,9 +147,10 @@ public interface SVMProgram<T> extends Serializable {
 
 	/**
 	 * Stellt sicher, dass das Programm in sich konsitent ist (z. B. die Parameterlisten in
-	 * {@linkplain VirtualInstruction} gleich lang sind usw.) und 
+	 * {@linkplain VirtualInstruction} gleich lang sind usw.).
+	 * @return das SVMProgram
 	 * @throws SVMException bei fehlerhaften Programmdefinitionen mit einer entsprechenden Fehlermeldung
 	 */
-	public void validate() throws SVMException;
+	public SVMProgram<T> validate() throws SVMException;
 
 }

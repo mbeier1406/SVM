@@ -1,6 +1,4 @@
 package com.github.mbeier1406.svm.prg.parser;
-
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.github.mbeier1406.svm.SVMException;
@@ -14,7 +12,8 @@ public class SVMParserShortTest {
 	/** Das zu testende Objekt */
 	public SVMParser<Short>  svmParser = new SVMParserShort();
 
-	@Disabled
+	/** Liest ein SVM Beispiel-Programm ein (Lexer/Parser) und validiert es */
+	// @Disabled
 	@Test
 	public void testeProgrammEinlesen() throws SVMException {
 		SVMProgram<Short> svmProgram = svmParser.parse("src/test/resources/com/github/mbeier1406/svm/prg/example.svm");

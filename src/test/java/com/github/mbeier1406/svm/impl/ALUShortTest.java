@@ -4,17 +4,22 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.config.Configurator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.github.mbeier1406.svm.ALU;
 import com.github.mbeier1406.svm.SVMException;
 import com.github.mbeier1406.svm.instructions.InstructionFactory;
 import com.github.mbeier1406.svm.prg.SVMLoader;
 import com.github.mbeier1406.svm.prg.SVMLoaderShort;
 import com.github.mbeier1406.svm.prg.SVMLoaderShortTest;
 import com.github.mbeier1406.svm.prg.SVMProgram;
+import com.github.mbeier1406.svm.prg.parser.SVMParser;
+import com.github.mbeier1406.svm.prg.parser.SVMParserShort;
 import com.github.mbeier1406.svm.syscalls.SyscallFactory;
 
 /**
@@ -23,6 +28,9 @@ import com.github.mbeier1406.svm.syscalls.SyscallFactory;
 public class ALUShortTest {
 
 	public static final Logger LOGGER = LogManager.getLogger(ALUShortTest.class);
+
+	/** Ein Beispielprogramm, das in der {@linkplain #alu} ausgeführt werden kann ist {@value} */
+	public static final String SVM_BEISPIEL_PROGRAMM = "src/test/resources/com/github/mbeier1406/svm/prg/example.svm";
 
 	public MEMShort mem;
 	public ALUShort alu;
@@ -101,6 +109,29 @@ public class ALUShortTest {
 		int exitCode = this.alu.start();
 		LOGGER.info("exitCode={}", exitCode);
 		assertThat(exitCode, equalTo(1));
+	}
+
+	/**
+	 * Liest das SVM-Programm {@value #SVM_BEISPIEL_PROGRAMM} (externe Darstellung)
+	 * mittels {@linkplain SVMParser} in die interne Darstellung ({@linkplain SVMProgram}
+	 * ein, validiert es mittels {@linkplain SVMProgram#validate()}, lädt es über
+	 * {@linkplain SVMLoader#load(com.github.mbeier1406.svm.MEM, SVMProgram)} in den
+	 * Speicher {@linkplain MEMShort} ein und führt es über {@linkplain ALU#start()} aus.
+	 */
+	@Test
+	public void testeProgrammAusExternerDarstellungAusfuehren() throws SVMException {
+		SVMProgram<Short> svmProgram = new SVMParserShort()
+				.parse(SVM_BEISPIEL_PROGRAMM)
+				.validate();
+		LOGGER.info("svmProgram={}", svmProgram);
+		new SVMLoaderShort().load(this.mem, svmProgram);
+		LOGGER.info("aluShort={}", alu);
+		Configurator.setRootLevel(Level.ERROR);
+		int exitCode = this.alu.start(); // Soll XY ausgeben
+		System.out.println();
+		Configurator.setRootLevel(Level.INFO);
+		LOGGER.info("exitCode={}", exitCode);
+		assertThat(exitCode, equalTo(55));
 	}
 
 }

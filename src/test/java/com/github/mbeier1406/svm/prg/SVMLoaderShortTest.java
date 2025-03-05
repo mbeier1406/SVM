@@ -117,7 +117,7 @@ public class SVMLoaderShortTest {
 		prg.addInstruction(NOP0_OHNE_LABEL);		// NOP
 		prg.addInstruction(MOV2_REG0_OHNE_LABEL);	// MOV $2 REG(0) 			-- Funktion IO
 		prg.addInstruction(MOV1_REG1_OHNE_LABEL);	// MOV $1 REG(1)			-- stdout
-		prg.addInstruction(MOVX_REG2_LABEL2);		// MOV .text2 REG(2)		-- Startadresse
+		prg.addInstruction(MOVX_REG2_LABEL2);		// MOV (.text2) REG(2)		-- Startadresse
 		prg.addInstruction(MOVL_REG3_OHNE_LABEL);	// MOV len(.text2) REG(3)	-- Länge Ausgabestring
 		prg.addInstruction(INT1_OHNE_LABEL);		// INT(1)					-- Int für Ausgabe
 		prg.addInstruction(MOV1_REG0_OHNE_LABEL);	// MOV $1 REG(0) 			-- Funktion EXIT
@@ -171,7 +171,7 @@ public class SVMLoaderShortTest {
 		assertThat(instrDef.params(), equalTo(MOV1_REG1.params()));
 		addr -= movLenInWords;
 
-		instrDef = instructionReader.getInstruction(mem, addr); // An dieser Stelel ist die Adresse des Labels text2 in der Parameterliste 
+		instrDef = instructionReader.getInstruction(mem, addr); // An dieser Stelle ist die Adresse des Labels text2 in der Parameterliste 
 		assertThat(instrDef.instruction(), equalTo(MOVX_REG2.instruction())); // MOVX_REG2.params() bereits eingetragen und wird auch aus dem Speicher gelesen
 		assertThat(instrDef.params(), equalTo(MOVX_REG2.params()));
 		addr -= movLenInWords;

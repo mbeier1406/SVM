@@ -61,7 +61,7 @@ public class SVMParserShort implements SVMParser<Short> {
 		int indexNextSection = sectionDataParser.parse(svmProgram, lineInfoList);
 		LOGGER.trace("Ende parsen Datensektion (indexNextSection={}).\nParse die Codesektion...", indexNextSection);
 		indexNextSection = sectionCodeParser.parse(svmProgram, lineInfoList.subList(indexNextSection, lineInfoList.size()));
-		LOGGER.trace("Ende parsen Datensektion (indexNextSection={}).", indexNextSection);
+		LOGGER.trace("Ende parsen Codesektion (indexNextSection={}).", indexNextSection);
 		return svmProgram;
 	}
 

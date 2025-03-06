@@ -59,6 +59,24 @@ public interface SVMLexer {
 	};
 
 	/**
+	 * Definiert einen Service, der einen mit {@linkplain TokenPart#STRING} gefundenen
+	 * String dekodiert. Dies bedeutet zum Beispiel, dass aus einem '{@code \n}' ein
+	 * <i>Line Feed</i> wird, aus einem '{@code \t}' ein <i>Tabulator</i> usw.
+	 */
+	@FunctionalInterface
+	public static interface StringDecoder {
+		/**
+		 * Dekodiert einen gegebenen String.
+		 * @param str der String
+		 * @return der dekodierte String
+		 */
+		public String decode(String str);
+	}
+
+	/** Für Standard Strings reicht diese dekotierung */
+	public static final StringDecoder STD_STR_DECODER = str -> str.replaceAll("\\\\n", "\n").replaceAll("\\\\r", "\r").replaceAll("\\\\t", "\t");
+
+	/**
 	 * Definiert die Signatur der Methode zur Bearbeitung/zum Scannen eines {@linkplain SVMLexer.TokenPart}.
 	 * @see {@linkplain SVMLexer.TokenPart#getTokenPartLexer()}.
 	 */

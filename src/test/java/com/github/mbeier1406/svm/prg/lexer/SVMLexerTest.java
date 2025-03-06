@@ -2,6 +2,7 @@ package com.github.mbeier1406.svm.prg.lexer;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -9,10 +10,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Token;
 
@@ -158,6 +163,24 @@ public class SVMLexerTest {
 				() -> assertEquals(lineInfo.symbols(), symbols),
 				() -> assertEquals(lineInfo.line(), "line 5"),
 				() -> assertEquals(lineInfo.lineNumber(), 5));
+	}
+
+	/** Stellt sicher, dass die String-Dekodierung korrekt funktioniert */
+	@MethodSource(value="getTestParameterStringDecodierer")
+	@ParameterizedTest
+	public void testeStringDecodierer(String input, String expected) {
+		assertThat(SVMLexer.STD_STR_DECODER.decode(input), equalTo(expected));
+	}
+
+	/** Liefert die Testfälle für {@linkplain #getTestParameterStringDecodierer()} */
+	public static Stream<Arguments> getTestParameterStringDecodierer() {
+		return Stream.of(
+				Arguments.of("\\tdefg", "\tdefg"),
+				Arguments.of("abc\\rdefg", "abc\rdefg"),
+				Arguments.of("abc\\n", "abc\n"),
+				Arguments.of("abc", "abc"),
+				Arguments.of("", "")
+			);
 	}
 
 }

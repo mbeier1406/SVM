@@ -44,7 +44,9 @@ public class StringLexer {
 						.map(i -> i.toString().toLowerCase())
 						.filter(name -> name.equals(tokenValue))
 						.findAny();
-				symbolList.add(new SVMLexer.Symbol(cmd.isPresent()?SVMLexer.Token.CODE:SVMLexer.Token.DATA, tokenValue));
+				symbolList.add(new SVMLexer.Symbol(
+						cmd.isPresent()?SVMLexer.Token.CODE:SVMLexer.Token.DATA,
+						SVMLexer.STD_STR_DECODER.decode(tokenValue))); // An dieser Stelle '\n' etc. ersetzen
 			}
 			else
 				throw new SVMException("Nach TokenPart '"+lastTokenType+"' darf kein String folgen: "+tokenValue);

@@ -3,7 +3,7 @@
 
 	&data
 .text1
-	abc\n
+	abc\txxx\n
 .text2
 	XY
 
@@ -11,8 +11,8 @@
 	nop
 	mov $2, %0         # Funktion IO
 	mov $1, %1         # stdout
-	mov (text2), %2    # Startadresse
-	mov len(text2), %3 # Länge der Ausgabe
+	mov (text1), %2    # Startadresse
+	mov len(text1), %3 # Länge der Ausgabe
 	int $1             # syscall
 	nop
 	mov $1, %0         # exit

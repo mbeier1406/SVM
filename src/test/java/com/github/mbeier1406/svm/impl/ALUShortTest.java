@@ -127,8 +127,7 @@ public class ALUShortTest {
 		new SVMLoaderShort().load(this.mem, svmProgram);
 		LOGGER.info("aluShort={}", alu);
 		Configurator.setRootLevel(Level.ERROR);
-		int exitCode = this.alu.start(); // Soll XY ausgeben
-		System.out.println();
+		int exitCode = this.alu.start(); // Soll 'abc' + tab + 'xxx' + line feed ausgeben
 		Configurator.setRootLevel(Level.INFO);
 		LOGGER.info("exitCode={}", exitCode);
 		assertThat(exitCode, equalTo(55));

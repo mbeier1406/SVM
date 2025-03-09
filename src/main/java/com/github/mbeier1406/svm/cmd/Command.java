@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Zeichnet die Klassen aus, die ein Kommandor der SVM-Cli bilden.
+ * Zeichnet die Klassen aus, die ein Kommandor der {@linkplain SVMCli} bilden.
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

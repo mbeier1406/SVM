@@ -17,7 +17,7 @@ public class InstructionFactoryTest {
 	/** Stellt sicher, dass die Factory alle definierten {@linkplain InstructionInterface Maschinenbefehle} lädt */
 	@SuppressWarnings("unchecked")
 	@Test
-	public void pruefeSyscalls() {
+	public void pruefeInstructionLaden() {
 		LOGGER.info("Instructions: {}", InstructionFactory.INSTRUCTIONS);
 		assertThat(InstructionFactory.INSTRUCTIONS.values(), contains(new Nop(), new Int(), new Mov()));
 	}

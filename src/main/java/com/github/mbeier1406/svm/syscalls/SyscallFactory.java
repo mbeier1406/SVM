@@ -2,20 +2,20 @@ package com.github.mbeier1406.svm.syscalls;
 
 import static java.util.Objects.requireNonNull;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-
-import org.reflections.Reflections;
 
 import com.github.mbeier1406.svm.ALU;
+import com.github.mbeier1406.svm.GenericFactory;
 import com.github.mbeier1406.svm.MEM;
 import com.github.mbeier1406.svm.instructions.InstructionInterface;
 import com.github.mbeier1406.svm.instructions.Int;
 import com.github.mbeier1406.svm.instructions.IntInterface;
 
 public class SyscallFactory {
+
+	/** Das Java-Package, in dem sich alle Syscalls befinden ist {@value} */
+	public static final String PACKAGE = SyscallFactory.class.getPackageName();
 
 	/**
 	 * Diese Map enthält alle {@linkplain SyscallInterface Syscalls} mit derem Code als Wort
@@ -31,24 +31,7 @@ public class SyscallFactory {
 
 	/** Lädt alle Systemaufrufe für {@linkplain com.github.mbeier1406.Int.instructions.Syscall} */
 	public static Map<Byte, SyscallInterface<Short>> getSyscalls() {
-		try {
-			Set<Class<?>> syscallClasses = new Reflections("com.github.mbeier1406.svm.syscalls").getTypesAnnotatedWith(Syscall.class);
-			final Map<Byte, SyscallInterface<Short>> syscalls = new HashMap<>();
-			syscallClasses.forEach(syscallClass -> {
-				try {
-					@SuppressWarnings("unchecked")
-					SyscallInterface<Short> syscall = (SyscallInterface<Short>) syscallClass.getConstructor().newInstance();
-					syscalls.put(syscallClass.getAnnotation(Syscall.class).code(), syscall);
-				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-						| InvocationTargetException | NoSuchMethodException | SecurityException e) {
-					throw new RuntimeException("syscallClass="+syscallClass, e);
-				}
-			});
-			return syscalls;
-		}
-		catch ( Exception e ) {
-			throw new RuntimeException("Syscalls können nicht mehr Refelction ermittelt werden!", e);
-		}
+		return new GenericFactory<Byte, SyscallInterface<Short>>().getItems(SyscallFactory.PACKAGE, Syscall.class, "code");
 	}
 
 	/** Ermöglicht den Zugriff auf den Hauptspeicher für die Systemaufrufe */

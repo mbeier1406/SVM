@@ -30,7 +30,7 @@ public class SVMLexerImpl implements SVMLexer {
 		try ( @SuppressWarnings("unused") CloseableThreadContext.Instance ctx = put("file", requireNonNull(file.getAbsolutePath(), "file")).put("encoding", encoding.toString()) ) {
 			return scan(new String (Files.readAllBytes(Paths.get(file.getAbsolutePath())), requireNonNull(encoding,"encoding")));
 		} catch (IOException e) {
-			LOGGER.error("file={}", file, e);
+			LOGGER.warn("file={}", file, e);
 			throw new SVMException("File "+file+"; Encoding "+encoding, e);
 		}
 	}

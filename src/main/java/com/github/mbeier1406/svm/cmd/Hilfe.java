@@ -30,6 +30,7 @@ public class Hilfe extends CommandBase implements CommandInterface {
 		final String commando = sb.toString();
 		CommandFactory.COMMANDS.entrySet().stream().forEach(cmd -> {
 			if ( (!commando.isBlank() && commando.equals(cmd.getKey())) || commando.isBlank() ) {
+				if ( !s.isEmpty() ) s.append("\n");
 				s.append(cmd.getKey());
 				s.append(" - ");
 				s.append(cmd.getValue().getClass().getAnnotation(Help.class).shortHelp());
@@ -39,6 +40,7 @@ public class Hilfe extends CommandBase implements CommandInterface {
 				}
 			}
 		});
+		if ( s.isEmpty() ) s.append("Unbekannt: "+commando);
 		return s.toString();
 	}
 

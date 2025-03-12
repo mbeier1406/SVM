@@ -43,7 +43,7 @@ public class SVMCliImpl implements SVMCli {
 					}
 					ausgabe = cmd.exec(s, this.svmProgram);
 					if ( s != null && !ausgabe.isBlank() && !ausgabe.equals(Ende.ENDE) )
-						out.println(ausgabe);
+						out.print(ausgabe+"\n");
 				}
 			} catch ( Exception e ) {
 				out.println("Fehler: " + e.getLocalizedMessage());

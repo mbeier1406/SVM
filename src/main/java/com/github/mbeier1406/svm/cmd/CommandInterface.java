@@ -3,6 +3,7 @@ package com.github.mbeier1406.svm.cmd;
 import java.util.Scanner;
 
 import com.github.mbeier1406.svm.SVM;
+import com.github.mbeier1406.svm.prg.SVMProgram;
 
 /**
  * Definiert die Kommandos, die in der {@linkplain SVM}-Cli eingegeben werdne können.
@@ -14,6 +15,6 @@ public interface CommandInterface {
 	public static final String PACKAGE = CommandInterface.class.getPackageName();
 
 	/** Führt das in der CLI eingegebene Kommando aus */
-	public String exec(final Scanner scanner);
+	public <T> String exec(final Scanner scanner, final SVMProgram<T> svmProgram);
 
 }

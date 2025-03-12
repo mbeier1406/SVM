@@ -9,16 +9,20 @@ import java.util.Scanner;
 
 import com.github.mbeier1406.svm.SVM;
 import com.github.mbeier1406.svm.SVMException;
+import com.github.mbeier1406.svm.prg.SVMProgram;
 
 /**
  * Steuert die {@linkplain SVM} über eingegebene Kommandos.
  */
 public class SVMCliImpl implements SVMCli {
 
-	/** Initialisierung {@linkplain #svmCommands} */
-	public SVMCliImpl() {
-	}
+	/** Die interne Darstellung des SVM-Programms, das ausgeführt werden soll */
+	private final SVMProgram<Short> svmProgram;
 
+	public SVMCliImpl(SVMProgram<Short> svmProgram) {
+		this.svmProgram = svmProgram;
+	}
+	
 	/** {@inheritDoc} */
 	@Override
 	public void cli(InputStream is, OutputStream os) {
@@ -28,7 +32,7 @@ public class SVMCliImpl implements SVMCli {
 		String ausgabe = "";
 		while ( !ausgabe.equals(Ende.ENDE) ) {
 			try {
-				out.print("--> ");
+				out.print("--> "); out.flush();
 				String str = in.readLine();
 				try ( Scanner s = new Scanner(str) ) {
 					String cmdStr = s.next();
@@ -37,15 +41,15 @@ public class SVMCliImpl implements SVMCli {
 						s.close();
 						throw new SVMException("Kommando '"+cmdStr+"' existiert nicht: "+str);
 					}
-					ausgabe = cmd.exec(s);
-					if ( s != null && !ausgabe.isBlank() )
+					ausgabe = cmd.exec(s, this.svmProgram);
+					if ( s != null && !ausgabe.isBlank() && !ausgabe.equals(Ende.ENDE) )
 						out.println(ausgabe);
 				}
 			} catch ( Exception e ) {
 				out.println("Fehler: " + e.getLocalizedMessage());
 			}
 		}
-		out.println("SVM Cli wird beendet.");
+		out.println("SVM Cli wird beendet."); out.flush();
 	}
 
 }

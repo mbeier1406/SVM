@@ -3,6 +3,8 @@ package com.github.mbeier1406.svm.cmd;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
+import com.github.mbeier1406.svm.prg.SVMProgram;
+
 /**
  * Gibt eine Hilfe zu allen verfügbaren {@linkplain Command SVM-Kommandos} aus.
  */
@@ -15,7 +17,7 @@ public class Hilfe extends CommandBase implements CommandInterface {
 
 	/** {@inheritDoc} */
 	@Override
-	public String exec(final Scanner scanner) {
+	public <T> String exec(final Scanner scanner, final SVMProgram<T> svmProgram) {
 		final StringBuffer s = new StringBuffer("");
 		if ( !scanner.hasNext() )
 			s.append("Folgende Kommandos sind verfügbar:\n");
@@ -31,9 +33,8 @@ public class Hilfe extends CommandBase implements CommandInterface {
 				s.append(cmd.getKey());
 				s.append(" - ");
 				s.append(cmd.getValue().getClass().getAnnotation(Help.class).shortHelp());
-				s.append("\n");
 				if ( !commando.isBlank() ) {
-					s.append("\t");
+					s.append("\n\t");
 					s.append(cmd.getValue().getClass().getAnnotation(Help.class).longHelp());
 				}
 			}

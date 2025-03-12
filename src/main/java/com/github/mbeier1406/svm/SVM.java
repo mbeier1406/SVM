@@ -1,10 +1,12 @@
 package com.github.mbeier1406.svm;
 
-import java.net.URL;
+import com.github.mbeier1406.svm.cmd.CommandInterface;
+import com.github.mbeier1406.svm.cmd.SVMCli;
+import com.github.mbeier1406.svm.impl.SVMShort;
 
 /**
  * Definiert die Schnittstelle zur <i>Simple Virtual Machine</i> (SVM).
- * @see ALU ALU - die Arithmetisch-Logische Einheit (CPU) der Maschine
+ * @see SVMShort
  */
 public interface SVM {
 
@@ -16,11 +18,9 @@ public interface SVM {
 
 
 	/**
-	 * Führt ein Programm in der SVM aus.
-	 * @param programm Lädt das auszuführend programm von dieser Adresse
-	 * @return der Return-Codes des ausgeführten Programms
-	 * @throws SVMException weist auf einen technischen fehler bei der Ausführung eines Programms hin
+	 * Startet die {@linkplain SVMCli CLI} der SVM zur Eingabe von {@linkplain CommandInterface Kommandos}.
+	 * @throws SVMException weist auf einen technischen Fehler bei der Ausführung von Kommandos hin
 	 */
-	public int run(URL programm) throws SVMException;
+	public void start() throws SVMException;
 
 }

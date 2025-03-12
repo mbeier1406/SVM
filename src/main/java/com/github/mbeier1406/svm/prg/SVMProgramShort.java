@@ -135,6 +135,14 @@ public class SVMProgramShort implements SVMProgram<Short> {
 		}
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public SVMProgram<Short> reset() {
+		this.dataList = new ArrayList<>();
+		this.instructionList = new ArrayList<>();
+		return this;
+	}
+
 	@Override
 	public String toString() {
 		return "SVMProgramShort [instructionList=" + instructionList.size() + ", dataList=" + dataList.size() + "]";

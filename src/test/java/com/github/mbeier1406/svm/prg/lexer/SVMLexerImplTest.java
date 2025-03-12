@@ -95,17 +95,17 @@ public class SVMLexerImplTest {
 		assertThat(lineInfo.size(), equalTo(16));
 		assertThat(lineInfo.get(0), equalTo(new LineInfo(4, "	&data", new ArrayList<Symbol>() {{add(SYM_TOKEN_DATA);}})));
 		assertThat(lineInfo.get(1), equalTo(new LineInfo(5, ".text1", new ArrayList<Symbol>() {{add(new Symbol(Token.LABEL, "text1"));}})));
-		assertThat(lineInfo.get(2), equalTo(new LineInfo(6, "	abc\\n", new ArrayList<Symbol>() {{add(new Symbol(Token.DATA, "abc\\n"));}})));
+		assertThat(lineInfo.get(2), equalTo(new LineInfo(6, "	abc\\txxx\\n", new ArrayList<Symbol>() {{add(new Symbol(Token.DATA, "abc\txxx\n"));}})));
 		assertThat(lineInfo.get(6), equalTo(new LineInfo(11, "	nop", new ArrayList<Symbol>() {{add(new Symbol(Token.CODE, "nop"));}})));
 		assertThat(lineInfo.get(7), equalTo(new LineInfo(12, "	mov $2, %0         # Funktion IO", new ArrayList<Symbol>() {{
 			add(new Symbol(Token.CODE, "mov"));add(new Symbol(Token.CONSTANT, "2"));add(SYM_COMMA);add(new Symbol(Token.REGISTER, "0"));
 		}})));
-		assertThat(lineInfo.get(9), equalTo(new LineInfo(14, "	mov (text2), %2    # Startadresse", new ArrayList<Symbol>() {{
-			add(new Symbol(Token.CODE, "mov"));add(SYM_LEFTPAR);add(new Symbol(Token.LABEL_REF, "text2"));add(SYM_RIGHTPAR);
+		assertThat(lineInfo.get(9), equalTo(new LineInfo(14, "	mov (text1), %2    # Startadresse", new ArrayList<Symbol>() {{
+			add(new Symbol(Token.CODE, "mov"));add(SYM_LEFTPAR);add(new Symbol(Token.LABEL_REF, "text1"));add(SYM_RIGHTPAR);
 			add(SYM_COMMA);add(new Symbol(Token.REGISTER, "2"));
 		}})));
-		assertThat(lineInfo.get(10), equalTo(new LineInfo(15, "	mov len(text2), %3 # Länge der Ausgabe", new ArrayList<Symbol>() {{
-			add(new Symbol(Token.CODE, "mov"));add(new Symbol(Token.FUNCTION, "len"));add(SYM_LEFTPAR);add(new Symbol(Token.LABEL_REF, "text2"));
+		assertThat(lineInfo.get(10), equalTo(new LineInfo(15, "	mov len(text1), %3 # Länge der Ausgabe", new ArrayList<Symbol>() {{
+			add(new Symbol(Token.CODE, "mov"));add(new Symbol(Token.FUNCTION, "len"));add(SYM_LEFTPAR);add(new Symbol(Token.LABEL_REF, "text1"));
 			add(SYM_RIGHTPAR);add(SYM_COMMA);add(new Symbol(Token.REGISTER, "3"));
 		}})));
 		assertThat(lineInfo.get(15), equalTo(new LineInfo(20, "	int $1             # syscall", new ArrayList<Symbol>() {{

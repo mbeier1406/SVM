@@ -153,4 +153,7 @@ public interface SVMProgram<T> extends Serializable {
 	 */
 	public SVMProgram<T> validate() throws SVMException;
 
+	/** Leert die internen Datenstrukturen */
+	public SVMProgram<T> reset();
+
 }

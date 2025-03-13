@@ -9,6 +9,8 @@ import com.github.mbeier1406.svm.cmd.Command;
 import com.github.mbeier1406.svm.cmd.CommandInterface;
 import com.github.mbeier1406.svm.cmd.Ende;
 import com.github.mbeier1406.svm.cmd.Hilfe;
+import com.github.mbeier1406.svm.cmd.LogLevel;
+import com.github.mbeier1406.svm.cmd.Programm;
 import com.github.mbeier1406.svm.instructions.Instruction;
 import com.github.mbeier1406.svm.instructions.InstructionFactory;
 import com.github.mbeier1406.svm.instructions.InstructionInterface;
@@ -51,7 +53,7 @@ public class GenericFactoryTest {
 	public void testeCommandFactory() {
 		final GenericFactory<String, CommandInterface> genericFactory = new GenericFactory<>();
 		final var items = genericFactory.getItems(CommandInterface.PACKAGE, Command.class, "command");
-		assertThat(items.values(), contains(new Hilfe(), new Ende()));
+		assertThat(items.values(), contains(new Hilfe(), new Ende(), new LogLevel(), new Programm()));
 
 	}
 

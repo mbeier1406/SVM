@@ -1,5 +1,6 @@
 package com.github.mbeier1406.svm.cmd;
 
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -12,7 +13,7 @@ import com.github.mbeier1406.svm.prg.SVMProgram;
 	shortHelp="Bietet Hilfe zur Nutzung der SVM-Cli Kommandos an",
 	longHelp="hilfe [Kommando] gibt Hilfestellung für ein spezielles Kommando"
 )
-@Command(command="hilfe")
+@Command(command="hilfe", aliases={"h"})
 public class Hilfe extends CommandBase implements CommandInterface {
 
 	/** {@inheritDoc} */
@@ -28,13 +29,15 @@ public class Hilfe extends CommandBase implements CommandInterface {
 		catch ( NoSuchElementException e) {
 		}
 		final String commando = sb.toString();
-		CommandFactory.COMMANDS.entrySet().stream().forEach(cmd -> {
+		CommandFactory.getCommands().entrySet().stream().forEach(cmd -> {
 			if ( (!commando.isBlank() && commando.equals(cmd.getKey())) || commando.isBlank() ) {
 				if ( !s.isEmpty() ) s.append("\n");
 				s.append(cmd.getKey());
 				s.append(" - ");
 				s.append(cmd.getValue().getClass().getAnnotation(Help.class).shortHelp());
 				if ( !commando.isBlank() ) {
+					s.append("\n\t");
+					s.append("Aliase: "+Arrays.toString(cmd.getValue().getClass().getAnnotation(Command.class).aliases()));
 					s.append("\n\t");
 					s.append(cmd.getValue().getClass().getAnnotation(Help.class).longHelp());
 				}

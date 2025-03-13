@@ -14,5 +14,6 @@ public @interface Command {
 
 	/** Liefert das Kommando, das in der CLI eingegeben werden muss */
 	public String command() default "";
+	public String[] aliases() default {};
 
 }

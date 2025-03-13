@@ -14,8 +14,8 @@ import com.github.mbeier1406.svm.prg.parser.SVMParserShort;
  * {@code /SVM/src/test/resources/com/github/mbeier1406/svm/prg/example.svm}.
  */
 @Help(shortHelp="Lädt ein SVM-Programm in die internen Strukturen", longHelp="lade <SVM-Programm>\n\tmit 'validiere' prüfen")
-@Command(command="lade")
-public class Lade extends CommandBase implements CommandInterface {
+@Command(command="programm", aliases={"prog", "prg"})
+public class Programm extends CommandBase implements CommandInterface {
 
 	/** {@inheritDoc} */
 	@Override

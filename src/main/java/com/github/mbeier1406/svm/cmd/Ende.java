@@ -8,7 +8,7 @@ import com.github.mbeier1406.svm.prg.SVMProgram;
  * Beendet die {@linkplain SVMCliImpl}.
  */
 @Help(shortHelp="Beendet die SVM-Cli", longHelp="")
-@Command(command="ende")
+@Command(command="ende", aliases={"e"})
 public class Ende extends CommandBase implements CommandInterface {
 
 	/** Signalisiert der {@linkplain SVMCli} das Ende der Eingaben */

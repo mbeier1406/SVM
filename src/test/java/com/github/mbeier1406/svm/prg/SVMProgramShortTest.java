@@ -18,7 +18,6 @@ import com.github.mbeier1406.svm.instructions.Mov;
 import com.github.mbeier1406.svm.instructions.Nop;
 import com.github.mbeier1406.svm.prg.SVMProgram.Label;
 import com.github.mbeier1406.svm.prg.SVMProgram.LabelType;
-import com.github.mbeier1406.svm.prg.parser.SVMParserShort;
 
 /**
  * Tests für die Klasse {@linkplain SVMProgramShort}.

@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.Optional;
 import java.util.Scanner;
 
 import com.github.mbeier1406.svm.SVM;
@@ -36,7 +37,9 @@ public class SVMCliImpl implements SVMCli {
 				String str = in.readLine();
 				try ( Scanner s = new Scanner(str) ) {
 					String cmdStr = s.next();
-					var cmd = CommandFactory.COMMANDS.get(cmdStr);
+					var cmd = Optional.
+							ofNullable(CommandFactory.getCommands().get(cmdStr))
+							.orElse(CommandFactory.getAliase().get(cmdStr));
 					if ( cmd == null ) {
 						s.close();
 						throw new SVMException("Kommando '"+cmdStr+"' existiert nicht: "+str);

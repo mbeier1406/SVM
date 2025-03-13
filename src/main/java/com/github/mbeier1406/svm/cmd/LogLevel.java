@@ -12,7 +12,7 @@ import com.github.mbeier1406.svm.prg.SVMProgram;
  * Beendet die {@linkplain SVMCliImpl}.
  */
 @Help(shortHelp="Stellt den Loglevel ein", longHelp="loglevel <level> (INFO, ERROR usw.)")
-@Command(command="loglevel")
+@Command(command="loglevel", aliases={"ll"})
 public class LogLevel extends CommandBase implements CommandInterface {
 
 	/** {@inheritDoc} */

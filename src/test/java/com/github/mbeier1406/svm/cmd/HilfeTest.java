@@ -29,7 +29,7 @@ public class HilfeTest {
 	/** Test die Ausgabe des Hilfe-Kommandos für verschiedene Kommandos */
 	@Test
 	public void testeHilfe() {
-		CommandFactory.COMMANDS.keySet().stream().forEach(cmd -> {
+		CommandFactory.getCommands().keySet().stream().forEach(cmd -> {
 			String usage = hilfe.exec(new Scanner(" "+cmd), null);
 			LOGGER.info("cmd={}; usage={}", cmd, usage);
 			assertTrue(usage.length() > 0);

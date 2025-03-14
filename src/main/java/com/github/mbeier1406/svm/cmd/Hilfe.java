@@ -21,7 +21,7 @@ public class Hilfe extends CommandBase implements CommandInterface {
 	public <T> String exec(final Scanner scanner, final SVMProgram<T> svmProgram) {
 		final StringBuffer s = new StringBuffer("");
 		if ( !scanner.hasNext() )
-			s.append("Folgende Kommandos sind verfügbar:\n");
+			s.append("Folgende Kommandos sind verfügbar:");
 		final StringBuffer sb = new StringBuffer("");
 		try {
 			sb.append(scanner.next());

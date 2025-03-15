@@ -53,4 +53,25 @@ public class ProgrammTest {
 		assertThat(svmProgramm.getInstructionList().size(), equalTo(9));
 	}
 
+	/** Rückmeldung, wenn {@value #SVM} geladen wurde */
+	@Test
+	public void testeSvmLaden() {
+		assertThat(programm.exec(new Scanner(Programm.CMD_PARSE+" "+SVM), svmProgramm), equalTo("Ok "+SVM));
+		assertThat(svmProgramm.getDataList().size(), equalTo(2));
+		assertThat(svmProgramm.getInstructionList().size(), equalTo(10));
+	}
+
+	/** Rückmeldung, wenn validiert wird und kein {@value #PRG} geladen wurde */
+	@Test
+	public void testeValidierenMitFehler() {
+		assertThat(programm.exec(new Scanner(Programm.CMD_VALIDIEREN), svmProgramm), equalTo("Fehler: [Instr] Leeres Programm: mindestens eine Instruktion wird erwartet!"));
+	}
+
+	/** Rückmeldung, wenn validiert wird und {@value #PRG} geladen wurde */
+	@Test
+	public void testeValidierenOhneFehler() {
+		programm.exec(new Scanner(Programm.CMD_LADE_INTERN+" "+PRG), svmProgramm);
+		assertThat(programm.exec(new Scanner(Programm.CMD_VALIDIEREN), svmProgramm), equalTo("OK"));
+	}
+
 }

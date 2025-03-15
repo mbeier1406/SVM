@@ -39,6 +39,9 @@ public class Programm extends CommandBase implements CommandInterface {
 	/** Option zum Laden eines PRG-Programms (interne Darstellung) in die internen Strukturen {@linkplain SVMProgram} */
 	public static final String CMD_LADE_INTERN = "lade-intern";
 
+	/** Option zum Speichern eines Programms in interner Struktur (zuvor geladen mit {@linkplain #CMD_LADE_INTERN} oder {@linkplain #CMD_PARSE} als Datei */
+	public static final String CMD_SPEICHER_EXTERN = "speicher-extern";
+
 	/** Option zum Validieren eines Programms in interner Struktur (zuvor geladen mit {@linkplain #CMD_LADE_INTERN} oder {@linkplain #CMD_PARSE} */
 	public static final String CMD_VALIDIEREN = "validieren";
 
@@ -50,6 +53,7 @@ public class Programm extends CommandBase implements CommandInterface {
 				+ CMD_LEXER + " <SVM-Programm>|"
 				+ CMD_PARSE + " <SVM-Programm>|"
 				+ CMD_LADE_INTERN + " <PRG-Programm>|"
+				+ CMD_SPEICHER_EXTERN + " <PRG-Programm>|"
 				+ CMD_VALIDIEREN + "|"
 				+ CMD_LOESCHEN + "|"
 				+ "lade-speicher|"
@@ -58,6 +62,7 @@ public class Programm extends CommandBase implements CommandInterface {
 			+ "\t"+CMD_LEXER+" - führt die lexikalische Analyse des angegebenen Programms in externer Darstellung (SVM) durch\n"
 			+ "\t"+CMD_PARSE+" - lädt das angegebene Programm in externer Darstellung (SVM) in die internen Strukturen\n"
 			+ "\t"+CMD_LADE_INTERN+" - lädt das angegebene Programm in interner Darstellung (PRG) in die internen Strukturen\n"
+			+ "\t"+CMD_SPEICHER_EXTERN+" - speichert das geladene Programm in interner Darstellung als Datei (PRG)\n"
 			+ "\t"+CMD_VALIDIEREN+" - prüft die internen Programm-Strukturen nach dem Laden\n"
 			+ "\t"+CMD_LOESCHEN+" - löscht die internen Programm-Strukturen nach dem Laden\n"
 			+ "\tlade-speicher - lädt die internen Strukturen in den Speicher der SVM\n"
@@ -77,6 +82,7 @@ public class Programm extends CommandBase implements CommandInterface {
 		PRG_MAP.put(CMD_LEXER, this::lexer);
 		PRG_MAP.put(CMD_PARSE, this::parse);
 		PRG_MAP.put(CMD_LADE_INTERN, this::ladeIntern);
+		PRG_MAP.put(CMD_SPEICHER_EXTERN, this::speicherExtern);
 		PRG_MAP.put(CMD_VALIDIEREN, this::validieren);
 		PRG_MAP.put(CMD_LOESCHEN, this::loeschen);
 	}
@@ -126,6 +132,20 @@ public class Programm extends CommandBase implements CommandInterface {
 				svmProgram.addInstruction((VirtualInstruction<T>) instr);
 			return "Ok " + prgprg;
 		} catch (SVMException e) {
+			return "Fehler (prg="+prgprg+"): " + e.getLocalizedMessage();
+		}
+	}
+
+	/** Option {@linkplain #CMD_SPEICHER_EXTERN}: ein PRG-Programm aus der interne Datenstruktur (geladen mit {@value #CMD_PARSE} oder {@value #CMD_LADE_INTERN}l in eine Datei speichern */
+	@SuppressWarnings("unchecked")
+	private <T> String speicherExtern(String option, final Scanner scanner, final SVMProgram<T> svmProgram) {
+		String prgprg = null;
+		try {
+			if ( !scanner.hasNext() ) return KEIN_PROGRAMM_ANGEGEBEN;
+			prgprg  = scanner.next();
+			new SVMSourceShort().save((SVMProgram<Short>) svmProgram, prgprg);
+			return "Ok " + prgprg;
+		} catch (Exception e) {
 			return "Fehler (prg="+prgprg+"): " + e.getLocalizedMessage();
 		}
 	}

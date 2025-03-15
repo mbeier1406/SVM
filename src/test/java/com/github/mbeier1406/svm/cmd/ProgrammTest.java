@@ -1,9 +1,12 @@
 package com.github.mbeier1406.svm.cmd;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.startsWith;
-import static org.hamcrest.MatcherAssert.assertThat;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Scanner;
 
 import org.junit.jupiter.api.Test;
@@ -78,6 +81,27 @@ public class ProgrammTest {
 		assertThat(programm.exec(new Scanner(Programm.CMD_LADE_INTERN+" "+PRG), svmProgramm), equalTo("Ok "+PRG));
 		assertThat(svmProgramm.getDataList().size(), equalTo(2));
 		assertThat(svmProgramm.getInstructionList().size(), equalTo(9));
+	}
+
+	/** Rückmeldung, wenn {@linkplain Programm#CMD_SPEICHER_EXTERN} ohne Parameter aufgerufen wurde */
+	@Test
+	public void testePrgSpeichernOhneParameter() {
+		assertThat(programm.exec(new Scanner(Programm.CMD_SPEICHER_EXTERN+" "), null), equalTo(Programm.KEIN_PROGRAMM_ANGEGEBEN));
+	}
+
+	/** Rückmeldung, wenn {@linkplain Programm#CMD_SPEICHER_EXTERN} mit ungültigem Pfad aufgerufen wurde */
+	@Test
+	public void testePrgSpeichernUngueltigerPfad() {
+		programm.exec(new Scanner(Programm.CMD_LADE_INTERN+" "+PRG), svmProgramm);
+		assertThat(programm.exec(new Scanner(Programm.CMD_SPEICHER_EXTERN+" /a/b/c/x.prg"), svmProgramm), startsWith("Fehler (prg=/a/b/c/x.prg)"));
+	}
+
+	/** Rückmeldung, wenn mit {@linkplain Programm#CMD_SPEICHER_EXTERN} gespeichert wurde */
+	@Test
+	public void testePrgSpeichern() throws IOException {
+		programm.exec(new Scanner(Programm.CMD_LADE_INTERN+" "+PRG), svmProgramm);
+		assertThat(programm.exec(new Scanner(Programm.CMD_SPEICHER_EXTERN+" /tmp/x.prg"), svmProgramm), equalTo("Ok /tmp/x.prg"));
+		assertThat(Files.readAllBytes(new File(PRG).toPath()), equalTo(Files.readAllBytes(new File("/tmp/x.prg").toPath())));
 	}
 
 	/** Rückmeldung, wenn validiert wird und kein {@value #PRG} geladen wurde */

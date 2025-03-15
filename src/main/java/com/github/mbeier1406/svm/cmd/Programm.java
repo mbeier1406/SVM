@@ -20,6 +20,12 @@ import com.github.mbeier1406.svm.prg.parser.SVMParserShort;
 @Command(command="programm", aliases={"prog", "prg"})
 public class Programm extends CommandBase implements CommandInterface {
 
+	/** Wenn keine Option zum Kommando angegeben wurde */
+	public static final String KEINE_OPTION_ANGEGEBEN = "Keine Option angegeben!";
+
+	/** Wenn keine Programm angegeben wurde */
+	public static final String KEIN_PROGRAMM_ANGEGEBEN = "Kein Programm angegeben!";
+
 	/** Option zum Laden eines PRG-Programms (interne Darstellung) in die internen Strukturen {@linkplain SVMProgram} */
 	public static final String CMD_LADE_INTERN = "lade-intern";
 
@@ -58,6 +64,7 @@ public class Programm extends CommandBase implements CommandInterface {
 	private <T> String ladeIntern(String option, final Scanner scanner, final SVMProgram<T> svmProgram) {
 		String prgprg = null;
 		try {
+			if ( !scanner.hasNext() ) return KEIN_PROGRAMM_ANGEGEBEN;
 			prgprg  = scanner.next();
 			var prg = new SVMSourceShort().load(prgprg);
 			for ( var data : prg.getDataList() )
@@ -105,8 +112,8 @@ public class Programm extends CommandBase implements CommandInterface {
 	/** {@inheritDoc} */
 	@Override
 	public <T> String exec(final Scanner scanner, final SVMProgram<T> svmProgram) {
+		if ( !scanner.hasNext() ) return KEINE_OPTION_ANGEGEBEN;
 		String option = scanner.next();
-		if ( option == null ) return "Keine Option angegeben!";
 		return Optional
 				.ofNullable(PRG_MAP.get(option))
 				.orElse(this::unbekannteOption)

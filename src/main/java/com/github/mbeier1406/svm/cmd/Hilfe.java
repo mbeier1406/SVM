@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
+import com.github.mbeier1406.svm.ALU;
 import com.github.mbeier1406.svm.prg.SVMProgram;
 
 /**
@@ -18,7 +19,7 @@ public class Hilfe extends CommandBase implements CommandInterface {
 
 	/** {@inheritDoc} */
 	@Override
-	public <T> String exec(final Scanner scanner, final SVMProgram<T> svmProgram) {
+	public <T> String exec(final Scanner scanner, final ALU<T> alu, final SVMProgram<T> svmProgram) {
 		final StringBuffer s = new StringBuffer("");
 		if ( !scanner.hasNext() )
 			s.append("Folgende Kommandos sind verfügbar:");

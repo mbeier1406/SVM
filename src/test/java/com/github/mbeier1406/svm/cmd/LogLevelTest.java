@@ -17,21 +17,21 @@ public class LogLevelTest {
 	/** Prüft, ob Ausführung ohne Parameter ein Fehler geliefert wird */
 	@Test
 	public void testeExecOhneParameter() {
-		String erg = logLevel.exec(new Scanner(""), null);
+		String erg = logLevel.exec(new Scanner(""), null, null);
 		assertTrue(erg.equals("Kein Loglevel angegeben!"));
 	}
 
 	/** Prüft, ob Ausführung mit falschem Parameter ein Fehler geliefert wird */
 	@Test
 	public void testeExecMitFalschemParameter() {
-		String erg = logLevel.exec(new Scanner(" xxx"), null);
+		String erg = logLevel.exec(new Scanner(" xxx"), null, null);
 		assertTrue(erg.equals("Unbekannter Loglevel: xxx"));
 	}
 
 	/** Prüft, ob Ausführung mit korrektem Parameter funktioniert */
 	@Test
 	public void testeExecMitKorrektemParameter() {
-		String erg = logLevel.exec(new Scanner("info"), null);
+		String erg = logLevel.exec(new Scanner("info"), null, null);
 		assertTrue(erg.equals("OK INFO"));
 	}
 

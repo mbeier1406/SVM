@@ -21,7 +21,7 @@ public class EndeTest {
 	/** Prüft, ob das Ende-Signal bei Ausführung geliefert wird */
 	@Test
 	public void testeExec() {
-		String erg = ende.exec(new Scanner(""), null);
+		String erg = ende.exec(new Scanner(""), null, null);
 		LOGGER.info("erg={}", erg);
 		assertTrue(erg.equals(Ende.ENDE));
 	}

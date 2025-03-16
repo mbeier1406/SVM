@@ -2,6 +2,7 @@ package com.github.mbeier1406.svm.cmd;
 
 import java.util.Scanner;
 
+import com.github.mbeier1406.svm.ALU;
 import com.github.mbeier1406.svm.prg.SVMProgram;
 
 /**
@@ -16,7 +17,7 @@ public class Ende extends CommandBase implements CommandInterface {
 
 	/** {@inheritDoc} */
 	@Override
-	public <T> String exec(final Scanner scanner, final SVMProgram<T> svmProgram) {
+	public <T> String exec(final Scanner scanner, final ALU<T> alu, final SVMProgram<T> svmProgram) {
 		return ENDE;
 	}
 

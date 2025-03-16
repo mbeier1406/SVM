@@ -21,6 +21,6 @@ public interface SVM {
 	 * Startet die {@linkplain SVMCli CLI} der SVM zur Eingabe von {@linkplain CommandInterface Kommandos}.
 	 * @throws SVMException weist auf einen technischen Fehler bei der Ausführung von Kommandos hin
 	 */
-	public void start() throws SVMException;
+	public void cli() throws SVMException;
 
 }

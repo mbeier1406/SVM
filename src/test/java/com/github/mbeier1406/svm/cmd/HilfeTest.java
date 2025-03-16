@@ -21,7 +21,7 @@ public class HilfeTest {
 	/** Test die Standardausgabe des Hilfe-Kommandos */
 	@Test
 	public void testeShortHelp() {
-		String usage = hilfe.exec(new Scanner(""), null);
+		String usage = hilfe.exec(new Scanner(""), null, null);
 		LOGGER.info("usage={}", usage);
 		assertTrue(usage.length() > 0);
 	}
@@ -30,7 +30,7 @@ public class HilfeTest {
 	@Test
 	public void testeHilfe() {
 		CommandFactory.getCommands().keySet().stream().forEach(cmd -> {
-			String usage = hilfe.exec(new Scanner(" "+cmd), null);
+			String usage = hilfe.exec(new Scanner(" "+cmd), null, null);
 			LOGGER.info("cmd={}; usage={}", cmd, usage);
 			assertTrue(usage.length() > 0);
 		});

@@ -6,19 +6,26 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Scanner;
 
+import com.github.mbeier1406.svm.ALU;
+import com.github.mbeier1406.svm.MEM;
 import com.github.mbeier1406.svm.SVMException;
+import com.github.mbeier1406.svm.prg.SVMLoaderShort;
 import com.github.mbeier1406.svm.prg.SVMProgram;
 import com.github.mbeier1406.svm.prg.SVMProgram.Data;
 import com.github.mbeier1406.svm.prg.SVMProgram.VirtualInstruction;
 import com.github.mbeier1406.svm.prg.SVMSourceShort;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.LineInfo;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexerImpl;
+import com.github.mbeier1406.svm.prg.parser.SVMParser;
 import com.github.mbeier1406.svm.prg.parser.SVMParserShort;
 
 /**
- * Lädt ein SVM-Programm in externer in die interne
- * Darstellung ({@linkplain SVMProgram}. Beispiel:
- * {@code /SVM/src/test/resources/com/github/mbeier1406/svm/prg/example.svm}.
+ * Alle programmbezogenen Funktionen wie lexen, parsen, einlesen, speichern, validieren und ausführen von Programmen.
+ * Beispiele für die Darstellung eines {@linkplain SVMProgram}s
+ * <ul>
+ * <li>Extern: {@code /SVM/src/test/resources/com/github/mbeier1406/svm/prg/example.svm}</li>
+ * <li>Intern: {@code /SVM/src/test/resources/com/github/mbeier1406/svm/prg/example.prg} (nach {@linkplain SVMParser#parse(File)})</li>
+ * </ul>
  */
 @Help(shortHelp="Lädt, validiert, führt aus, ... ein SVM-Programm", longHelp=Programm.HILFE)
 @Command(command="programm", aliases={"prog", "prg"})
@@ -48,6 +55,12 @@ public class Programm extends CommandBase implements CommandInterface {
 	/** Option zum Löschen eines zuvor mit {@value #CMD_PARSE} oder {@value #CMD_LADE_INTERN} geladenen Programms */
 	public static final String CMD_LOESCHEN = "loeschen";
 
+	/** Option zum Laden eines zuvor mit {@value #CMD_PARSE} oder {@value #CMD_LADE_INTERN} geladenen Programms zur Ausführung in den Speicher {@linkplain MEM} */
+	public static final String CMD_LADE_SPEICHER = "lade-speicher";
+
+	/** Option zum Ausführen eines zuvor mit {@value #CMD_LADE_SPEICHER} geladenen Programms */
+	public static final String CMD_STARTEN = "starten";
+
 	/** Hilfe zur Benutzung des Kommandos */
 	public static final String HILFE = "programm ("
 				+ CMD_LEXER + " <SVM-Programm>|"
@@ -56,8 +69,8 @@ public class Programm extends CommandBase implements CommandInterface {
 				+ CMD_SPEICHER_EXTERN + " <PRG-Programm>|"
 				+ CMD_VALIDIEREN + "|"
 				+ CMD_LOESCHEN + "|"
-				+ "lade-speicher|"
-				+ "starten"
+				+ CMD_LADE_SPEICHER + "|"
+				+ CMD_STARTEN + ""
 				+ ")\n"
 			+ "\t"+CMD_LEXER+" - führt die lexikalische Analyse des angegebenen Programms in externer Darstellung (SVM) durch\n"
 			+ "\t"+CMD_PARSE+" - lädt das angegebene Programm in externer Darstellung (SVM) in die internen Strukturen\n"
@@ -65,13 +78,13 @@ public class Programm extends CommandBase implements CommandInterface {
 			+ "\t"+CMD_SPEICHER_EXTERN+" - speichert das geladene Programm in interner Darstellung als Datei (PRG)\n"
 			+ "\t"+CMD_VALIDIEREN+" - prüft die internen Programm-Strukturen nach dem Laden\n"
 			+ "\t"+CMD_LOESCHEN+" - löscht die internen Programm-Strukturen nach dem Laden\n"
-			+ "\tlade-speicher - lädt die internen Strukturen in den Speicher der SVM\n"
-			+ "\tstarten - startet das in den Speicher der SVM geladene Programm";
+			+ "\t"+CMD_LADE_SPEICHER+" - lädt die internen Strukturen in den Speicher der SVM\n"
+			+ "\t"+CMD_STARTEN+" - startet das in den Speicher der SVM geladene Programm";
 
 	/** Alle Optionen zu diesem Kommando müssen dieses Interface implementieren */
 	@FunctionalInterface
 	public static interface Ausfuehrung {
-		public <T> String ausfuehren(String option, final Scanner scanner, final SVMProgram<T> svmProgram);
+		public <T> String ausfuehren(String option, final Scanner scanner, final ALU<T> alu, final SVMProgram<T> svmProgram);
 	}
 
 	/** Diese Map pflegt die Zuordnung einer Option zum Kommando zur Ausführungslogik */
@@ -85,10 +98,12 @@ public class Programm extends CommandBase implements CommandInterface {
 		PRG_MAP.put(CMD_SPEICHER_EXTERN, this::speicherExtern);
 		PRG_MAP.put(CMD_VALIDIEREN, this::validieren);
 		PRG_MAP.put(CMD_LOESCHEN, this::loeschen);
+		PRG_MAP.put(CMD_LADE_SPEICHER, this::ladeSpeicher);
+		PRG_MAP.put(CMD_STARTEN, this::starten);
 	}
 
 	/** Option {@linkplain #CMD_LEXER}: lexikalische Analyse für ein SVM-Programm */
-	private <T> String lexer(String option, final Scanner scanner, final SVMProgram<T> svmProgram) {
+	private <T> String lexer(String option, final Scanner scanner, final ALU<T> alu, final SVMProgram<T> svmProgram) {
 		String svmprg = null;
 		try {
 			if ( !scanner.hasNext() ) return KEIN_PROGRAMM_ANGEGEBEN;
@@ -102,7 +117,7 @@ public class Programm extends CommandBase implements CommandInterface {
 
 	/** Option {@linkplain #CMD_PARSE}: ein SVM-Programm in die interne Datenstruktur laden */
 	@SuppressWarnings("unchecked")
-	private <T> String parse(String option, final Scanner scanner, final SVMProgram<T> svmProgram) {
+	private <T> String parse(String option, final Scanner scanner, final ALU<T> alu, final SVMProgram<T> svmProgram) {
 		String svmprg = null;
 		try {
 			if ( !scanner.hasNext() ) return KEIN_PROGRAMM_ANGEGEBEN;
@@ -120,7 +135,7 @@ public class Programm extends CommandBase implements CommandInterface {
 
 	/** Option {@linkplain #CMD_LADE_INTERN}: ein PRG-Programm in die interne Datenstruktur laden */
 	@SuppressWarnings("unchecked")
-	private <T> String ladeIntern(String option, final Scanner scanner, final SVMProgram<T> svmProgram) {
+	private <T> String ladeIntern(String option, final Scanner scanner, final ALU<T> alu, final SVMProgram<T> svmProgram) {
 		String prgprg = null;
 		try {
 			if ( !scanner.hasNext() ) return KEIN_PROGRAMM_ANGEGEBEN;
@@ -138,7 +153,7 @@ public class Programm extends CommandBase implements CommandInterface {
 
 	/** Option {@linkplain #CMD_SPEICHER_EXTERN}: ein PRG-Programm aus der interne Datenstruktur (geladen mit {@value #CMD_PARSE} oder {@value #CMD_LADE_INTERN}l in eine Datei speichern */
 	@SuppressWarnings("unchecked")
-	private <T> String speicherExtern(String option, final Scanner scanner, final SVMProgram<T> svmProgram) {
+	private <T> String speicherExtern(String option, final Scanner scanner, final ALU<T> alu, final SVMProgram<T> svmProgram) {
 		String prgprg = null;
 		try {
 			if ( !scanner.hasNext() ) return KEIN_PROGRAMM_ANGEGEBEN;
@@ -151,7 +166,7 @@ public class Programm extends CommandBase implements CommandInterface {
 	}
 
 	/** Option {@linkplain #CMD_VALIDIEREN}: ein geladenes Programm (interne Darstellung) validieren */
-	private <T> String validieren(String option, final Scanner scanner, final SVMProgram<T> svmProgram) {
+	private <T> String validieren(String option, final Scanner scanner, final ALU<T> alu, final SVMProgram<T> svmProgram) {
 		try {
 			svmProgram.validate();
 			return "OK";
@@ -161,25 +176,46 @@ public class Programm extends CommandBase implements CommandInterface {
 	}
 
 	/** Option {@linkplain #CMD_LOESCHEN}: ein geladenes Programm (interne Darstellung) wieder löschen */
-	private <T> String loeschen(String option, final Scanner scanner, final SVMProgram<T> svmProgram) {
+	private <T> String loeschen(String option, final Scanner scanner, final ALU<T> alu, final SVMProgram<T> svmProgram) {
 		svmProgram.reset();
 		return "OK";
 	}
 
+	/** Option {@linkplain #CMD_LADE_SPEICHER}: ein geladenes Programm (interne Darstellung) in den Hauptspeicher laden */
+	@SuppressWarnings("unchecked")
+	private <T> String ladeSpeicher(String option, final Scanner scanner, final ALU<T> alu, final SVMProgram<T> svmProgram) {
+		try {
+			new SVMLoaderShort().load((MEM<Short>) alu.getMEM(), (SVMProgram<Short>) svmProgram);
+			return "OK";
+		} catch (SVMException e) {
+			return "Fehler: " + e.getLocalizedMessage();
+		}
+	}
+
+	/** Option {@linkplain #CMD_STARTEN}: ein geladenes Programm ({@linkplain #CMD_LADE_INTERN}) ausführen */
+	private <T> String starten(String option, final Scanner scanner, final ALU<T> alu, final SVMProgram<T> svmProgram) {
+		try {
+			int code = alu.start();
+			return "OK: "+code;
+		} catch (SVMException e) {
+			return "Fehler: " + e.getLocalizedMessage();
+		}
+	}
+
 	/** Falls eine unbekannte Option als Parameter zu 'programm' eingegben wird */
-	private <T> String unbekannteOption(String option, final Scanner scanner, final SVMProgram<T> svmProgram) {
+	private <T> String unbekannteOption(String option, final Scanner scanner, final ALU<T> alu, final SVMProgram<T> svmProgram) {
 		return "Unbekannte Option: "+option;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public <T> String exec(final Scanner scanner, final SVMProgram<T> svmProgram) {
+	public <T> String exec(final Scanner scanner, final ALU<T> alu, final SVMProgram<T> svmProgram) {
 		if ( !scanner.hasNext() ) return KEINE_OPTION_ANGEGEBEN;
 		String option = scanner.next();
 		return Optional
 				.ofNullable(PRG_MAP.get(option))
 				.orElse(this::unbekannteOption)
-				.ausfuehren(option, scanner, svmProgram);
+				.ausfuehren(option, scanner, alu, svmProgram);
 	}
 
 }

@@ -45,6 +45,12 @@ public class ALUShortTest {
 		SyscallFactory.init(alu, mem);
 	}
 
+	/** Stellt sicher, dass die Referenz auf den Hauptspeicher zurückgegeben wird */
+	@Test
+	public void testeGetMem() {
+		assertThat(this.alu.getMEM() == this.mem, equalTo(true));
+	}
+
 	/** Bei Setzen des Stopp-Flags muss das oberste Bit des Statusregisters gesetzt werden */
 	@Test
 	public void testeStatusRegister() {

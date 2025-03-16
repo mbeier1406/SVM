@@ -8,6 +8,8 @@ import java.io.PrintWriter;
 import java.util.Optional;
 import java.util.Scanner;
 
+import com.github.mbeier1406.svm.ALU;
+import com.github.mbeier1406.svm.MEM;
 import com.github.mbeier1406.svm.SVM;
 import com.github.mbeier1406.svm.SVMException;
 import com.github.mbeier1406.svm.prg.SVMProgram;
@@ -17,10 +19,14 @@ import com.github.mbeier1406.svm.prg.SVMProgram;
  */
 public class SVMCliImpl implements SVMCli {
 
+	/** Die ALU enthält den {@linkplain MEM Hauptspeicher} der {@linkplain SVM}, in den die Programme zur Ausführung geladen werden */
+	private final ALU<Short> alu;
+	
 	/** Die interne Darstellung des SVM-Programms, das ausgeführt werden soll */
 	private final SVMProgram<Short> svmProgram;
 
-	public SVMCliImpl(SVMProgram<Short> svmProgram) {
+	public SVMCliImpl(final ALU<Short> alu, final SVMProgram<Short> svmProgram) {
+		this.alu = alu;
 		this.svmProgram = svmProgram;
 	}
 	
@@ -44,7 +50,7 @@ public class SVMCliImpl implements SVMCli {
 						s.close();
 						throw new SVMException("Kommando '"+cmdStr+"' existiert nicht: "+str);
 					}
-					ausgabe = cmd.exec(s, this.svmProgram);
+					ausgabe = cmd.exec(s, this.alu, this.svmProgram);
 					if ( s != null && !ausgabe.isBlank() && !ausgabe.equals(Ende.ENDE) )
 						out.print(ausgabe+"\n");
 				}

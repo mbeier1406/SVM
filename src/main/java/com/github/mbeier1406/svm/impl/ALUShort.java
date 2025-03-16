@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.github.mbeier1406.svm.ALU;
 import com.github.mbeier1406.svm.ALU.Instruction;
+import com.github.mbeier1406.svm.MEM;
 import com.github.mbeier1406.svm.SVMException;
 import com.github.mbeier1406.svm.instructions.InstructionInterface;
 import com.github.mbeier1406.svm.instructions.InstructionReaderInterface;
@@ -97,6 +98,12 @@ public class ALUShort implements ALU<Short>, Instruction<Short> {
 		}
 		LOGGER.debug("Stopp: {}", this);
 		return this.register[0];
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public MEM<Short> getMEM() {
+		return this.mem;
 	}
 
 

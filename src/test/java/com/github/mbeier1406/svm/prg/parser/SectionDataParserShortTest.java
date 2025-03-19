@@ -78,7 +78,7 @@ public class SectionDataParserShortTest {
 		assertThat(sectionDataParser.getSvmData(new Symbol(Token.DATA, "abc")), equalTo(new Short[] { (short) 'a', (short) 'b', (short) 'c' }));
 	}
 
-	/** Stellt sicher, dass ein fehlende {@linkplain SVMProgram} einen definierten Fehler liefert */
+	/** Stellt sicher, dass ein fehlendes {@linkplain SVMProgram} einen definierten Fehler liefert */
 	@Test
 	public void testeSVMProgramNullValue() {
 		var ex = assertThrows(NullPointerException.class, () -> sectionDataParser.parse(null, STD_LINE_INFO));

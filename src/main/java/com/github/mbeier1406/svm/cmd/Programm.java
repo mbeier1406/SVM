@@ -61,6 +61,9 @@ public class Programm extends CommandBase implements CommandInterface {
 	/** Option zum Ausführen eines zuvor mit {@value #CMD_LADE_SPEICHER} geladenen Programms */
 	public static final String CMD_STARTEN = "starten";
 
+	/** Option zum Ausführen eines Programmes über {@value #CMD_PARSE}, {@linkplain #CMD_VALIDIEREN}, {@linkplain #CMD_LADE_SPEICHER} und {@linkplain #CMD_STARTEN} */
+	public static final String CMD_AUSFUEHREN = "ausfuehren";
+
 	/** Hilfe zur Benutzung des Kommandos */
 	public static final String HILFE = "programm ("
 				+ CMD_LEXER + " <SVM-Programm>|"
@@ -70,7 +73,8 @@ public class Programm extends CommandBase implements CommandInterface {
 				+ CMD_VALIDIEREN + "|"
 				+ CMD_LOESCHEN + "|"
 				+ CMD_LADE_SPEICHER + "|"
-				+ CMD_STARTEN + ""
+				+ CMD_STARTEN + "|"
+				+ CMD_AUSFUEHREN + " <SVM-Programm>"
 				+ ")\n"
 			+ "\t"+CMD_LEXER+" - führt die lexikalische Analyse des angegebenen Programms in externer Darstellung (SVM) durch\n"
 			+ "\t"+CMD_PARSE+" - lädt das angegebene Programm in externer Darstellung (SVM) in die internen Strukturen\n"
@@ -79,7 +83,8 @@ public class Programm extends CommandBase implements CommandInterface {
 			+ "\t"+CMD_VALIDIEREN+" - prüft die internen Programm-Strukturen nach dem Laden\n"
 			+ "\t"+CMD_LOESCHEN+" - löscht die internen Programm-Strukturen nach dem Laden\n"
 			+ "\t"+CMD_LADE_SPEICHER+" - lädt die internen Strukturen in den Speicher der SVM\n"
-			+ "\t"+CMD_STARTEN+" - startet das in den Speicher der SVM geladene Programm";
+			+ "\t"+CMD_STARTEN+" - startet das in den Speicher der SVM geladene Programm"
+			+ "\t"+CMD_AUSFUEHREN+" - parst, validiert, lädt und startet das angegebene SVM-Programm";
 
 	/** Alle Optionen zu diesem Kommando müssen dieses Interface implementieren */
 	@FunctionalInterface
@@ -100,6 +105,7 @@ public class Programm extends CommandBase implements CommandInterface {
 		PRG_MAP.put(CMD_LOESCHEN, this::loeschen);
 		PRG_MAP.put(CMD_LADE_SPEICHER, this::ladeSpeicher);
 		PRG_MAP.put(CMD_STARTEN, this::starten);
+		PRG_MAP.put(CMD_AUSFUEHREN, this::ausfuehren);
 	}
 
 	/** Option {@linkplain #CMD_LEXER}: lexikalische Analyse für ein SVM-Programm */
@@ -195,6 +201,20 @@ public class Programm extends CommandBase implements CommandInterface {
 	/** Option {@linkplain #CMD_STARTEN}: ein geladenes Programm ({@linkplain #CMD_LADE_INTERN}) ausführen */
 	private <T> String starten(String option, final Scanner scanner, final ALU<T> alu, final SVMProgram<T> svmProgram) {
 		try {
+			int code = alu.start();
+			return "OK: "+code;
+		} catch (SVMException e) {
+			return "Fehler: " + e.getLocalizedMessage();
+		}
+	}
+
+	/** Option {@linkplain #CMD_AUSFUEHREN}: parst, validiert, lädt und startet ein SVM-Programm */
+	private <T> String ausfuehren(String option, final Scanner scanner, final ALU<T> alu, final SVMProgram<T> svmProgram) {
+		try {
+			loeschen(option, scanner, alu, svmProgram);
+			parse(option, scanner, alu, svmProgram);
+			validieren(option, scanner, alu, svmProgram);
+			ladeSpeicher(option, scanner, alu, svmProgram);
 			int code = alu.start();
 			return "OK: "+code;
 		} catch (SVMException e) {

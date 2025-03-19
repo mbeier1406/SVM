@@ -132,9 +132,9 @@ public class ProgrammTest {
 		assertThat(svmProgramm.getInstructionList().size(), equalTo(0));
 	}
 
-	/** Testet das Laden und ausführen eines Programms */
+	/** Testet das Laden und Ausführen eines Programms */
 	@Test
-	public void testeAusfuehren() {
+	public void testeStarten() {
 		MEMShort mem = new MEMShort();
 		ALUShort alu = new ALUShort(mem);
 		alu.init();
@@ -144,6 +144,17 @@ public class ProgrammTest {
 		programm.exec(new Scanner(Programm.CMD_VALIDIEREN), null, svmProgramm);
 		programm.exec(new Scanner(Programm.CMD_LADE_SPEICHER), alu, svmProgramm);
 		assertThat(programm.exec(new Scanner(Programm.CMD_STARTEN), alu, svmProgramm), equalTo("OK: 1"));
+	}
+
+	/** Testet das Parsen, Validieren, Laden und Ausführen eines Programms */
+	@Test
+	public void testeAusfuehren() {
+		MEMShort mem = new MEMShort();
+		ALUShort alu = new ALUShort(mem);
+		alu.init();
+		InstructionFactory.init(alu, mem);
+		SyscallFactory.init(alu, mem);
+		assertThat(programm.exec(new Scanner(Programm.CMD_AUSFUEHREN+" "+SVM), alu, svmProgramm), equalTo("OK: 55"));
 	}
 
 }

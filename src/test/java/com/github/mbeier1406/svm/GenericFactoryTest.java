@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.contains;
 
 import org.junit.jupiter.api.Test;
 
+import com.github.mbeier1406.svm.cmd.Alu;
 import com.github.mbeier1406.svm.cmd.Command;
 import com.github.mbeier1406.svm.cmd.CommandInterface;
 import com.github.mbeier1406.svm.cmd.Ende;
@@ -54,7 +55,7 @@ public class GenericFactoryTest {
 	public void testeCommandFactory() {
 		final GenericFactory<String, CommandInterface> genericFactory = new GenericFactory<>();
 		final var items = genericFactory.getItems(CommandInterface.PACKAGE, Command.class, "command");
-		assertThat(items.values(), contains(new Hilfe(), new Ende(), new LogLevel(), new Information(), new Programm()));
+		assertThat(items.values(), contains(new Hilfe(), new Ende(), new LogLevel(), new Information(), new Alu(), new Programm()));
 
 	}
 

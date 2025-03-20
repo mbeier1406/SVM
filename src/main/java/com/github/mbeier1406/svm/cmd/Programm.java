@@ -83,8 +83,10 @@ public class Programm extends CommandBase implements CommandInterface {
 			+ "\t"+CMD_VALIDIEREN+" - prüft die internen Programm-Strukturen nach dem Laden\n"
 			+ "\t"+CMD_LOESCHEN+" - löscht die internen Programm-Strukturen nach dem Laden\n"
 			+ "\t"+CMD_LADE_SPEICHER+" - lädt die internen Strukturen in den Speicher der SVM\n"
-			+ "\t"+CMD_STARTEN+" - startet das in den Speicher der SVM geladene Programm"
-			+ "\t"+CMD_AUSFUEHREN+" - parst, validiert, lädt und startet das angegebene SVM-Programm";
+			+ "\t"+CMD_STARTEN+" - startet das in den Speicher der SVM geladene Programm\n"
+			+ "\t"+CMD_AUSFUEHREN+" - parst, validiert, lädt und startet das angegebene SVM-Programm\n\n"
+			+ "\tBeispiel SVM-Programm: src/test/resources/com/github/mbeier1406/svm/prg/example.svm\n"
+			+ "\t         PRG-Programm: src/test/resources/com/github/mbeier1406/svm/prg/example.prg\n";
 
 	/** Alle Optionen zu diesem Kommando müssen dieses Interface implementieren */
 	@FunctionalInterface

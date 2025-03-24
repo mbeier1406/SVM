@@ -106,6 +106,12 @@ public class ALUShort implements ALU<Short>, Instruction<Short> {
 		return this.mem;
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public Instruction<Short> getInstructionInterface() {
+		return (Instruction<Short>) this;
+	}
+
 
 	/** Prüft, ob das oberste Bit im Statusregister gesetzt ist */
 	private boolean isStopped() {

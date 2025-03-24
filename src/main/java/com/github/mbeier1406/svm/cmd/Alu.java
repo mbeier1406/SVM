@@ -46,7 +46,7 @@ public class Alu extends CommandBase implements CommandInterface {
 					int reg = Integer.parseInt(scanner.next());
 					if ( !scanner.hasNext() ) throw new Exception("Wert erwartet: "+usageSetReg);
 					int wert = Integer.parseInt(scanner.next());
-					((ALU.Instruction<Short>) alu).setRegisterValue(reg, (short) wert);
+					alu.getInstructionInterface().setRegisterValue(reg, (T) Short.valueOf((short) wert));
 					yield "OK";
 				}
 				catch ( NumberFormatException e ) {
@@ -60,7 +60,7 @@ public class Alu extends CommandBase implements CommandInterface {
 				try {
 					if ( !scanner.hasNext() ) throw new Exception("Register erwartet: "+usageReadReg);
 					int reg = Integer.parseInt(scanner.next());
-					T wert = ((ALU.Instruction<T>) alu).getRegisterValue(reg);
+					T wert = alu.getInstructionInterface().getRegisterValue(reg);
 					yield "OK: "+wert;
 				}
 				catch ( NumberFormatException e ) {

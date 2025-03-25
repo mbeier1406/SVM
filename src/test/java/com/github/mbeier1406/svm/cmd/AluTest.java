@@ -47,175 +47,212 @@ public class AluTest {
 		assertTrue(erg.equals(Alu.USAGE));
 	}
 
-	/** Prüft, ob Parameter <i>init</i> die richtige Meldung liefert */
+	/** Prüft, ob Parameter <i>{@linkplain Alu#CMD_INIT}</i> die richtige Meldung liefert */
 	@Test
 	public void testeExecInit() {
-		String erg = alu.exec(new Scanner(" init"), aluShort, null);
+		String erg = alu.exec(new Scanner(Alu.CMD_INIT), aluShort, null);
 		assertTrue(erg.equals("OK"));
 		verify(aluShort).init();
 	}
 
-	/** Prüft, ob Parameter <i>start</i> die richtige Meldung liefert */
+	/** Prüft, ob Parameter <i>{@linkplain Alu#CMD_START}</i> die richtige Meldung liefert */
 	@Test
 	public void testeExecStartOhneFehler() throws SVMException {
-		String erg = alu.exec(new Scanner("start"), aluShort, null);
+		String erg = alu.exec(new Scanner(Alu.CMD_START), aluShort, null);
 		assertTrue(erg.equals("OK"));
 		verify(aluShort).start();
 	}
 
-	/** Prüft, ob Parameter <i>start</i> mit Exception die richtige Meldung liefert */
+	/** Prüft, ob Parameter <i>{@linkplain Alu#CMD_START}</i> mit Exception die richtige Meldung liefert */
 	@Test
 	public void testeExecStartMitFehler() throws SVMException {
 		when(aluShort.start()).thenThrow(new SVMException("XXX"));
-		String erg = alu.exec(new Scanner("start"), aluShort, null);
+		String erg = alu.exec(new Scanner(Alu.CMD_START), aluShort, null);
 		assertTrue(erg.equals("Fehler: XXX"));
 		verify(aluShort).start();
 	}
 
-	/** Prüft, ob Parameter <i>set_stop_flag</i> die richtige Meldung liefert */
+	/** Prüft, ob Parameter <i>{@linkplain Alu#CMD_SET_STOP_FLAG}</i> die richtige Meldung liefert */
 	@Test
 	public void testeExecSetStopFlag() {
 		aluShort = new ALUShort(new MEMShort());
-		String erg = alu.exec(new Scanner("set_stop_flag"), aluShort, null);
+		String erg = alu.exec(new Scanner(Alu.CMD_SET_STOP_FLAG), aluShort, null);
 		assertTrue(erg.equals("OK"));
 	}
 
-	/** Prüft, ob Parameter <i>set_reg</i> ohne Argumente die richtige Fehlermeldung liefert */
+	/** Prüft, ob Parameter <i>{@linkplain Alu#CMD_SET_REG}</i> ohne Argumente die richtige Fehlermeldung liefert */
 	@Test
 	public void testeExecSetRegOhneArgument() {
 		aluShort = new ALUShort(new MEMShort());
-		String erg = alu.exec(new Scanner("set_reg"), aluShort, null);
-		assertTrue(erg.equals("Register erwartet: set_reg <nr> <wert>"));
+		String erg = alu.exec(new Scanner(Alu.CMD_SET_REG), aluShort, null);
+		assertTrue(erg.equals("Register erwartet: "+Alu.USAGE_SET_REG));
 	}
 
-	/** Prüft, ob Parameter <i>set_reg</i> mit nur einem Argument die richtige Fehlermeldung liefert */
+	/** Prüft, ob Parameter <i>{@linkplain Alu#CMD_SET_REG}</i> mit nur einem Argument die richtige Fehlermeldung liefert */
 	@Test
 	public void testeExecSetRegNurEinArgument() {
 		aluShort = new ALUShort(new MEMShort());
-		String erg = alu.exec(new Scanner("set_reg 1"), aluShort, null);
-		assertTrue(erg.equals("Wert erwartet: set_reg <nr> <wert>"));
+		String erg = alu.exec(new Scanner(Alu.CMD_SET_REG+" 1"), aluShort, null);
+		assertTrue(erg.equals("Wert erwartet: "+Alu.USAGE_SET_REG));
 	}
 
-	/** Prüft, ob Parameter <i>set_reg</i> die richtige Meldung liefert */
+	/** Prüft, ob Parameter <i>{@linkplain Alu#CMD_SET_REG}</i> die richtige Meldung liefert */
 	@Test
 	public void testeExecSetReg() {
 		aluShort = new ALUShort(new MEMShort());
-		String erg = alu.exec(new Scanner("set_reg 1 2"), aluShort, null);
+		String erg = alu.exec(new Scanner(Alu.CMD_SET_REG+" 1 2"), aluShort, null);
 		assertTrue(erg.equals("OK"));
 	}
 
-	/** Prüft, ob Parameter <i>set_reg</i> mit Argumnet "keine Zahl" die richtige Fehlermeldung liefert */
+	/** Prüft, ob Parameter <i>{@linkplain Alu#CMD_SET_REG}</i> mit Argumnet "keine Zahl" die richtige Fehlermeldung liefert */
 	@Test
 	public void testeExecSetRegKeineZahl1() {
 		aluShort = new ALUShort(new MEMShort());
-		String erg = alu.exec(new Scanner("set_reg a 2"), aluShort, null);
+		String erg = alu.exec(new Scanner(Alu.CMD_SET_REG+" a 2"), aluShort, null);
 		assertTrue(erg.equals("Ungültige Zahl: For input string: \"a\""));
 	}
 
-	/** Prüft, ob Parameter <i>set_reg</i> mit Argumnet "keine Zahl" die richtige Fehlermeldung liefert */
+	/** Prüft, ob Parameter <i>{@linkplain Alu#CMD_SET_REG}</i> mit Argumnet "keine Zahl" die richtige Fehlermeldung liefert */
 	@Test
 	public void testeExecSetRegKeineZahl2() {
 		aluShort = new ALUShort(new MEMShort());
-		String erg = alu.exec(new Scanner("set_reg 1 b"), aluShort, null);
+		String erg = alu.exec(new Scanner(Alu.CMD_SET_REG+" 1 b"), aluShort, null);
 		assertTrue(erg.equals("Ungültige Zahl: For input string: \"b\""));
 	}
 
-	/** Prüft, ob Parameter <i>set_reg</i> mit Exception richtige Fehlermeldung liefert */
+	/** Prüft, ob Parameter <i>{@linkplain Alu#CMD_SET_REG}</i> mit Exception richtige Fehlermeldung liefert */
 	@Test
 	public void testeExecSetRegException() throws SVMException {
 		when(aluShort.getInstructionInterface()).thenReturn(aluInstruction);
 		doThrow(new SVMException("XXX")).when(aluInstruction).setRegisterValue(1, (short) 2);
-		String erg = alu.exec(new Scanner("set_reg 1 2"), aluShort, null);
+		String erg = alu.exec(new Scanner(Alu.CMD_SET_REG+" 1 2"), aluShort, null);
 		assertTrue(erg.equals("XXX"));
 		verify(aluInstruction).setRegisterValue(1, (short) 2);
 	}
 
-	/** Prüft, ob Parameter <i>get_reg</i> ohne Argumente die richtige Fehlermeldung liefert */
+	/** Prüft, ob Parameter <i>{@linkplain Alu#CMD_READ_REG}</i> ohne Argumente die richtige Fehlermeldung liefert */
 	@Test
 	public void testeExecGetRegOhneArgument() {
 		aluShort = new ALUShort(new MEMShort());
-		String erg = alu.exec(new Scanner("get_reg"), aluShort, null);
-		assertTrue(erg.equals("Register erwartet: read_reg <nr>"));
+		String erg = alu.exec(new Scanner(Alu.CMD_READ_REG), aluShort, null);
+		assertTrue(erg.equals("Register erwartet: "+Alu.USAGE_READ_REG));
 	}
 
-	/** Prüft, ob Parameter <i>get_reg</i> mit Argumnet "keine Zahl" die richtige Fehlermeldung liefert */
+	/** Prüft, ob Parameter <i>{@linkplain Alu#CMD_READ_REG}</i> mit Argumnet "keine Zahl" die richtige Fehlermeldung liefert */
 	@Test
 	public void testeExecGetRegKeineZahl() {
 		aluShort = new ALUShort(new MEMShort());
-		String erg = alu.exec(new Scanner("get_reg a"), aluShort, null);
+		String erg = alu.exec(new Scanner(Alu.CMD_READ_REG+" a"), aluShort, null);
 		assertTrue(erg.equals("Ungültige Zahl: For input string: \"a\""));
 	}
 
-	/** Prüft, ob Parameter <i>get_reg</i> die richtige Meldung liefert */
+	/** Prüft, ob Parameter <i>{@linkplain Alu#CMD_READ_REG}</i> die richtige Meldung liefert */
 	@Test
 	public void testeExecGetReg() throws SVMException {
 		when(aluShort.getInstructionInterface()).thenReturn(aluInstruction);
 		when(aluInstruction.getRegisterValue(1)).thenReturn((short) 27);
-		String erg = alu.exec(new Scanner("get_reg 1"), aluShort, null);
+		String erg = alu.exec(new Scanner(Alu.CMD_READ_REG+" 1"), aluShort, null);
 		assertTrue(erg.equals("OK: 27"));
 		verify(aluInstruction).getRegisterValue(1);
 	}
 
-	/** Prüft, ob Parameter <i>get_reg</i> mit Exception richtige Fehlermeldung liefert */
+	/** Prüft, ob Parameter <i>{@linkplain Alu#CMD_READ_REG}</i> mit Exception richtige Fehlermeldung liefert */
 	@Test
 	public void testeExecGetRegException() throws SVMException {
 		when(aluShort.getInstructionInterface()).thenReturn(aluInstruction);
 		doThrow(new SVMException("XXX")).when(aluInstruction).getRegisterValue(1);
-		String erg = alu.exec(new Scanner("get_reg 1"), aluShort, null);
+		String erg = alu.exec(new Scanner(Alu.CMD_READ_REG+" 1"), aluShort, null);
 		assertTrue(erg.equals("XXX"));
 		verify(aluInstruction).getRegisterValue(1);
 	}
 
-	/** Prüft, ob Parameter <i>set_mem</i> ohne Argumente die richtige Fehlermeldung liefert */
+	/** Prüft, ob Parameter <i>{@linkplain Alu#CMD_SET_MEM}</i> ohne Argumente die richtige Fehlermeldung liefert */
 	@Test
 	public void testeExecSetMemOhneArgument() {
 		aluShort = new ALUShort(new MEMShort());
-		String erg = alu.exec(new Scanner("set_mem"), aluShort, null);
-		assertTrue(erg.equals("Speicheradresse erwartet: set_mem <addr> <wert>"));
+		String erg = alu.exec(new Scanner(Alu.CMD_SET_MEM), aluShort, null);
+		assertTrue(erg.equals("Speicheradresse erwartet: "+Alu.USAGE_SET_MEM));
 	}
 
-	/** Prüft, ob Parameter <i>set_mem</i> mit nur einem Argument die richtige Fehlermeldung liefert */
+	/** Prüft, ob Parameter <i>{@linkplain Alu#CMD_SET_MEM}</i> mit nur einem Argument die richtige Fehlermeldung liefert */
 	@Test
 	public void testeExecSetMemNurEinArgument() {
 		aluShort = new ALUShort(new MEMShort());
-		String erg = alu.exec(new Scanner("set_mem 1"), aluShort, null);
-		assertTrue(erg.equals("Wert erwartet: set_mem <addr> <wert>"));
+		String erg = alu.exec(new Scanner(Alu.CMD_SET_MEM+" 1"), aluShort, null);
+		assertTrue(erg.equals("Wert erwartet: "+Alu.USAGE_SET_MEM));
 	}
 
-	/** Prüft, ob Parameter <i>set_mem</i> die richtige Meldung liefert */
+	/** Prüft, ob Parameter <i>{@linkplain Alu#CMD_SET_MEM}</i> die richtige Meldung liefert */
 	@Test
 	public void testeExecSetMem() {
 		aluShort = new ALUShort(new MEMShort());
-		String erg = alu.exec(new Scanner("set_mem 1 2"), aluShort, null);
+		String erg = alu.exec(new Scanner(Alu.CMD_SET_MEM+" 1 2"), aluShort, null);
 		assertTrue(erg.equals("OK"));
 	}
 
-	/** Prüft, ob Parameter <i>set_mem</i> mit Argument 1 "keine Zahl" die richtige Fehlermeldung liefert */
+	/** Prüft, ob Parameter <i>{@linkplain Alu#CMD_SET_MEM}</i> mit Argument 1 "keine Zahl" die richtige Fehlermeldung liefert */
 	@Test
 	public void testeExecSetMemKeineZahl1() {
 		aluShort = new ALUShort(new MEMShort());
-		String erg = alu.exec(new Scanner("set_mem a 2"), aluShort, null);
+		String erg = alu.exec(new Scanner(Alu.CMD_SET_MEM+" a 2"), aluShort, null);
 		assertTrue(erg.equals("Ungültige Zahl: For input string: \"a\""));
 	}
 
-	/** Prüft, ob Parameter <i>set_mem</i> mit Argument 2 "keine Zahl" die richtige Fehlermeldung liefert */
+	/** Prüft, ob Parameter <i>{@linkplain Alu#CMD_SET_MEM}</i> mit Argument 2 "keine Zahl" die richtige Fehlermeldung liefert */
 	@Test
 	public void testeExecSetMemKeineZahl2() {
 		aluShort = new ALUShort(new MEMShort());
-		String erg = alu.exec(new Scanner("set_mem 1 b"), aluShort, null);
+		String erg = alu.exec(new Scanner(Alu.CMD_SET_MEM+" 1 b"), aluShort, null);
 		assertTrue(erg.equals("Ungültige Zahl: For input string: \"b\""));
 	}
 
-	/** Prüft, ob Parameter <i>set_mem</i> mit Exception richtige Fehlermeldung liefert */
+	/** Prüft, ob Parameter <i>{@linkplain Alu#CMD_SET_MEM}</i> mit Exception richtige Fehlermeldung liefert */
 	@Test
 	public void testeExecSetMemException() throws SVMException {
 		when(aluShort.getMEM()).thenReturn(mem);
 		when(mem.getInstructionInterface()).thenReturn(memInstruction);
 		doThrow(new SVMException("XXX")).when(memInstruction).write(1, (short) 2);
-		String erg = alu.exec(new Scanner("set_mem 1 2"), aluShort, null);
+		String erg = alu.exec(new Scanner(Alu.CMD_SET_MEM+" 1 2"), aluShort, null);
 		assertTrue(erg.equals("XXX"));
 		verify(memInstruction).write(1, (short) 2);
 	}
 
+	/** Prüft, ob Parameter <i>{@linkplain Alu#CMD_READ_MEM}</i> ohne Argumente die richtige Fehlermeldung liefert */
+	@Test
+	public void testeExecReadMemOhneArgument() {
+		aluShort = new ALUShort(new MEMShort());
+		String erg = alu.exec(new Scanner(Alu.CMD_READ_MEM), aluShort, null);
+		assertTrue(erg.equals("Speicheradresse erwartet: "+Alu.USAGE_READ_MEM));
+	}
+
+	/** Prüft, ob Parameter <i>{@linkplain Alu#CMD_READ_MEM}</i> mit Argument "keine Zahl" die richtige Fehlermeldung liefert */
+	@Test
+	public void testeExecreadMemKeineZahl() {
+		aluShort = new ALUShort(new MEMShort());
+		String erg = alu.exec(new Scanner(Alu.CMD_READ_MEM+" a"), aluShort, null);
+		assertTrue(erg.equals("Ungültige Zahl: For input string: \"a\""));
+	}
+
+	/** Prüft, ob Parameter <i>{@linkplain Alu#CMD_READ_MEM}</i> die richtige Meldung liefert */
+	@Test
+	public void testeExecReadMem() throws SVMException {
+		when(aluShort.getMEM()).thenReturn(mem);
+		when(mem.getInstructionInterface()).thenReturn(memInstruction);
+		when(memInstruction.read(1)).thenReturn((short) 27);
+		String erg = alu.exec(new Scanner(Alu.CMD_READ_MEM+" 1"), aluShort, null);
+		assertTrue(erg.equals("OK: 27"));
+		verify(memInstruction).read(1);
+	}
+
+	/** Prüft, ob Parameter <i>{@linkplain Alu#CMD_READ_MEM}</i> mit Exception richtige Fehlermeldung liefert */
+	@Test
+	public void testeExecreadMemException() throws SVMException {
+		when(aluShort.getMEM()).thenReturn(mem);
+		when(mem.getInstructionInterface()).thenReturn(memInstruction);
+		doThrow(new SVMException("XXX")).when(memInstruction).read(1);
+		String erg = alu.exec(new Scanner(Alu.CMD_READ_MEM+" 1"), aluShort, null);
+		assertTrue(erg.equals("XXX"));
+		verify(memInstruction).read(1);
+	}
 
 }

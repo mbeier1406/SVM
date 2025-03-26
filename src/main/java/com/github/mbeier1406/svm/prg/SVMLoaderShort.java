@@ -62,6 +62,8 @@ public class SVMLoaderShort implements SVMLoader<Short>, InstructionIO<Short> {
 	 */
 	private final InstructionWriterInterface<Short> instructionWriter = new InstructionWriterShort();
 
+	private final DebuggingInfo debuggingInfo = new DebuggingInfo();
+
 
 	/**	{@inheritDoc} */
 	@Override
@@ -140,6 +142,12 @@ public class SVMLoaderShort implements SVMLoader<Short>, InstructionIO<Short> {
 	@Override
 	public Map<Label, Integer> getLabelList() {
 		return this.labelList;
+	}
+
+	/**	{@inheritDoc} */
+	@Override
+	public DebuggingInfo getDebuggingInfo() {
+		return debuggingInfo;
 	}
 
 	@Override

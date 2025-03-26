@@ -1,5 +1,6 @@
 package com.github.mbeier1406.svm.prg;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.github.mbeier1406.svm.ALU;
@@ -8,7 +9,9 @@ import com.github.mbeier1406.svm.MEM;
 import com.github.mbeier1406.svm.SVM;
 import com.github.mbeier1406.svm.SVMException;
 import com.github.mbeier1406.svm.instructions.InstructionInterface;
+import com.github.mbeier1406.svm.prg.SVMProgram.Data;
 import com.github.mbeier1406.svm.prg.SVMProgram.Label;
+import com.github.mbeier1406.svm.prg.SVMProgram.VirtualInstruction;
 import com.github.mbeier1406.svm.syscalls.IO;
 
 /**
@@ -41,9 +44,32 @@ public interface SVMLoader<T> {
 	/**
 	 * Nach dem Laden eines {@linkplain SVMProgram}s müssen allen virtuellen Adressen ({@linkplain Label}n)
 	 * die konkreten Adressen im Speicher zugeordnet sein. Diese Zuordnungstabelle wird während des
-	 * ladens mit {@linkplain #load(MEM, SVMProgram)} gepflegt.
+	 * Ladens mit {@linkplain #load(MEM, SVMProgram)} gepflegt.
 	 * @return Liste der im geladenen Programm verwendeten labeln mit Adresse
 	 */
 	public Map<Label, Integer> getLabelList();
+
+
+	/**
+	 * Dieses Objekt speichert die {@linkplain Data Daten} und {@linkplain VirtualInstruction Instruktionen}
+	 * eines {@linkplain SVMProgram SVM-Programms} (interne Darstellung) zusammen mit deren Adressen im {@linkplain MEM Speicher}
+	 * nach dem Laden über {@linkplain SVMLoader#load(MEM, SVMProgram)}.<p/>
+	 * Diese Information wird von der {@linkplain ALU} zur Anzeige von Debugging-Informationen verwendet.
+	 * @param <T> Die Wortlänge der {@linkplain SVM}
+	 * @see {@linkplain ALU#setDebugMode(boolean)}
+	 */
+	public static class DebuggingInfo<T> {
+
+		private final Map<Integer, Data<T>> dataAdresses = new HashMap<>();
+
+		private final Map<Integer, VirtualInstruction<T>> instructionAdresses = new HashMap<>();
+	
+	}
+
+	/**
+	 * Liefert die Liste der Original-SVM-Anweisungen mit den Adressen im Speicher {@linkplain MEM}.
+	 * Diese wird zum Dbugging
+	 */
+	public DebuggingInfo getDebuggingInfo();
 
 }

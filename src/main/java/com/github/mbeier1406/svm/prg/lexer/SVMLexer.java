@@ -178,7 +178,7 @@ public interface SVMLexer {
 		}
 		/** Liefert den Wert für Zahl-Token wie {@linkplain Token#REGISTER} (hier: die Nummer des Registers) */
 		public Optional<Integer> getIntValue() {
-			return Optional.ofNullable(value == null ? null : Integer.parseInt(value));
+			return Optional.ofNullable((Integer) (value == null ? null : Integer.parseInt(value)));
 		}
 	}
 

@@ -59,6 +59,11 @@ public interface ALU<T> {
 	 */
 	public int start() throws SVMException;
 
+	public void setDebugInfo();
+
+	/** */
+	public void setDebugMode(boolean on);
+
 	/** Liefert die Referenz auf den Hauptspeicher, den die ALU benutzt */
 	public MEM<T> getMEM();
 

@@ -17,6 +17,7 @@ import com.github.mbeier1406.svm.instructions.InstructionIO;
 import com.github.mbeier1406.svm.instructions.InstructionInterface;
 import com.github.mbeier1406.svm.instructions.InstructionWriterInterface;
 import com.github.mbeier1406.svm.instructions.InstructionWriterShort;
+import com.github.mbeier1406.svm.prg.SVMProgram.Data;
 import com.github.mbeier1406.svm.prg.SVMProgram.Label;
 
 /**
@@ -62,7 +63,13 @@ public class SVMLoaderShort implements SVMLoader<Short>, InstructionIO<Short> {
 	 */
 	private final InstructionWriterInterface<Short> instructionWriter = new InstructionWriterShort();
 
-	private final DebuggingInfo debuggingInfo = new DebuggingInfo();
+	/**
+	 * In dieser Datenstruktur werden die echten Speicheradressen im ({@linkplain MEM} mit den zugeordenen
+	 * Datenstrukturen ({@linkplain Data} und Instruktionen {@linkplain InstructionInterface} gespeichert.
+	 * Diese Information kann von der {@linkplain ALU} verwendet werden, um bei der Ausführung eines SVM-Programms
+	 * Debugging-Informationen auszugeben.
+	 */
+	private final DebuggingInfo<Short> debuggingInfo = new DebuggingInfo<Short>();
 
 
 	/**	{@inheritDoc} */
@@ -80,6 +87,7 @@ public class SVMLoaderShort implements SVMLoader<Short>, InstructionIO<Short> {
 			for ( var data : svmProgram.getDataList() ) {
 				LOGGER.trace("Data: dataAddr={}; label={}", this.dataAddr, data.label());
 				this.labelList.put(data.label(), this.dataAddr);
+				this.debuggingInfo.getDataAdresses().put(this.dataAddr, data);
 				for ( int i=0; i < data.dataList().length; i++ )
 					mem.getInstructionInterface().write(this.dataAddr+i, (Short) data.dataList()[i]);
 				this.dataAddr += data.dataList().length;
@@ -127,6 +135,7 @@ public class SVMLoaderShort implements SVMLoader<Short>, InstructionIO<Short> {
 					}
 				}
 				int instrLenInWords = instructionWriter.writeInstruction(mem.getInstructionInterface(), this.prgAddr, instrDef);
+				this.debuggingInfo.getInstructionAdresses().put(this.prgAddr, virtInstr);
 				LOGGER.trace("instrLenInWords={}", instrLenInWords);
 				this.prgAddr -= instrLenInWords;
 			};
@@ -146,7 +155,7 @@ public class SVMLoaderShort implements SVMLoader<Short>, InstructionIO<Short> {
 
 	/**	{@inheritDoc} */
 	@Override
-	public DebuggingInfo getDebuggingInfo() {
+	public DebuggingInfo<Short> getDebuggingInfo() {
 		return debuggingInfo;
 	}
 

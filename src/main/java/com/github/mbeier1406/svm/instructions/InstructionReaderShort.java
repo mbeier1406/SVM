@@ -25,7 +25,7 @@ public class InstructionReaderShort implements InstructionReaderInterface<Short>
 	/** {@inheritDoc} */
 	@Override
 	public InstructionDefinition<Short> getInstruction(MEM.Instruction<Short> mem, int addr) throws SVMException {
-		try ( CloseableThreadContext.Instance _ = put("mem", mem.toString()).put("addr", String.valueOf(addr)) ) {
+		try ( CloseableThreadContext.Instance ctx = put("mem", mem.toString()).put("addr", String.valueOf(addr)) ) {
 			/* Teil I: die Instruktion anhand des Codes ermitteln */
 			short nextWord = requireNonNull(mem, "mem").read(addr);
 			LOGGER.trace("nextWord={}", BD_SHORT.getBinaerDarstellung(nextWord));

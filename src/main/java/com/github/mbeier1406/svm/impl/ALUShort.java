@@ -138,4 +138,16 @@ public class ALUShort implements ALU<Short>, Instruction<Short> {
 		return sb.toString();
 	}
 
+	@Override
+	public void setDebugInfo() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setDebugMode(boolean on) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

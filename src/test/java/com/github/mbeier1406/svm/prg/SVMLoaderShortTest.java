@@ -203,4 +203,26 @@ public class SVMLoaderShortTest {
 
 	}
 
+	/** Stellt sicher, dass nach dem Laden eines SVM-Programms die Debugging-Informationen vorhanden sind */
+	@Test
+	public void testeDbuggingInfo() throws SVMException {
+		final var svmLoader = new SVMLoaderShort();
+		svmLoader.load(mem, getKorrektesProgramm());
+		final var debuggingInfo = svmLoader.getDebuggingInfo();
+		LOGGER.info("debuggingInfo={}", debuggingInfo);
+		assertThat(debuggingInfo.getDataAdresses().size(), equalTo(2));
+		assertThat(debuggingInfo.getDataAdresses().get(0), equalTo(FOUR_WORDS_DATA));
+		assertThat(debuggingInfo.getDataAdresses().get(4), equalTo(THREE_WORDS_DATA));
+		assertThat(debuggingInfo.getInstructionAdresses().size(), equalTo(9));
+		assertThat(debuggingInfo.getInstructionAdresses().get(999), equalTo(NOP0_OHNE_LABEL));
+		assertThat(debuggingInfo.getInstructionAdresses().get(998), equalTo(MOV2_REG0_OHNE_LABEL));
+		assertThat(debuggingInfo.getInstructionAdresses().get(995), equalTo(MOV1_REG1_OHNE_LABEL));
+		assertThat(debuggingInfo.getInstructionAdresses().get(992), equalTo(MOVX_REG2_LABEL2));
+		assertThat(debuggingInfo.getInstructionAdresses().get(989), equalTo(MOVL_REG3_OHNE_LABEL));
+		assertThat(debuggingInfo.getInstructionAdresses().get(986), equalTo(INT1_OHNE_LABEL));
+		assertThat(debuggingInfo.getInstructionAdresses().get(985), equalTo(MOV1_REG0_OHNE_LABEL));
+		assertThat(debuggingInfo.getInstructionAdresses().get(982), equalTo(MOV1_REG1_OHNE_LABEL));
+		assertThat(debuggingInfo.getInstructionAdresses().get(979), equalTo(INT1_OHNE_LABEL));
+	}
+
 }

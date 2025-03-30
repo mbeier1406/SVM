@@ -26,7 +26,9 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>23</java.version>
+		<!--Kompatibilität Java 21 und Lombok 1.18.30-->
+		<java.version>21</java.version>
+		<lombok.version>1.18.30</lombok.version>
 		<org.junit.version>5.10.2</org.junit.version>
 		<org.junit.params.version>5.10.2</org.junit.params.version>
 		<org.hamcrest.version>1.3</org.hamcrest.version>
@@ -45,6 +47,13 @@
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
+	                <annotationProcessorPaths>
+	                    <path>
+	                        <groupId>org.projectlombok</groupId>
+	                        <artifactId>lombok</artifactId>
+	                        <version>${lombok.version}</version>
+	                    </path>
+	                </annotationProcessorPaths>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -121,6 +130,12 @@
 			<artifactId>commons-lang</artifactId>
 			<version>2.6</version>
 		</dependency>
+	    <dependency>
+	        <groupId>org.projectlombok</groupId>
+	        <artifactId>lombok</artifactId>
+	        <version>${lombok.version}</version>
+	        <scope>provided</scope>
+	    </dependency>
 	</dependencies>
 
 	<profiles>

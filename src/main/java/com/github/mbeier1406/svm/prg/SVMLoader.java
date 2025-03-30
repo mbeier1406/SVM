@@ -14,6 +14,10 @@ import com.github.mbeier1406.svm.prg.SVMProgram.Label;
 import com.github.mbeier1406.svm.prg.SVMProgram.VirtualInstruction;
 import com.github.mbeier1406.svm.syscalls.IO;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 /**
  * Lädt ein SVM-Programm in interner Repräsentation ({@linkplain SVMProgram}) zur Ausführung über
  * {@linkplain ALU#start()} in den Hauptspeicher ({@linkplain MEM}) einer {@linkplain SVM}.
@@ -49,7 +53,6 @@ public interface SVMLoader<T> {
 	 */
 	public Map<Label, Integer> getLabelList();
 
-
 	/**
 	 * Dieses Objekt speichert die {@linkplain Data Daten} und {@linkplain VirtualInstruction Instruktionen}
 	 * eines {@linkplain SVMProgram SVM-Programms} (interne Darstellung) zusammen mit deren Adressen im {@linkplain MEM Speicher}
@@ -58,18 +61,20 @@ public interface SVMLoader<T> {
 	 * @param <T> Die Wortlänge der {@linkplain SVM}
 	 * @see {@linkplain ALU#setDebugMode(boolean)}
 	 */
+	@Getter
+	@ToString
+	@NoArgsConstructor
 	public static class DebuggingInfo<T> {
-
+		/** Zuordnung Speicheradresse zu einem definierten Datenbereich */
 		private final Map<Integer, Data<T>> dataAdresses = new HashMap<>();
-
+		/** Zuordnung Speicheradresse zu einer Instruktion */
 		private final Map<Integer, VirtualInstruction<T>> instructionAdresses = new HashMap<>();
-	
 	}
 
 	/**
-	 * Liefert die Liste der Original-SVM-Anweisungen mit den Adressen im Speicher {@linkplain MEM}.
-	 * Diese wird zum Dbugging
+	 * Liefert die Liste der Original-SVM-Anweisungen und Daten mit den Adressen im Speicher {@linkplain MEM}.
+	 * Diese wird zum Debugging in der {@linkplain ALU} verwendet.
 	 */
-	public DebuggingInfo getDebuggingInfo();
+	public DebuggingInfo<T> getDebuggingInfo();
 
 }

@@ -22,6 +22,9 @@ public class SVMSourceShortTest {
 
 	public static final Logger LOGGER = LogManager.getLogger(SVMSourceShortTest.class);
 
+	/** Ein Beispiel-Programm */
+	public static final String EXAMPLE_PRG = "src/test/resources/com/github/mbeier1406/svm/prg/example.prg";
+
 	/** Der Pfad, untern dem das Programm {@linkplain SVMLoaderShortTest#getKorrektesProgramm()} gespeichert wird ist {@value} */
 	public static final String PRG_DATEI = "src/test/resources/com/github/mbeier1406/svm/prg/program.prg";
 
@@ -44,7 +47,7 @@ public class SVMSourceShortTest {
 	/** Liest ein bekanntes Programm ein und prüft die Struktur */
 	@Test
 	public void testeLesen() throws SVMException {
-		var svmProgram = svmSource.load("src/test/resources/com/github/mbeier1406/svm/prg/example.prg");
+		var svmProgram = svmSource.load(EXAMPLE_PRG);
 		svmProgram.validate();
 		assertThat(svmProgram.getDataList().size(), equalTo(2));
 		Stream.of("text1", "text2").forEach(label -> {

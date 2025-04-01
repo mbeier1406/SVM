@@ -59,7 +59,7 @@ public class IntTest {
 	/** Bei Null-LineInfo definierte Meldung schreiben */
 	@Test
 	public void testeNullParameter() {
-		var ex = assertThrows(NullPointerException.class, () -> intr.getVirtualInstruction(null, null, null));
+		var ex = assertThrows(NullPointerException.class, () -> intr.getVirtualInstruction(null, null, null, false));
 		assertThat(ex.getLocalizedMessage(), containsString("lineInfo"));
 	}
 
@@ -67,7 +67,7 @@ public class IntTest {
 	@Test
 	public void testeFalscheZahlParameter() {
 		Stream.of(incorrectSymbols1, incorrectSymbols2).forEach(list -> {
-			var ex = assertThrows(SVMException.class, () -> intr.getVirtualInstruction(null, new LineInfo(1, "", list), null));
+			var ex = assertThrows(SVMException.class, () -> intr.getVirtualInstruction(null, new LineInfo(1, "", list), null, false));
 			assertThat(ex.getLocalizedMessage(), containsString("INT erwartet einen Parameter"));
 		});
 	}
@@ -75,21 +75,21 @@ public class IntTest {
 	/** Die Instruktion Int erwartet einen Number-Parameter */
 	@Test
 	public void testeKeineZahlParameter() {
-		var ex = assertThrows(SVMException.class, () -> intr.getVirtualInstruction(null, new LineInfo(1, "", incorrectSymbols3), null));
+		var ex = assertThrows(SVMException.class, () -> intr.getVirtualInstruction(null, new LineInfo(1, "", incorrectSymbols3), null, false));
 		assertThat(ex.getLocalizedMessage(), containsString("INT erwartet Number-Parameter"));
 	}
 
 	/** Die Instruktion Int wird erwartet */
 	@Test
 	public void testeFalschesSymbol() {
-		var ex = assertThrows(SVMException.class, () -> intr.getVirtualInstruction(null, new LineInfo(1, "", incorrectSymbolsInt), null));
+		var ex = assertThrows(SVMException.class, () -> intr.getVirtualInstruction(null, new LineInfo(1, "", incorrectSymbolsInt), null, false));
 		assertThat(ex.getLocalizedMessage(), containsString("INT erwartet Symbol"));
 	}
 
 	/** Testet das Parsen der Instruktion <b>ohne</b> vorangestelltes Label als Sprungmarke */
 	@Test
 	public void testeOhneLabel() throws SVMException {
-		var virtualInstruction = intr.getVirtualInstruction(null, new LineInfo(1, "	int $1", correctSymbols), null);
+		var virtualInstruction = intr.getVirtualInstruction(null, new LineInfo(1, "	int $1", correctSymbols), null, false);
 		assertAll("virtualInstruction",
 				() -> assertEquals(virtualInstruction.instruction(), new InstructionDefinition<>(InstructionFactory.INT, new byte[]{(byte) 1}, null)),
 				() -> assertEquals(virtualInstruction.label(), null),
@@ -100,7 +100,7 @@ public class IntTest {
 	@Test
 	@SuppressWarnings("serial")
 	public void testeMitLabel() throws SVMException {
-		var virtualInstruction = intr.getVirtualInstruction(new Symbol(Token.LABEL, "label1"), new LineInfo(1, "	int $1", correctSymbols), null);
+		var virtualInstruction = intr.getVirtualInstruction(new Symbol(Token.LABEL, "label1"), new LineInfo(1, "	int $1", correctSymbols), null, false);
 		assertAll("virtualInstruction",
 				() -> assertEquals(virtualInstruction.instruction(), new InstructionDefinition<>(InstructionFactory.INT, new byte[]{(byte) 1}, null)),
 				() -> assertEquals(virtualInstruction.label(), new Label(LabelType.INSTRUCTION, "label1")),

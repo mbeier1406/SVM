@@ -147,23 +147,23 @@ public class MovTest {
 	/** SVM-Programm Datenbereich initialisieren */
 	@BeforeAll
 	public static void init() throws SVMException {
-		svmProgram.addData(new Data<Short>(label1, new Short[] {'a', 'b', 'c'}));
-		svmProgram.addData(new Data<Short>(label2, new Short[] {1, 2}));
-		svmProgram.addInstruction(new VirtualInstruction<Short>(null, new InstructionDefinition<Short>(InstructionFactory.INT, new byte[] {1}, null), new Label[] {null}));
+		svmProgram.addData(new Data<Short>(label1, new Short[] {'a', 'b', 'c'}, null));
+		svmProgram.addData(new Data<Short>(label2, new Short[] {1, 2}, null));
+		svmProgram.addInstruction(new VirtualInstruction<Short>(null, new InstructionDefinition<Short>(InstructionFactory.INT, new byte[] {1}, null), new Label[] {null}, null));
 		svmProgram.validate();
 	}
 
 	/** Bei Null-LineInfo definierte Meldung schreiben */
 	@Test
 	public void testeNullParameterLineInfo() {
-		var ex = assertThrows(NullPointerException.class, () -> mov.getVirtualInstruction(null, null, null));
+		var ex = assertThrows(NullPointerException.class, () -> mov.getVirtualInstruction(null, null, null, false));
 		assertThat(ex.getLocalizedMessage(), containsString("lineInfo"));
 	}
 
 	/** Bei Null-SVM-Programm definierte Meldung schreiben */
 	@Test
 	public void testeNullParameterSvmProgram() {
-		var ex = assertThrows(NullPointerException.class, () -> mov.getVirtualInstruction(null, new LineInfo(1, "", mvLenLabel1Reg2), null));
+		var ex = assertThrows(NullPointerException.class, () -> mov.getVirtualInstruction(null, new LineInfo(1, "", mvLenLabel1Reg2), null, false));
 		assertThat(ex.getLocalizedMessage(), containsString("svmProgram"));
 	}
 

@@ -56,20 +56,20 @@ public class SVMProgramTest {
 	/** VirtualInstruction: InstructionDefinition ist <b>null</b> */
 	@Test
 	public void testeVirtualInstructionNullInstructionDefinition() {
-		assertThrows(NullPointerException.class, () -> new SVMProgram.VirtualInstruction<Short>(null, null, emptyLabelList));
+		assertThrows(NullPointerException.class, () -> new SVMProgram.VirtualInstruction<Short>(null, null, emptyLabelList, null));
 	}
 
 	/** VirtualInstruction: LabelListe ist <b>null</b> */
 	@Test
 	public void testeVirtualInstructionNullLabelList() {
-		assertThrows(NullPointerException.class, () -> new SVMProgram.VirtualInstruction<Short>(null, instructionDefinitionNOP, null));
+		assertThrows(NullPointerException.class, () -> new SVMProgram.VirtualInstruction<Short>(null, instructionDefinitionNOP, null, null));
 	}
 
 	/** VirtualInstruction (NOP): LabelListe enthält nicht die erwartete Anzahl Elemente */
 	@Test
 	public void testeVirtualInstructionLenLabelListNOP() {
 		final IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () ->
-			new SVMProgram.VirtualInstruction<Short>(null, instructionDefinitionNOP, oneLabelList));
+			new SVMProgram.VirtualInstruction<Short>(null, instructionDefinitionNOP, oneLabelList, null));
 		assertThat(ex.getLocalizedMessage(), containsString("erwartete Parameter: 0; erhalteneAnzahlParameter: 1"));
 	}
 
@@ -77,7 +77,7 @@ public class SVMProgramTest {
 	@Test
 	public void testeVirtualInstructionLenLabelListINT() {
 		final IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () ->
-			new SVMProgram.VirtualInstruction<Short>(null, instructionDefinitionINT, emptyLabelList));
+			new SVMProgram.VirtualInstruction<Short>(null, instructionDefinitionINT, emptyLabelList, null));
 		assertThat(ex.getLocalizedMessage(), containsString("erwartete Parameter: 1; erhalteneAnzahlParameter: 0"));
 	}
 
@@ -85,40 +85,40 @@ public class SVMProgramTest {
 	@Test
 	public void testeVirtualInstructionLenLabelListMOV() {
 		final IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () ->
-			new SVMProgram.VirtualInstruction<Short>(null, instructionDefinitionMOV, threeLabelList));
+			new SVMProgram.VirtualInstruction<Short>(null, instructionDefinitionMOV, threeLabelList, null));
 		assertThat(ex.getLocalizedMessage(), containsString("erwartete Parameter: 5; erhalteneAnzahlParameter: 3"));
 	}
 
 	/** Data: Label ist <b>null</b> */
 	@Test
 	public void testeNullLabelData() {
-		assertThrows(NullPointerException.class, () -> new SVMProgram.Data<Short>(null, new Short[] {1}));
+		assertThrows(NullPointerException.class, () -> new SVMProgram.Data<Short>(null, new Short[] {1}, null));
 	}
 
 	/** Data: Label ist ungültig */
 	@Test
 	public void testeIllegalLabelTypeData() {
 		final IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () ->
-			new SVMProgram.Data<Short>(new SVMProgram.Label(LabelType.INSTRUCTION, "A"), new Short[] {1}));
+			new SVMProgram.Data<Short>(new SVMProgram.Label(LabelType.INSTRUCTION, "A"), new Short[] {1}, null));
 		assertThat(ex.getLocalizedMessage(), containsString("Labeltyp ungültig"));
 	}
 
 	/** Data: Daten sind <b>null</b> */
 	@Test
 	public void testeNullDaten1Data() {
-		assertThrows(NullPointerException.class, () -> new SVMProgram.Data<Short>(label, null));
+		assertThrows(NullPointerException.class, () -> new SVMProgram.Data<Short>(label, null, null));
 	}
 
 	/** Data: Daten sind <b>null</b> */
 	@Test
 	public void testeNullDaten2Data() {
-		assertThrows(IllegalArgumentException.class, () -> new SVMProgram.Data<Short>(label, new Short[]{}));
+		assertThrows(IllegalArgumentException.class, () -> new SVMProgram.Data<Short>(label, new Short[]{}, null));
 	}
 
 	/** Data: Daten enthalten <b>null</b>-Werte */
 	@Test
 	public void testeNullDaten3Data() {
-		final NullPointerException ex = assertThrows(NullPointerException.class, () -> new SVMProgram.Data<Short>(label, new Short[]{ 1, null, 2}));
+		final NullPointerException ex = assertThrows(NullPointerException.class, () -> new SVMProgram.Data<Short>(label, new Short[]{ 1, null, 2}, null));
 		assertThat(ex.getLocalizedMessage(), containsString("dataList[1]"));
 	}
 

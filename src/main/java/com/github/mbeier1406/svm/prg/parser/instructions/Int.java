@@ -31,7 +31,7 @@ public class Int extends InstructionParserBase<Short> implements InstructionPars
 
 	/** {@inheritDoc} */
 	@Override
-	public VirtualInstruction<Short> getVirtualInstruction(final Symbol label, final LineInfo lineInfo, final SVMProgram<Short> svmProgram) throws SVMException {
+	public VirtualInstruction<Short> getVirtualInstruction(final Symbol label, final LineInfo lineInfo, final SVMProgram<Short> svmProgram, boolean debugging) throws SVMException {
 		if ( Objects.requireNonNull(lineInfo, "lineInfo").symbols().size() != 2 ) // Syntax "int <Number>"
 			throw new SVMException("INT erwartet einen Parameter: "+lineInfo.symbols());
 		if ( !lineInfo.symbols().get(0).equals(SVMLexer.SYM_INT) )
@@ -43,7 +43,8 @@ public class Int extends InstructionParserBase<Short> implements InstructionPars
 		return new VirtualInstruction<>(
 				Helper.getLabel(label),
 				new InstructionDefinition<>(InstructionFactory.INT, new byte[] {lineInfo.symbols().get(1).getIntValue().get().byteValue()}, null),
-				new Label[]{ null } /* Ein Parameter, keine Referenz, muss eine Konstante sein */);
+				new Label[]{ null }, /* Ein Parameter, keine Referenz, muss eine Konstante sein */
+				debugging ? lineInfo : null);
 	}
 
 }

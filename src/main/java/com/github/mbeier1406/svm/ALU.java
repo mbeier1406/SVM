@@ -1,6 +1,7 @@
 package com.github.mbeier1406.svm;
 
 import com.github.mbeier1406.svm.instructions.InstructionInterface;
+import com.github.mbeier1406.svm.prg.SVMLoader.DebuggingInfo;
 
 /**
  * Definiert die Schnittstelle zu Arithmetisch-, logischen Einheit (ALU),
@@ -59,9 +60,14 @@ public interface ALU<T> {
 	 */
 	public int start() throws SVMException;
 
-	public void setDebugInfo();
+	public void setDebugInfo(final DebuggingInfo<T> debuggingInfo);
 
-	/** */
+	/**
+	 * Schaltet den Debugmodus ein: wenn ein Programm mit {@linkplain #start()} ausgeführt wird,
+	 * und zuvor mit {@linkplain #setDebugInfo(DebuggingInfo)} die entsprechenden Informationen
+	 * gesetzt wurden, wird per Logger vor der Ausführung eines Kommandos die entsprechende
+	 * Codezeile {@linkplain DebuggingInfo#getInstructionAdresses()}
+	 */
 	public void setDebugMode(boolean on);
 
 	/** Liefert die Referenz auf den Hauptspeicher, den die ALU benutzt */

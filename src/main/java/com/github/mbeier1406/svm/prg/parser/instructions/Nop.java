@@ -29,7 +29,7 @@ public class Nop extends InstructionParserBase<Short> implements InstructionPars
 
 	/** {@inheritDoc} */
 	@Override
-	public VirtualInstruction<Short> getVirtualInstruction(final Symbol label, final LineInfo lineInfo, final SVMProgram<Short> svmProgram) throws SVMException {
+	public VirtualInstruction<Short> getVirtualInstruction(final Symbol label, final LineInfo lineInfo, final SVMProgram<Short> svmProgram, boolean debugging) throws SVMException {
 		if ( Objects.requireNonNull(lineInfo, "lineInfo").symbols().size() != 1 ) // Symbol an Index  0 ist "nop"
 			throw new SVMException("NOP erwartet keine Parameter: "+lineInfo.symbols());
 		if ( !lineInfo.symbols().get(0).equals(SVMLexer.SYM_NOP) )
@@ -37,7 +37,8 @@ public class Nop extends InstructionParserBase<Short> implements InstructionPars
 		return new VirtualInstruction<>(
 				Helper.getLabel(label),
 				new InstructionDefinition<>(InstructionFactory.NOP, new byte[0], null),
-				new Label[]{} /* Keine Parameter */);
+				new Label[]{}, /* Keine Parameter */
+				debugging ? lineInfo : null);
 	}
 
 }

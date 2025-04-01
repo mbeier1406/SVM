@@ -43,9 +43,9 @@ public class SVMProgramShortTest {
 
 
 	/** Ein paar Datensätze zum Test */
-	public final SVMProgram.Data<Short> dataA = new SVMProgram.Data<>(labelA, new Short[]{1, 2, 3});
-	public final SVMProgram.Data<Short> dataB = new SVMProgram.Data<>(labelB, new Short[]{2, 3, 4});
-	public final SVMProgram.Data<Short> dataC = new SVMProgram.Data<>(labelC, new Short[]{3, 4, 5});
+	public final SVMProgram.Data<Short> dataA = new SVMProgram.Data<>(labelA, new Short[]{1, 2, 3}, null);
+	public final SVMProgram.Data<Short> dataB = new SVMProgram.Data<>(labelB, new Short[]{2, 3, 4}, null);
+	public final SVMProgram.Data<Short> dataC = new SVMProgram.Data<>(labelC, new Short[]{3, 4, 5}, null);
 
 	/** Einige Instruktionen */
 	public final InstructionInterface<Short> NOP = InstructionFactory.INSTRUCTIONS.get(Nop.CODE);
@@ -58,12 +58,12 @@ public class SVMProgramShortTest {
 	public final InstructionDefinition<Short> instrMov = new InstructionDefinition<>(MOV, new byte[] {1,2,3,4,5}, null);
 
 	/** Einige Instruktionen <b>ohne</b> Label */
-	public final SVMProgram.VirtualInstruction<Short> virtInstrNopOhneLabel = new SVMProgram.VirtualInstruction<>(null, instrNop, emptyLabelList);
+	public final SVMProgram.VirtualInstruction<Short> virtInstrNopOhneLabel = new SVMProgram.VirtualInstruction<>(null, instrNop, emptyLabelList, null);
 
 	/** Einige Instruktionen <b>mit</b> Label */
-	public final SVMProgram.VirtualInstruction<Short> virtInstrNopMitLabelA = new SVMProgram.VirtualInstruction<>(labelA, instrNop, emptyLabelList);
-	public final SVMProgram.VirtualInstruction<Short> virtInstrIntLabelD = new SVMProgram.VirtualInstruction<>(null, instrMov, fiveLabelList);
-	public final SVMProgram.VirtualInstruction<Short> virtInstrInt1 = new SVMProgram.VirtualInstruction<>(null, instrInt, oneEmptyLabelList);
+	public final SVMProgram.VirtualInstruction<Short> virtInstrNopMitLabelA = new SVMProgram.VirtualInstruction<>(labelA, instrNop, emptyLabelList, null);
+	public final SVMProgram.VirtualInstruction<Short> virtInstrIntLabelD = new SVMProgram.VirtualInstruction<>(null, instrMov, fiveLabelList, null);
+	public final SVMProgram.VirtualInstruction<Short> virtInstrInt1 = new SVMProgram.VirtualInstruction<>(null, instrInt, oneEmptyLabelList, null);
 
 
 	@BeforeEach

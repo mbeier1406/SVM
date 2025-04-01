@@ -59,10 +59,10 @@ public class SVMLoaderShortTest {
 	}}.toArray(new Label[0]);
 
 	/** Daten: 4-Worte String */
-	public static final Data<Short> FOUR_WORDS_DATA = new Data<Short>(LABEL1, new Short[] { (short) 'a', (short) 'b', (short) 'c', (short) '\n' });
+	public static final Data<Short> FOUR_WORDS_DATA = new Data<Short>(LABEL1, new Short[] { (short) 'a', (short) 'b', (short) 'c', (short) '\n' }, null);
 
 	/** Daten: 3-Worte String */
-	public static final Data<Short> THREE_WORDS_DATA = new Data<Short>(LABEL2, new Short[] { (short) 'X', (short) 'Y', (short) '\n' });
+	public static final Data<Short> THREE_WORDS_DATA = new Data<Short>(LABEL2, new Short[] { (short) 'X', (short) 'Y', (short) '\n' }, null);
 
 	/** Verschiedene Instruktionsdefinition */
 	public static final InstructionDefinition<Short> NOP0 = new InstructionDefinition<Short>(NOP, new byte[] {}, null); // NOP
@@ -74,13 +74,13 @@ public class SVMLoaderShortTest {
 	public static final InstructionDefinition<Short> MOV1_REG0 = new InstructionDefinition<Short>(MOV, new byte[] {0x21,0,1,0,0}, null); // MOV $1 -> REG(0)
 
 	/** Verschiedene virtuelle Instruktion */
-	public static final VirtualInstruction<Short> NOP0_OHNE_LABEL = new VirtualInstruction<Short>(null, NOP0, ZERO_REF_LABEL); // INT(1) kein Label
-	public static final VirtualInstruction<Short> INT1_OHNE_LABEL = new VirtualInstruction<Short>(null, INT1, ONE_EMPTY_REF_LABEL); // INT(1) kein Label
-	public static final VirtualInstruction<Short> MOV2_REG0_OHNE_LABEL = new VirtualInstruction<Short>(null, MOV2_REG0, FIVE_EMPTY_REF_LABEL); // MOV $2 REG(0) kein Label
-	public static final VirtualInstruction<Short> MOV1_REG1_OHNE_LABEL = new VirtualInstruction<Short>(null, MOV1_REG1, FIVE_EMPTY_REF_LABEL); // MOV $1 REG(1) kein Label
-	public static final VirtualInstruction<Short> MOVX_REG2_LABEL2 = new VirtualInstruction<Short>(null, MOVX_REG2, FIVE_REF_LABEL_TEXT1); // MOV $1 REG(1) kein Label
-	public static final VirtualInstruction<Short> MOVL_REG3_OHNE_LABEL = new VirtualInstruction<Short>(null, MOVL_REG3, FIVE_EMPTY_REF_LABEL); // MOV $1 REG(1) kein Label
-	public static final VirtualInstruction<Short> MOV1_REG0_OHNE_LABEL = new VirtualInstruction<Short>(null, MOV1_REG0, FIVE_EMPTY_REF_LABEL); // MOV $2 REG(0) kein Label
+	public static final VirtualInstruction<Short> NOP0_OHNE_LABEL = new VirtualInstruction<Short>(null, NOP0, ZERO_REF_LABEL, null); // INT(1) kein Label
+	public static final VirtualInstruction<Short> INT1_OHNE_LABEL = new VirtualInstruction<Short>(null, INT1, ONE_EMPTY_REF_LABEL, null); // INT(1) kein Label
+	public static final VirtualInstruction<Short> MOV2_REG0_OHNE_LABEL = new VirtualInstruction<Short>(null, MOV2_REG0, FIVE_EMPTY_REF_LABEL, null); // MOV $2 REG(0) kein Label
+	public static final VirtualInstruction<Short> MOV1_REG1_OHNE_LABEL = new VirtualInstruction<Short>(null, MOV1_REG1, FIVE_EMPTY_REF_LABEL, null); // MOV $1 REG(1) kein Label
+	public static final VirtualInstruction<Short> MOVX_REG2_LABEL2 = new VirtualInstruction<Short>(null, MOVX_REG2, FIVE_REF_LABEL_TEXT1, null); // MOV $1 REG(1) kein Label
+	public static final VirtualInstruction<Short> MOVL_REG3_OHNE_LABEL = new VirtualInstruction<Short>(null, MOVL_REG3, FIVE_EMPTY_REF_LABEL, null); // MOV $1 REG(1) kein Label
+	public static final VirtualInstruction<Short> MOV1_REG0_OHNE_LABEL = new VirtualInstruction<Short>(null, MOV1_REG0, FIVE_EMPTY_REF_LABEL, null); // MOV $2 REG(0) kein Label
 
 	/** Das einzuspielende Programm */
 	public SVMProgram<Short> svmProgramm;

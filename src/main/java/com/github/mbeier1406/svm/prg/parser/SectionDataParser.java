@@ -5,6 +5,7 @@ import java.util.List;
 import com.github.mbeier1406.svm.SVM;
 import com.github.mbeier1406.svm.SVMException;
 import com.github.mbeier1406.svm.prg.SVMProgram;
+import com.github.mbeier1406.svm.prg.SVMProgram.Data;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.LineInfo;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Symbol;
@@ -17,6 +18,13 @@ import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Symbol;
  * @see Ein Beispiel SVM-Programm (externe Repräsentation) /SVM/src/test/resources/com/github/mbeier1406/svm/prg/example.svm
  */
 public interface SectionDataParser<T> {
+
+	/**
+	 * Legt fest, ob in die {@linkplain Data}-Items Debugging-Informationen geschrieben wird.
+	 * Diese besteht aus Zeilennummer und Zeile aus {@linkplain LineInfo}. Standardmäßig ausgeschaltet.
+	 * @param debugging wenn <b>true</b>, wird die Information im {@linkplain SVMProgram} gespeichert, sonst nicht
+	 */
+	public void setDebugging(boolean debugging);
 
 	/**
 	 * Übernimmt das Ergebnis der lexikalischen Analyse eines {@linkplain SVMLexer} und

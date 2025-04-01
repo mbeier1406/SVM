@@ -22,11 +22,11 @@ public class InstructionParserBase<T> implements InstructionParser<T> {
 	 * {@inheritDoc}
 	 * <p/>
 	 * Diese Methode ist nicht zur Ausführung gedacht, da sie in den einzelnen
-	 * Instruktionsimplemntierungen verwendet werdne muss (zum Beispiel
+	 * Instruktionsimplemntierungen verwendet werden muss (zum Beispiel
 	 * {@linkplain Nop#getVirtualInstruction(Symbol, LineInfo, SVMProgram)}).
 	 */
 	@Override
-	public VirtualInstruction<T> getVirtualInstruction(Symbol label, LineInfo lineInfo, SVMProgram<T> svmProgram) throws SVMException {
+	public VirtualInstruction<T> getVirtualInstruction(Symbol label, LineInfo lineInfo, SVMProgram<T> svmProgram, boolean debugging) throws SVMException {
 		throw new NotImplementedException("Bitte eine der Implementierungen Nop, Int, Mov usw. verwenden!");
 	}
 

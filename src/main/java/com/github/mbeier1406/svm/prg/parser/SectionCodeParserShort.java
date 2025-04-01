@@ -58,6 +58,15 @@ public class SectionCodeParserShort implements SectionCodeParser<Short> {
 	 */
 	private InstructionParser<Short> ipImplService = new InstructionParserBase<Short>();
 
+	/** Definiert, ob Debugginginfos in die {@linkplain VirtualInstruction}-Items geschrieben wird */
+	private boolean debugging = false;
+
+
+	/** {@inheritDoc} */
+	@Override
+	public void setDebugging(boolean debugging) {
+		this.debugging = debugging;
+	}
 
 	/** {@inheritDoc} */
 	@Override
@@ -80,7 +89,7 @@ public class SectionCodeParserShort implements SectionCodeParser<Short> {
 				try {
 					var instructionParser = ipImplService.getInstructionParser(codeSymbol);
 					LOGGER.trace("instructionParser={}", instructionParser);
-					var virtualInstruction = instructionParser.getVirtualInstruction(label, lineInfo, svmProgram);
+					var virtualInstruction = instructionParser.getVirtualInstruction(label, lineInfo, svmProgram, this.debugging);
 					LOGGER.trace("label={}; svmProgram={}; virtualInstruction={}", label, svmProgram, virtualInstruction);
 					svmProgram.addInstruction(virtualInstruction);
 					label = null;

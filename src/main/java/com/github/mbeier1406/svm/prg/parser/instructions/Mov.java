@@ -105,7 +105,7 @@ public class Mov extends InstructionParserBase<Short> implements InstructionPars
 
 	/** {@inheritDoc} */
 	@Override
-	public VirtualInstruction<Short> getVirtualInstruction(final Symbol label, final LineInfo lineInfo, final SVMProgram<Short> svmProgram) throws SVMException {
+	public VirtualInstruction<Short> getVirtualInstruction(final Symbol label, final LineInfo lineInfo, final SVMProgram<Short> svmProgram, boolean debugging) throws SVMException {
 		int numSymbols = requireNonNull(lineInfo, "lineInfo").symbols().size();
 		if ( !lineInfo.symbols().get(0).equals(SVMLexer.SYM_MOV) )
 			throw new SVMException("MOV erwartet Symbol "+SVMLexer.SYM_MOV);
@@ -168,7 +168,8 @@ public class Mov extends InstructionParserBase<Short> implements InstructionPars
 		return new VirtualInstruction<>(
 				Helper.getLabel(label),
 				new InstructionDefinition<>(InstructionFactory.MOV, params, null),
-				instructionParams.labelList);
+				instructionParams.labelList,
+				debugging ? lineInfo : null);
 	}
 
 }

@@ -34,9 +34,9 @@ public class FunctionFactoryTest {
 	/** Liefer die Daten für {@linkplain #svmProgram} */
 	@SuppressWarnings("serial")
 	public List<Data<Short>> dataList = new ArrayList<Data<Short>>() {{
-		add(new Data<Short>(new Label(LabelType.DATA, "test1"), new Short[] {1, 2, 3}));
-		add(new Data<Short>(new Label(LabelType.DATA, "test2"), new Short[] {'a', 'b', 'c'}));
-		add(new Data<Short>(new Label(LabelType.DATA, "test3"), new Short[] {4, 5}));
+		add(new Data<Short>(new Label(LabelType.DATA, "test1"), new Short[] {1, 2, 3}, null));
+		add(new Data<Short>(new Label(LabelType.DATA, "test2"), new Short[] {'a', 'b', 'c'}, null));
+		add(new Data<Short>(new Label(LabelType.DATA, "test3"), new Short[] {4, 5}, null));
 	}};
 
 	/** {@linkplain #svmProgram} initialisieren */

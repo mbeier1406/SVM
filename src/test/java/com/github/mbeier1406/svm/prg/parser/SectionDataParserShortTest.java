@@ -95,7 +95,7 @@ public class SectionDataParserShortTest {
 	/** Stellt sicher, dass ein definierten Fehler erzeugt wird, wenn das Programm bereits Daten enthält */
 	@Test
 	public void testeSVMProgramDataSectionNotEmpty() {
-		svmProgramm.addData(new SVMProgram.Data<Short>(new SVMProgram.Label(LabelType.DATA, "xyz"), new Short[] {1}));
+		svmProgramm.addData(new SVMProgram.Data<Short>(new SVMProgram.Label(LabelType.DATA, "xyz"), new Short[] {1}, null));
 		var ex = assertThrows(SVMException.class, () -> sectionDataParser.parse(svmProgramm, STD_LINE_INFO));
 		assertThat(ex.getLocalizedMessage(), containsString("Sektion im SVM-Programm ist nicht leer"));
 	}
@@ -165,8 +165,8 @@ public class SectionDataParserShortTest {
 		}});
 		assertThat(index, equalTo(5));
 		assertThat(svmProgramm.getDataList().size(), equalTo(2));
-		assertThat(svmProgramm.getDataList().get(0), equalTo(new Data<Short>(new Label(LabelType.DATA, "label1"), new Short[] { (short) 'a', (short) 'b', (short) 'c' })));
-		assertThat(svmProgramm.getDataList().get(1), equalTo(new Data<Short>(new Label(LabelType.DATA, "label2"), new Short[] { (short) '1', (short) '2', (short) '3' })));
+		assertThat(svmProgramm.getDataList().get(0), equalTo(new Data<Short>(new Label(LabelType.DATA, "label1"), new Short[] { (short) 'a', (short) 'b', (short) 'c' }, null)));
+		assertThat(svmProgramm.getDataList().get(1), equalTo(new Data<Short>(new Label(LabelType.DATA, "label2"), new Short[] { (short) '1', (short) '2', (short) '3' }, null)));
 	}
 
 }

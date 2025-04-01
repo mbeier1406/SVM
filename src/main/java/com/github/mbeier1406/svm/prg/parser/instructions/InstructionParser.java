@@ -38,10 +38,16 @@ public interface InstructionParser<T> {
 	 * @param label Falls im Programmtext zuvor ein Label definiert wurde, muss er als Ziel für einen Sprungbefehl mitgegeben werden
 	 * @param lineInfo die vom Lexer eingelesene Programmzeile als Liste von {@linkplain SVMLexer.Symbol Symbolen} mitgegeben wird
 	 * @param svmProgram das bisher erzeugte Programm, wird für die Berechnung von Referenzen (Zugriff auf {@linkplain Label} benötigt
+	 * @param debugging Ob Debugginginformationen in die {@linkplain VirtualInstruction} geschrieben werden soll
 	 * @throws SVMException falls die Liste der Symbole in {@linkplain LineInfo} nicht zur Instruktion passt
 	 * @return die virtuelle Instruktion
 	 */
-	public VirtualInstruction<T> getVirtualInstruction(final Symbol label, final LineInfo lineInfo, final SVMProgram<T> svmProgram) throws SVMException;
+	public VirtualInstruction<T> getVirtualInstruction(final Symbol label, final LineInfo lineInfo, final SVMProgram<T> svmProgram, boolean debugging) throws SVMException;
+
+	/** @see #getVirtualInstruction(Symbol, LineInfo, SVMProgram, boolean) */
+	public default VirtualInstruction<T> getVirtualInstruction(final Symbol label, final LineInfo lineInfo, final SVMProgram<T> svmProgram) throws SVMException {
+		return getVirtualInstruction(label, lineInfo, svmProgram, false);
+	}
 
 	public default InstructionParser<T> getInstructionParser(final Symbol symbol) throws SVMException {
 		if ( symbol.token() != SVMLexer.Token.CODE )

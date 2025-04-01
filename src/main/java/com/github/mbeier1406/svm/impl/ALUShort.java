@@ -13,6 +13,7 @@ import com.github.mbeier1406.svm.SVMException;
 import com.github.mbeier1406.svm.instructions.InstructionInterface;
 import com.github.mbeier1406.svm.instructions.InstructionReaderInterface;
 import com.github.mbeier1406.svm.instructions.InstructionReaderShort;
+import com.github.mbeier1406.svm.prg.SVMLoader.DebuggingInfo;
 
 /**
  * Eine Implementierung der {@linkplain ALU} für Tests.
@@ -139,7 +140,7 @@ public class ALUShort implements ALU<Short>, Instruction<Short> {
 	}
 
 	@Override
-	public void setDebugInfo() {
+	public void setDebugInfo(final DebuggingInfo<Short> debuggingInfo) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -13,6 +13,8 @@ import com.github.mbeier1406.svm.SVMException;
 import com.github.mbeier1406.svm.instructions.InstructionDefinition;
 import com.github.mbeier1406.svm.instructions.InstructionInterface;
 import com.github.mbeier1406.svm.instructions.Mov;
+import com.github.mbeier1406.svm.prg.lexer.SVMLexer;
+import com.github.mbeier1406.svm.prg.lexer.SVMLexer.LineInfo;
 
 /**
  * Definiert alle Datenstrukturen und Methoden zur internen Darstellung
@@ -55,9 +57,10 @@ public interface SVMProgram<T> extends Serializable {
 	 * @param label der Label, der dieser Instruktion vorangestellt ist, d. h. die Instruktion kann Ziel eines Sprungbefehls sein, <b>null</b> wenn keine Sprungmarke
 	 * @param instruction die auszuführende Instruktion
 	 * @param labelList falls die Instruktion Parameter erhält, können hier virtuelle Adresse/Label eingesetzt werden, <b>null</b> wenn nicht
+	 * @param lineInfo Infos zur Programmzeile als Ergebnis des {@linkplain SVMLexer}s
 	 * @param <T> Die Wortänge der {@linkplain SVM}
 	 */
-	public record VirtualInstruction<T>(Label label, InstructionDefinition<T> instruction, Label[] labelList) implements Serializable {
+	public record VirtualInstruction<T>(Label label, InstructionDefinition<T> instruction, Label[] labelList, LineInfo lineInfo) implements Serializable {
 		public VirtualInstruction {
 			requireNonNull(instruction, "instruction");			
 			requireNonNull(labelList, "labelList");
@@ -108,8 +111,9 @@ public interface SVMProgram<T> extends Serializable {
 	 * Daten, die im {@linkplain MEM Speicher} abgelegt werden, können über einen Label adressiert werden.
 	 * @implNote Standard hashCode()/equals()-Methoden funktionieren nicht!
 	 * @param <T> Wortlänge der {@linkplain SVM}
+	 * @param lineInfo Infos zur Programmzeile als Ergebnis des {@linkplain SVMLexer}s
 	 */
-	public static record Data<T>(Label label, T[] dataList) implements Serializable {
+	public static record Data<T>(Label label, T[] dataList, LineInfo lineInfo) implements Serializable {
 		public Data {
 			requireNonNull(label, "label");
 			if ( label.labelType != LabelType.DATA ) throw new IllegalArgumentException("Labeltyp ungültig: "+label.labelType);

@@ -11,9 +11,9 @@ import org.apache.logging.log4j.Logger;
 
 import com.github.mbeier1406.svm.SVMException;
 import com.github.mbeier1406.svm.prg.SVMProgram;
+import com.github.mbeier1406.svm.prg.SVMProgram.Data;
 import com.github.mbeier1406.svm.prg.SVMProgram.Label;
 import com.github.mbeier1406.svm.prg.SVMProgram.LabelType;
-import com.github.mbeier1406.svm.prg.SVMProgram.Data;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.LineInfo;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Symbol;
@@ -38,6 +38,15 @@ public class SectionDataParserShort implements SectionDataParser<Short> {
 	/** Fehlermeldung wenn nicht mit der Datensektion begonnen wird */
 	private static final String ERR_DATA_EXPECTED2 = INDEX+"Nach einer Labeldefinition wird eine Datendefinition erwartet (%s): %s";
 
+	/** Definiert, ob Debugginginfos in die {@linkplain Data}-Items geschrieben wird */
+	private boolean debugging = false;
+
+
+	/** {@inheritDoc} */
+	@Override
+	public void setDebugging(boolean debugging) {
+		this.debugging = debugging;
+	}
 
 	/** {@inheritDoc} */
 	@Override
@@ -54,7 +63,7 @@ public class SectionDataParserShort implements SectionDataParser<Short> {
 				// Konstante in das SVMProgramm eintragen
 				var data = lineInfo.symbols().get(0);
 				LOGGER.trace("Data={}", data);
-				svmProgram.addData(new Data<Short>(new Label(LabelType.DATA, label.value()), getSvmData(data)));
+				svmProgram.addData(new Data<Short>(new Label(LabelType.DATA, label.value()), getSvmData(data), this.debugging?lineInfo:null));
 				label = null; // nächste Datendefinition
 				index++; // nächste Zeile
 			}
@@ -83,5 +92,6 @@ public class SectionDataParserShort implements SectionDataParser<Short> {
 			daten[i] = (short) data.getStringValue().get().charAt(i);
 		return daten;
 	}
+
 
 }

@@ -8,6 +8,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -167,6 +168,14 @@ public class SectionDataParserShortTest {
 		assertThat(svmProgramm.getDataList().size(), equalTo(2));
 		assertThat(svmProgramm.getDataList().get(0), equalTo(new Data<Short>(new Label(LabelType.DATA, "label1"), new Short[] { (short) 'a', (short) 'b', (short) 'c' }, null)));
 		assertThat(svmProgramm.getDataList().get(1), equalTo(new Data<Short>(new Label(LabelType.DATA, "label2"), new Short[] { (short) '1', (short) '2', (short) '3' }, null)));
+	}
+
+	/** Stellt sicher, dass die {@linkplain Data}-Items die Debugging-Informationen enthalten */
+	@Test
+	public void testeDataCorrectMitDebugging() throws SVMException {
+		this.sectionDataParser.setDebugging(true);
+		testeDataCorrect();
+		assertThat(this.svmProgramm.getDataList().stream().map(Data::lineInfo).peek(LOGGER::info).filter(Objects::nonNull).count(), equalTo(2L));
 	}
 
 }

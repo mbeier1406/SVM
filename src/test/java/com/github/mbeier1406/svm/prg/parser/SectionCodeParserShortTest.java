@@ -11,6 +11,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,7 +20,9 @@ import org.junit.jupiter.api.Test;
 import com.github.mbeier1406.svm.SVMException;
 import com.github.mbeier1406.svm.instructions.InstructionFactory;
 import com.github.mbeier1406.svm.prg.SVMProgram;
+import com.github.mbeier1406.svm.prg.SVMProgram.Data;
 import com.github.mbeier1406.svm.prg.SVMProgram.Label;
+import com.github.mbeier1406.svm.prg.SVMProgram.VirtualInstruction;
 import com.github.mbeier1406.svm.prg.SVMProgramShort;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.LineInfo;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Symbol;
@@ -82,6 +85,14 @@ public class SectionCodeParserShortTest {
 		assertThat(instruction.lenInWords(), equalTo(null));
 		assertThat(instruction.instruction(), equalTo(InstructionFactory.INT));
 		assertThat(instruction.params(), equalTo(new byte[] { 0x1 }));
+	}
+
+	/** Stellt sicher, dass die {@linkplain VirtualInstruction}-Items die Debugging-Informationen enthalten */
+	@Test
+	public void testeProgrammMitDebugging() throws SVMException {
+		this.sectionCodeParser.setDebugging(true);
+		testeProgramm();
+		assertThat(this.svmProgramm.getInstructionList().stream().map(VirtualInstruction::lineInfo).peek(LOGGER::info).filter(Objects::nonNull).count(), equalTo(1L));
 	}
 
 }

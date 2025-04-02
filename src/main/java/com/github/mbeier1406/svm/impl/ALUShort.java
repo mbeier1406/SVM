@@ -13,6 +13,7 @@ import com.github.mbeier1406.svm.SVMException;
 import com.github.mbeier1406.svm.instructions.InstructionInterface;
 import com.github.mbeier1406.svm.instructions.InstructionReaderInterface;
 import com.github.mbeier1406.svm.instructions.InstructionReaderShort;
+import com.github.mbeier1406.svm.prg.SVMLoader;
 import com.github.mbeier1406.svm.prg.SVMLoader.DebuggingInfo;
 
 /**
@@ -50,6 +51,11 @@ public class ALUShort implements ALU<Short>, Instruction<Short> {
 	 * gerade zeigt.
 	 */
 	private InstructionReaderInterface<Short> instructionReader = new InstructionReaderShort();
+
+	private boolean debug = false;
+
+	/** Debugging Info aus {@linkplain SVMLoader#getDebuggingInfo()} */
+	private DebuggingInfo<Short> debuggingInfo = null;
 
 
 	public ALUShort(MEMShort mem) {
@@ -92,6 +98,7 @@ public class ALUShort implements ALU<Short>, Instruction<Short> {
 	public int start() throws SVMException {
 		for ( ; !isStopped(); ) {
 			LOGGER.trace("ip={}", ip);
+			printDebugInformation();
 			final var instrDef = instructionReader.getInstruction(mem, ip);
 			LOGGER.trace("instr={}; len={} ({})", instrDef, instrDef.lenInWords(), BD_BYTE.getBinaerDarstellung(instrDef.instruction().getCode()));
 			instrDef.instruction().execute(instrDef.params());
@@ -113,10 +120,31 @@ public class ALUShort implements ALU<Short>, Instruction<Short> {
 		return (Instruction<Short>) this;
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public void setDebugInfo(final DebuggingInfo<Short> debuggingInfo) {
+		this.debuggingInfo  = debuggingInfo;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void setDebugMode(boolean debug) {
+		this.debug = debug;
+	}
+
 
 	/** Prüft, ob das oberste Bit im Statusregister gesetzt ist */
 	private boolean isStopped() {
 		return (this.statusRegister & Short.MIN_VALUE) == Short.MIN_VALUE;
+	}
+
+	private void printDebugInformation() {
+		if ( this.debug ) System.out.println(
+				this.debuggingInfo == null ?
+					"Keine Debuging Information!" : (
+							this.debuggingInfo.getInstructionAdresses().get(ip) == null ?
+								"Keine Debugging Information an Adresse "+ip :
+								this.debuggingInfo.getInstructionAdresses().get(ip).lineInfo()));
 	}
 
 	@Override
@@ -137,18 +165,6 @@ public class ALUShort implements ALU<Short>, Instruction<Short> {
 		sb.append(")");
 		sb.append("\n");
 		return sb.toString();
-	}
-
-	@Override
-	public void setDebugInfo(final DebuggingInfo<Short> debuggingInfo) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setDebugMode(boolean on) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

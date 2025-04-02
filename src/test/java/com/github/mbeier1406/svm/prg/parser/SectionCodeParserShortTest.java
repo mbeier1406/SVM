@@ -20,7 +20,6 @@ import org.junit.jupiter.api.Test;
 import com.github.mbeier1406.svm.SVMException;
 import com.github.mbeier1406.svm.instructions.InstructionFactory;
 import com.github.mbeier1406.svm.prg.SVMProgram;
-import com.github.mbeier1406.svm.prg.SVMProgram.Data;
 import com.github.mbeier1406.svm.prg.SVMProgram.Label;
 import com.github.mbeier1406.svm.prg.SVMProgram.VirtualInstruction;
 import com.github.mbeier1406.svm.prg.SVMProgramShort;

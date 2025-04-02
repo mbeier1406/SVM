@@ -76,7 +76,7 @@ public class SVMLoaderShort implements SVMLoader<Short>, InstructionIO<Short> {
 	@Override
 	public void load(final MEM<Short> mem, final SVMProgram<Short> svmProgram) throws SVMException {
 
-		try ( @SuppressWarnings("unused") CloseableThreadContext.Instance ctx = put("mem", mem.toString()).put("svmProgramm", svmProgram.toString()) ) {
+		try ( CloseableThreadContext.Instance ctx = put("mem", mem.toString()).put("svmProgramm", svmProgram.toString()) ) {
 
 			/* Schritt I: Sicherstellen, dass das Programm in sich konsistent ist und Initialisierung */
 			LOGGER.debug("Prg: Validierung...");

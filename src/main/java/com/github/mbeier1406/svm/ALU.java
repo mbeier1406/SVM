@@ -1,6 +1,7 @@
 package com.github.mbeier1406.svm;
 
 import com.github.mbeier1406.svm.instructions.InstructionInterface;
+import com.github.mbeier1406.svm.prg.SVMLoader;
 import com.github.mbeier1406.svm.prg.SVMLoader.DebuggingInfo;
 
 /**
@@ -60,6 +61,10 @@ public interface ALU<T> {
 	 */
 	public int start() throws SVMException;
 
+	/**
+	 * Übernimmt die Debugging Informationen aus {@linkplain SVMLoader#getDebuggingInfo()}.
+	 * @see #setDebugMode(boolean)
+	 */
 	public void setDebugInfo(final DebuggingInfo<T> debuggingInfo);
 
 	/**
@@ -67,6 +72,7 @@ public interface ALU<T> {
 	 * und zuvor mit {@linkplain #setDebugInfo(DebuggingInfo)} die entsprechenden Informationen
 	 * gesetzt wurden, wird per Logger vor der Ausführung eines Kommandos die entsprechende
 	 * Codezeile {@linkplain DebuggingInfo#getInstructionAdresses()}
+	 * @see #setDebugInfo(DebuggingInfo)
 	 */
 	public void setDebugMode(boolean on);
 

@@ -12,6 +12,8 @@ import org.apache.logging.log4j.Logger;
 
 import com.github.mbeier1406.svm.SVMException;
 import com.github.mbeier1406.svm.prg.SVMProgram;
+import com.github.mbeier1406.svm.prg.SVMProgram.Data;
+import com.github.mbeier1406.svm.prg.SVMProgram.VirtualInstruction;
 import com.github.mbeier1406.svm.prg.SVMProgramShort;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.LineInfo;
@@ -32,9 +34,10 @@ public class SVMParserShort implements SVMParser<Short> {
 	/** Das Programm zur lexikalischen Analyse, dessen Ergebnis zum Parsen verwendet wird */
 	private final SVMLexer svmLexer = new SVMLexerImpl();
 
-	/** Liest die Datensektion ein und schreibt die Werte in {@linkplain #svmProgram} */
+	/** Liest die Datensektion ein und schreibt die Werte als {@linkplain Data} in {@linkplain #svmProgram} */
 	private SectionDataParser<Short> sectionDataParser = new SectionDataParserShort();
 
+	/** Liest die Codesektion ein und schreibt die Werte als {@linkplain VirtualInstruction} in {@linkplain #svmProgram} */
 	private SectionCodeParser<Short> sectionCodeParser = new SectionCodeParserShort();
 
 
@@ -44,7 +47,7 @@ public class SVMParserShort implements SVMParser<Short> {
 	/** {@inheritDoc} */
 	@Override
 	public SVMProgram<Short> parse(File file, Charset encoding) throws SVMException {
-		try ( @SuppressWarnings("unused") CloseableThreadContext.Instance ctx = put("file", file.toString()) ) {
+		try ( CloseableThreadContext.Instance ctx = put("file", file.toString()) ) {
 			LOGGER.trace("Start parsen...");
 			var lineInfoList = svmLexer.scan(file, encoding);
 			LOGGER.debug("Abzahl Lines: {}", lineInfoList.size());
@@ -63,6 +66,14 @@ public class SVMParserShort implements SVMParser<Short> {
 		indexNextSection = sectionCodeParser.parse(svmProgram, lineInfoList.subList(indexNextSection, lineInfoList.size()));
 		LOGGER.trace("Ende parsen Codesektion (indexNextSection={}).", indexNextSection);
 		return svmProgram;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public SVMParser<Short> setDebugging(boolean debugging) {
+		this.sectionDataParser.setDebugging(debugging);
+		this.sectionCodeParser.setDebugging(debugging);
+		return this;
 	}
 
 }

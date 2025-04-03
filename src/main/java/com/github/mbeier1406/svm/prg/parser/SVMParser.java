@@ -12,6 +12,8 @@ import com.github.mbeier1406.svm.SVM;
 import com.github.mbeier1406.svm.SVMException;
 import com.github.mbeier1406.svm.prg.SVMLoader;
 import com.github.mbeier1406.svm.prg.SVMProgram;
+import com.github.mbeier1406.svm.prg.SVMProgram.Data;
+import com.github.mbeier1406.svm.prg.SVMProgram.VirtualInstruction;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.LineInfo;
 import com.github.mbeier1406.svm.prg.lexer.SVMLexer.Symbol;
@@ -99,5 +101,14 @@ public interface SVMParser<T> {
 	 * @see #parse(File, Charset)
 	 */
 	public SVMProgram<T> parse(final List<LineInfo> symbols) throws SVMException;
+
+	/**
+	 * Schaltet den Debugging-Modus an oder aus: es wird die geparste {@linkplain LineInfo} mit in die
+	 * {@linkplain Data}-Definion bzw. in die {@linkplain VirtualInstruction} geschrieben und in das
+	 * erzeugte {@linkplain SVMProgram} übernommen.
+	 * @param debugging wenn <b>true</b>, wird die Information übernommen, sonst nicht.
+	 * @return den Parser selbst (fluent API)
+	 */
+	public SVMParser<T> setDebugging(boolean debugging);
 
 }

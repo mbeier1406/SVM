@@ -130,12 +130,13 @@ public class Programm extends CommandBase implements CommandInterface {
 		try {
 			if ( !scanner.hasNext() ) return KEIN_PROGRAMM_ANGEGEBEN;
 			svmprg  = scanner.next();
-			var prg = new SVMParserShort().parse(svmprg);
+			boolean debugging =  scanner.hasNext() && scanner.next().equals("debug");
+			var prg = new SVMParserShort().setDebugging(debugging).parse(svmprg);
 			for ( var data : prg.getDataList() )
 				svmProgram.addData((Data<T>) data);
 			for ( var instr : prg.getInstructionList() )
 				svmProgram.addInstruction((VirtualInstruction<T>) instr);
-			return "Ok " + svmprg;
+			return "Ok " + svmprg + (debugging?" (debugging)":"");
 		} catch (SVMException e) {
 			return "Fehler (svmprg="+svmprg+"): " + e.getLocalizedMessage();
 		}

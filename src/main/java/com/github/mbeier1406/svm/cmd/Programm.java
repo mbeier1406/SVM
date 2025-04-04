@@ -43,6 +43,9 @@ public class Programm extends CommandBase implements CommandInterface {
 	/** Option zum Laden eines SVM-Programms (externe Darstellung) in die internen Strukturen {@linkplain SVMProgram} */
 	public static final String CMD_PARSE = "parse";
 
+	/** Option zum Schreiben von Debug-Informationen bei {@linkplain #CMD_PARSE} */
+	public static final String CMD_DEBUG = "debug";
+
 	/** Option zum Laden eines PRG-Programms (interne Darstellung) in die internen Strukturen {@linkplain SVMProgram} */
 	public static final String CMD_LADE_INTERN = "lade-intern";
 
@@ -67,7 +70,7 @@ public class Programm extends CommandBase implements CommandInterface {
 	/** Hilfe zur Benutzung des Kommandos */
 	public static final String HILFE = "programm ("
 				+ CMD_LEXER + " <SVM-Programm>|"
-				+ CMD_PARSE + " <SVM-Programm>|"
+				+ CMD_PARSE + " <SVM-Programm> ["+CMD_DEBUG+"]|"
 				+ CMD_LADE_INTERN + " <PRG-Programm>|"
 				+ CMD_SPEICHER_EXTERN + " <PRG-Programm>|"
 				+ CMD_VALIDIEREN + "|"
@@ -77,7 +80,7 @@ public class Programm extends CommandBase implements CommandInterface {
 				+ CMD_AUSFUEHREN + " <SVM-Programm>"
 				+ ")\n"
 			+ "\t"+CMD_LEXER+" - führt die lexikalische Analyse des angegebenen Programms in externer Darstellung (SVM) durch\n"
-			+ "\t"+CMD_PARSE+" - lädt das angegebene Programm in externer Darstellung (SVM) in die internen Strukturen\n"
+			+ "\t"+CMD_PARSE+" - lädt das angegebene Programm in externer Darstellung (SVM) in die internen Strukturen (ggf. mit Debugging)\n"
 			+ "\t"+CMD_LADE_INTERN+" - lädt das angegebene Programm in interner Darstellung (PRG) in die internen Strukturen\n"
 			+ "\t"+CMD_SPEICHER_EXTERN+" - speichert das geladene Programm in interner Darstellung als Datei (PRG)\n"
 			+ "\t"+CMD_VALIDIEREN+" - prüft die internen Programm-Strukturen nach dem Laden\n"
@@ -130,7 +133,7 @@ public class Programm extends CommandBase implements CommandInterface {
 		try {
 			if ( !scanner.hasNext() ) return KEIN_PROGRAMM_ANGEGEBEN;
 			svmprg  = scanner.next();
-			boolean debugging =  scanner.hasNext() && scanner.next().equals("debug");
+			boolean debugging =  scanner.hasNext() && scanner.next().equals(CMD_DEBUG);
 			var prg = new SVMParserShort().setDebugging(debugging).parse(svmprg);
 			for ( var data : prg.getDataList() )
 				svmProgram.addData((Data<T>) data);

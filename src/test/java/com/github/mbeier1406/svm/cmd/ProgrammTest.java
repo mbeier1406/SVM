@@ -15,6 +15,8 @@ import com.github.mbeier1406.svm.impl.ALUShort;
 import com.github.mbeier1406.svm.impl.MEMShort;
 import com.github.mbeier1406.svm.instructions.InstructionFactory;
 import com.github.mbeier1406.svm.prg.SVMProgram;
+import com.github.mbeier1406.svm.prg.SVMProgram.Data;
+import com.github.mbeier1406.svm.prg.SVMProgram.VirtualInstruction;
 import com.github.mbeier1406.svm.prg.SVMProgramShort;
 import com.github.mbeier1406.svm.syscalls.SyscallFactory;
 
@@ -71,6 +73,14 @@ public class ProgrammTest {
 		assertThat(programm.exec(new Scanner(Programm.CMD_PARSE+" "+SVM), null, svmProgramm), equalTo("Ok "+SVM));
 		assertThat(svmProgramm.getDataList().size(), equalTo(2));
 		assertThat(svmProgramm.getInstructionList().size(), equalTo(10));
+	}
+
+	/** Rückmeldung, wenn {@value #SVM} mit debugging Option geladen wurde */
+	@Test
+	public void testeSvmLadenMitDebug() {
+		assertThat(programm.exec(new Scanner(Programm.CMD_PARSE+" "+SVM+" "+Programm.CMD_DEBUG), null, svmProgramm), equalTo("Ok "+SVM+ " (debugging)"));
+		assertThat(svmProgramm.getDataList().stream().map(Data::lineInfo).count(), equalTo(2L));
+		assertThat(svmProgramm.getInstructionList().stream().map(VirtualInstruction::lineInfo).count(), equalTo(10L));
 	}
 
 	/** Rückmeldung, wenn {@linkplain Programm#CMD_LADE_INTERN} ohne Parameter aufgerufen wurde */

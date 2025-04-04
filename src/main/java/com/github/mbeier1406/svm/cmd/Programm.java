@@ -9,6 +9,7 @@ import java.util.Scanner;
 import com.github.mbeier1406.svm.ALU;
 import com.github.mbeier1406.svm.MEM;
 import com.github.mbeier1406.svm.SVMException;
+import com.github.mbeier1406.svm.prg.SVMLoader.DebuggingInfo;
 import com.github.mbeier1406.svm.prg.SVMLoaderShort;
 import com.github.mbeier1406.svm.prg.SVMProgram;
 import com.github.mbeier1406.svm.prg.SVMProgram.Data;
@@ -70,14 +71,14 @@ public class Programm extends CommandBase implements CommandInterface {
 	/** Hilfe zur Benutzung des Kommandos */
 	public static final String HILFE = "programm ("
 				+ CMD_LEXER + " <SVM-Programm>|"
-				+ CMD_PARSE + " <SVM-Programm> ["+CMD_DEBUG+"]|"
+				+ CMD_PARSE + " <SVM-Programm> [" + CMD_DEBUG + "]|"
 				+ CMD_LADE_INTERN + " <PRG-Programm>|"
 				+ CMD_SPEICHER_EXTERN + " <PRG-Programm>|"
 				+ CMD_VALIDIEREN + "|"
 				+ CMD_LOESCHEN + "|"
 				+ CMD_LADE_SPEICHER + "|"
-				+ CMD_STARTEN + "|"
-				+ CMD_AUSFUEHREN + " <SVM-Programm>"
+				+ CMD_STARTEN + " [" + CMD_DEBUG + "]|"
+				+ CMD_AUSFUEHREN + " <SVM-Programm> [" + CMD_DEBUG + "]"
 				+ ")\n"
 			+ "\t"+CMD_LEXER+" - führt die lexikalische Analyse des angegebenen Programms in externer Darstellung (SVM) durch\n"
 			+ "\t"+CMD_PARSE+" - lädt das angegebene Programm in externer Darstellung (SVM) in die internen Strukturen (ggf. mit Debugging)\n"
@@ -86,10 +87,11 @@ public class Programm extends CommandBase implements CommandInterface {
 			+ "\t"+CMD_VALIDIEREN+" - prüft die internen Programm-Strukturen nach dem Laden\n"
 			+ "\t"+CMD_LOESCHEN+" - löscht die internen Programm-Strukturen nach dem Laden\n"
 			+ "\t"+CMD_LADE_SPEICHER+" - lädt die internen Strukturen in den Speicher der SVM\n"
-			+ "\t"+CMD_STARTEN+" - startet das in den Speicher der SVM geladene Programm\n"
-			+ "\t"+CMD_AUSFUEHREN+" - parst, validiert, lädt und startet das angegebene SVM-Programm\n\n"
+			+ "\t"+CMD_STARTEN+" - startet das in den Speicher der SVM geladene Programm (ggf. mit Debugging)\n"
+			+ "\t"+CMD_AUSFUEHREN+" - parst, validiert, lädt und startet das angegebene SVM-Programm (ggf. mit Debugging)\n\n"
 			+ "\tBeispiel SVM-Programm: src/test/resources/com/github/mbeier1406/svm/prg/example.svm\n"
-			+ "\t         PRG-Programm: src/test/resources/com/github/mbeier1406/svm/prg/example.prg\n";
+			+ "\t         PRG-Programm: src/test/resources/com/github/mbeier1406/svm/prg/example.prg\n\n"
+			+ "--> prg parse src/test/resources/com/github/mbeier1406/svm/prg/example.svm debug\n\n";
 
 	/** Alle Optionen zu diesem Kommando müssen dieses Interface implementieren */
 	@FunctionalInterface
@@ -197,7 +199,9 @@ public class Programm extends CommandBase implements CommandInterface {
 	@SuppressWarnings("unchecked")
 	private <T> String ladeSpeicher(String option, final Scanner scanner, final ALU<T> alu, final SVMProgram<T> svmProgram) {
 		try {
-			new SVMLoaderShort().load((MEM<Short>) alu.getMEM(), (SVMProgram<Short>) svmProgram);
+			var svmLoader = new SVMLoaderShort();
+			svmLoader.load((MEM<Short>) alu.getMEM(), (SVMProgram<Short>) svmProgram);
+			alu.setDebugInfo((DebuggingInfo<T>) svmLoader.getDebuggingInfo());
 			return "OK";
 		} catch (SVMException e) {
 			return "Fehler: " + e.getLocalizedMessage();
@@ -207,6 +211,7 @@ public class Programm extends CommandBase implements CommandInterface {
 	/** Option {@linkplain #CMD_STARTEN}: ein geladenes Programm ({@linkplain #CMD_LADE_INTERN}) ausführen */
 	private <T> String starten(String option, final Scanner scanner, final ALU<T> alu, final SVMProgram<T> svmProgram) {
 		try {
+			if ( scanner.hasNext() ) alu.setDebugMode(scanner.next().equals(CMD_DEBUG));
 			int code = alu.start();
 			return "OK: "+code;
 		} catch (SVMException e) {
@@ -221,6 +226,7 @@ public class Programm extends CommandBase implements CommandInterface {
 			parse(option, scanner, alu, svmProgram);
 			validieren(option, scanner, alu, svmProgram);
 			ladeSpeicher(option, scanner, alu, svmProgram);
+			if ( scanner.hasNext() ) alu.setDebugMode(scanner.next().equals(CMD_DEBUG));
 			int code = alu.start();
 			return "OK: "+code;
 		} catch (SVMException e) {

@@ -38,6 +38,9 @@ public class Alu extends CommandBase implements CommandInterface {
 	/** Parameter für das Lesen eines Speicherwortes ist {@value} */
 	public static final String CMD_READ_MEM = "read_mem";
 
+	/** Parameter für das Einstellen des Debugging ist {@value} */
+	public static final String CMD_DEBUG = "debug";
+
 	/** Fehlermeldung falsche Nutzung {@linkplain #CMD_SET_REG} */
 	public static final String USAGE_SET_REG = CMD_SET_REG+" <nr> <wert>";
 
@@ -50,12 +53,15 @@ public class Alu extends CommandBase implements CommandInterface {
 	/** Fehlermeldung falsche Nutzung {@linkplain #CMD_READ_MEM} */
 	public static final String USAGE_READ_MEM = CMD_READ_MEM+" <addr>";
 
+	/** Fehlermeldung falsche Nutzung {@linkplain #CMD_DEBUG} */
+	public static final String USAGE_DEBUG = CMD_DEBUG+" <an|aus>";
+
 
 	/** Hilfe zur Nutzung des Kommandos */
 	public static final String USAGE = "alu ["
 			+ CMD_INIT + "|" + CMD_START + "|" + CMD_SET_STOP_FLAG + "|"
 			+ USAGE_SET_REG + "|" + USAGE_READ_REG + "|"
-			+ USAGE_SET_MEM + "|" + USAGE_READ_MEM
+			+ USAGE_SET_MEM + "|" + USAGE_READ_MEM + "|" + USAGE_DEBUG
 			+ "]";
 
 
@@ -131,6 +137,18 @@ public class Alu extends CommandBase implements CommandInterface {
 				}
 				catch ( NumberFormatException e ) {
 					yield "Ungültige Zahl: "+e.getLocalizedMessage();
+				}
+				catch ( Exception e ) {
+					yield e.getLocalizedMessage();
+				}
+			}
+			case CMD_DEBUG -> {
+				try {
+					if ( !scanner.hasNext() ) throw new Exception("Parameter erwartet: "+USAGE_DEBUG);
+					String debug = scanner.next();
+					if ( !debug.equals("an") && !debug.equals("aus") ) throw new Exception("Parameter falsch: "+debug+" - "+USAGE_DEBUG);
+					alu.setDebugMode(debug.equals("an"));
+					yield "OK: "+debug;
 				}
 				catch ( Exception e ) {
 					yield e.getLocalizedMessage();

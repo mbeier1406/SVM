@@ -122,14 +122,16 @@ public class ALUShort implements ALU<Short>, Instruction<Short> {
 
 	/** {@inheritDoc} */
 	@Override
-	public void setDebugInfo(final DebuggingInfo<Short> debuggingInfo) {
+	public ALU<Short> setDebugInfo(final DebuggingInfo<Short> debuggingInfo) {
 		this.debuggingInfo  = debuggingInfo;
+		return this;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void setDebugMode(boolean debug) {
+	public ALU<Short> setDebugMode(boolean debug) {
 		this.debug = debug;
+		return this;
 	}
 
 
